@@ -50,6 +50,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: nowrap; /* Prevent stacking */
     }
 
     .logo img { height: 40px; display: block; }
@@ -251,7 +252,6 @@
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
-      .header-container { flex-direction: column; gap: 10px; padding: 12px 16px; }
       .tool-card { padding: 24px; }
       .about-card { padding: 24px; }
       .calculate-btn { padding: 12px; }
@@ -260,6 +260,15 @@
     @media (max-width: 480px) {
       .tool-card h1 { font-size: 22px; }
       .about-card h2 { font-size: 18px; }
+      .logo img { height: 36px; }
+      .share-btn { padding: 8px 14px; font-size: 14px; }
+      /* Keep logo & button side by side */
+      .header-container {
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        padding: 12px 16px;
+      }
     }
   </style>
 </head>
@@ -386,5 +395,6 @@ document.getElementById('shareBtn').addEventListener('click', () => {
   }
 });
 </script>
+
 </body>
 </html>
