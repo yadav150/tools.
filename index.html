@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Age Calculator Tool – Skill2Job</title>
+  <meta name="description" content="Free online age calculator by Skill2Job. Calculate your exact age in years, months and days instantly with accurate logic.">
+  <meta name="keywords" content="Age Calculator, Calculate Age, Skill2Job Tools">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #e0ebff;
+      --dark: #1e293b;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #334155;
+      --font-base: 16px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: var(--font-base);
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* HEADER */
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo img { height: 40px; display: block; }
+
+    .share-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .share-btn:hover { background: #1a4fcc; }
+
+    /* TOOL CARD */
+    .tool-section {
+      padding: 60px 16px 40px 16px;
+    }
+
+    .tool-card {
+      max-width: 700px;
+      margin: auto;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      transition: transform 0.3s;
+    }
+
+    .tool-card:hover { transform: translateY(-3px); }
+
+    .tool-card h1 {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 28px;
+      color: var(--dark);
+    }
+
+    .input-group { margin-bottom: 20px; }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 8px rgba(37,99,235,0.2);
+    }
+
+    .calculate-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .calculate-btn:hover { background: #1a4fcc; }
+
+    .loading {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #dbeafe;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      margin: auto;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      max-width: 800px;
+      margin: auto;
+      padding: 40px 16px;
+    }
+
+    .about-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .about-card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    .about-text {
+      font-size: 15px;
+      text-align: justify;
+      line-height: 1.7;
+    }
+
+    .about-text a {
+      color: var(--primary);
+      font-weight: 500;
+      border-bottom: 1px dashed transparent;
+      transition: all 0.2s ease;
+    }
+
+    .about-text a:hover { border-bottom-color: var(--primary); opacity: 0.9; }
+
+    /* MORE TOOLS GRID */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .tool-preview {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      background: var(--card);
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .tool-preview:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+
+    .tool-preview h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .tool-preview p {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      color: #475569;
+    }
+
+    .badge {
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: #e5edff;
+      color: var(--primary);
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      color: #cbd5f5;
+      text-align: center;
+      padding: 16px;
+      font-size: 14px;
+    }
+
+    /* ANIMATION */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; gap: 10px; padding: 12px 16px; }
+      .tool-card { padding: 24px; }
+      .about-card { padding: 24px; }
+      .calculate-btn { padding: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .tool-card h1 { font-size: 22px; }
+      .about-card h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+    </div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
+<section class="tool-section">
+  <div class="tool-card">
+    <h1>Age Calculator</h1>
+    <div class="input-group">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob">
+    </div>
+    <button class="calculate-btn" id="calcBtn">Calculate Age</button>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="about-card">
+    <h2>About This Tool</h2>
+    <p class="about-text">
+      This Age Calculator tool helps you calculate your exact age based on your
+      date of birth. It shows your age in years, months, and days using accurate
+      date logic. The tool works fully on the browser and does not store any
+      personal data. Visit
+      <a href="https://www.skill2job.site/" target="_blank" rel="noopener">
+        Skill2Job
+      </a>
+      developed by <strong>Yadav Subba</strong> for recruitment alerts, admit cards, and more.
+    </p>
+  </div>
+</section>
+
+<section class="about">
+  <div class="about-card">
+    <h2>More Tools</h2>
+    <div class="tools-grid">
+      <div class="tool-preview">
+        <h3>Age Calculator</h3>
+        <p>Calculate your exact age instantly.</p>
+        <span class="badge"><a href="age-calculate/">Use Tool</a></span>
+      </div>
+      <div class="tool-preview">
+        <h3>Merge PDF</h3>
+        <p>Combine multiple PDFs quickly and securely.</p>
+        <span class="badge"><a href="merge-pdf/">Use Tool</a></span>
+      </div>
+      <div class="tool-preview">
+        <h3>Remove Pages</h3>
+        <p>Remove selected pages from your PDF easily.</p>
+        <span class="badge"><a href="remove-pages/">Use Tool</a></span>
+      </div>
+      <div class="tool-preview">
+        <h3>Crop PDF</h3>
+        <p>Crop PDF pages effortlessly and download instantly.</p>
+        <span class="badge"><a href="crop-pdf/">Use Tool</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Skill2Job Tools
+</footer>
+
+<script>
+const btn = document.getElementById('calcBtn');
+const loading = document.getElementById('loading');
+const result = document.getElementById('result');
+
+btn.addEventListener('click', () => {
+  const dobValue = document.getElementById('dob').value;
+  result.style.display = 'none';
+  loading.style.display = 'none';
+
+  if (!dobValue) {
+    result.style.display = 'block';
+    result.textContent = 'Please select your date of birth.';
+    return;
+  }
+
+  loading.offsetHeight;
+  loading.style.display = 'block';
+
+  setTimeout(() => {
+    const dob = new Date(dobValue);
+    const today = new Date();
+
+    let years = today.getFullYear() - dob.getFullYear();
+    let months = today.getMonth() - dob.getMonth();
+    let days = today.getDate() - dob.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    result.innerHTML = `<strong>Your Age:</strong> ${years} years, ${months} months, ${days} days`;
+  }, 900);
+});
+
+document.getElementById('shareBtn').addEventListener('click', () => {
+  if (navigator.share) {
+    navigator.share({ title: 'Age Calculator – Skill2Job', url: location.href });
+  }
+});
+</script>
+</body>
+</html>
