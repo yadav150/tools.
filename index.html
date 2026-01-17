@@ -105,29 +105,40 @@
     }
 
     .header-container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap; /* Prevent stacking */
-    }
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; /* Prevent stacking logo/button */
+}
 
-    .logo img { height: 40px; display: block; }
+.logo img {
+  height: 40px;
+  display: block;
+}
 
-    .share-btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+.share-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-    .share-btn:hover { background: #1a4fcc; }
+.share-btn:hover { background: #1a4fcc; }
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 12px 16px;
+  }
+  .logo img { height: 36px; }
+  .share-btn { padding: 8px 14px; font-size: 14px; }
+}
 
     /* TOOLS SECTION */
     .about {
@@ -242,7 +253,7 @@
     <div class="logo">
       <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
     </div>
-    <button class="share-btn">Tools</button>
+    <button class="share-btn" id="shareBtn">Share</button>
   </div>
 </header>
 
