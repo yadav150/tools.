@@ -1,0 +1,26 @@
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <a href="https://tools.skill2job.site/">
+        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo" height="40">
+      </a>
+    </div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
+<!-- Dynamic Ads for tool pages & homepage only -->
+{% if page.show_ads %}
+<ins class="adsbygoogle"
+     style="display:block;margin:10px 0"
+     data-ad-client="ca-pub-1876390706944654"
+     data-ad-slot="5136857748"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+{% endif %}
+
+<main>
+  {{ content }}
+</main>
