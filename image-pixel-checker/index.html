@@ -426,14 +426,19 @@
 </footer>
 
 <script>
+<script>
 const checkBtn = document.getElementById('checkBtn');
+const resetBtn = document.getElementById('resetBtn');
 const imgLoading = document.getElementById('imgLoading');
 const imgResult = document.getElementById('imgResult');
 const imageFile = document.getElementById('imageFile');
 
+let previewImg;
+
 checkBtn.addEventListener('click', () => {
   const file = imageFile.files[0];
   imgResult.style.display = 'none';
+  resetBtn.style.display = 'none';
 
   if (!file) {
     imgResult.style.display = 'block';
@@ -441,28 +446,36 @@ checkBtn.addEventListener('click', () => {
     return;
   }
 
-  // Show spinner
   imgLoading.style.display = 'block';
 
   const img = new Image();
-  const imgURL = URL.createObjectURL(file);
-  img.src = imgURL;
+  img.src = URL.createObjectURL(file);
 
   img.onload = () => {
     setTimeout(() => {
       imgLoading.style.display = 'none';
-      imgResult.style.display = 'block';
 
       const sizeKB = (file.size / 1024).toFixed(2);
 
+      imgResult.style.display = 'block';
       imgResult.innerHTML = `
-        <img src="${imgURL}" alt="Image Preview" style="max-width:100%;margin-bottom:10px;border-radius:6px;">
         <strong>Width:</strong> ${img.width} px<br>
         <strong>Height:</strong> ${img.height} px<br>
         <strong>File Size:</strong> ${sizeKB} KB
       `;
 
-      URL.revokeObjectURL(imgURL);
+      // Image preview
+      if (!previewImg) {
+        previewImg = document.createElement('img');
+        previewImg.style.maxWidth = '100%';
+        previewImg.style.marginTop = '10px';
+        imgResult.appendChild(previewImg);
+      }
+      previewImg.src = img.src;
+
+      resetBtn.style.display = 'block';
+
+      URL.revokeObjectURL(img.src);
     }, 800);
   };
 
@@ -471,6 +484,18 @@ checkBtn.addEventListener('click', () => {
     imgResult.style.display = 'block';
     imgResult.textContent = 'Unable to load image. Please try another file.';
   };
+});
+
+resetBtn.addEventListener('click', () => {
+  imageFile.value = '';
+  imgResult.style.display = 'none';
+  imgLoading.style.display = 'none';
+  resetBtn.style.display = 'none';
+
+  if (previewImg) {
+    previewImg.remove();
+    previewImg = null;
+  }
 });
 </script>
 
