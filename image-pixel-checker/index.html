@@ -119,7 +119,6 @@
       <p>© 2026 Skill2Job</p>
     </div>
   </footer>
-
   <script>
 (function() {
   'use strict';
@@ -137,18 +136,13 @@
     const imageFile = document.getElementById('imageFile');
     const imgPreview = document.getElementById('imgPreview');
     
+    // **ONLY Check button shows preview & result**
     checkBtn.addEventListener('click', checkImage);
-    imageFile.addEventListener('change', previewImage);
-    
-    // Enter key support
-    imageFile.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') checkImage();
-    });
     
     // Share button
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
-      shareBtn.addEventEventListener('click', handleShare);
+      shareBtn.addEventListener('click', handleShare);
       shareBtn.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -158,40 +152,24 @@
     }
   }
   
-  function previewImage() {
-    const file = document.getElementById('imageFile').files[0];
-    const imgPreview = document.getElementById('imgPreview');
-    
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        imgPreview.innerHTML = `
-          <div class="preview-wrapper">
-            <img src="${e.target.result}" alt="Image Preview" class="preview-img">
-          </div>
-        `;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      imgPreview.innerHTML = '';
-    }
-  }
-  
   function checkImage() {
     const file = document.getElementById('imageFile').files[0];
     const imgResult = document.getElementById('imgResult');
     const imgLoading = document.getElementById('imgLoading');
+    const imgPreview = document.getElementById('imgPreview');
     
+    // Reset everything
     imgResult.style.display = 'none';
+    imgPreview.innerHTML = '';
     
     if (!file) {
-      imgResult.innerHTML = '<strong style="color:#ef4444;">Please upload an image first.</strong>';
+      imgResult.innerHTML = '<div class="result-header">⚠️ Please upload an image first.</div>';
       imgResult.style.display = 'block';
       return;
     }
     
     if (!file.type.startsWith('image/')) {
-      imgResult.innerHTML = '<strong style="color:#ef4444;">Please upload a valid image file.</strong>';
+      imgResult.innerHTML = '<div class="result-header">⚠️ Please upload a valid image file.</div>';
       imgResult.style.display = 'block';
       return;
     }
@@ -204,10 +182,18 @@
         imgLoading.style.display = 'none';
         imgResult.style.display = 'block';
         
+        // File size calculation
         const bytes = file.size;
         const sizeKB = (bytes / 1024).toFixed(2);
         const sizeMB = (bytes / (1024 * 1024)).toFixed(2);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${sizeMB} MB`;
+        
+        // **SHOW PREVIEW + RESULT TOGETHER**
+        imgPreview.innerHTML = `
+          <div class="preview-wrapper">
+            <img src="${URL.createObjectURL(file)}" alt="Image Preview" class="preview-img">
+          </div>
+        `;
         
         imgResult.innerHTML = `
           <div class="result-header">✅ Image Analysis Complete!</div>
@@ -233,7 +219,7 @@
     
     img.onerror = () => {
       imgLoading.style.display = 'none';
-      imgResult.innerHTML = '<strong style="color:#ef4444;">Cannot process this image file.</strong>';
+      imgResult.innerHTML = '<div class="result-header">⚠️ Cannot process this image.</div>';
       imgResult.style.display = 'block';
     };
     
@@ -244,7 +230,7 @@
     const shareBtn = document.querySelector('.share-btn');
     const shareData = {
       title: 'Image Pixel Checker – Skill2Job Tools',
-      text: 'Instant image dimensions & size checker! 📏 Free, private, browser-based.',
+      text: 'Check image dimensions instantly! 📏 Free & private.',
       url: window.location.href
     };
     
@@ -256,7 +242,7 @@
         showFeedback(shareBtn, '🔗 Copied!', '#4CAF50');
       }
     } catch (err) {
-      prompt('Copy Image Pixel Checker link:', shareData.url);
+      prompt('Copy Image Pixel Checker:', shareData.url);
     }
   }
   
