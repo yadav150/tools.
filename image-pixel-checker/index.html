@@ -37,15 +37,52 @@ show_ads: true
   --border:#e2e8f0;
   --text:#334155;
   --dark:#1e293b;
+  --font-base:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:Poppins,sans-serif;
+  font-family:'Poppins',sans-serif;
   background:var(--bg);
   color:var(--text);
   line-height:1.6;
+  font-size:var(--font-base);
 }
 a{text-decoration:none;color:inherit}
+
+/* HEADER CONSISTENT WITH AGE CALCULATOR */
+header{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.header-container {
+  max-width:1200px;
+  margin:auto;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:nowrap;
+}
+.logo img{height:40px;display:block;}
+.share-btn{
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.share-btn:hover{background:#1a4fcc}
+@media(max-width:480px){
+  .header-container{padding:12px 16px}
+  .logo img{height:36px}
+  .share-btn{padding:8px 14px;font-size:14px}
+}
 
 /* TOOL */
 .tool-section{padding:40px 14px}
@@ -154,6 +191,15 @@ input[type=file]{
 
 <body>
 
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+    </div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
 <section class="tool-section">
   <div class="tool-card">
     <h1>Image Pixel / Dimensions Checker</h1>
@@ -177,7 +223,8 @@ input[type=file]{
   <div class="about-card">
     <h2>About This Tool</h2>
     <p class="about-text">
-      Image Pixel Checker helps you instantly find width, height and image size without uploading data to any server.
+      Image Pixel Checker helps you instantly find width, height, and file size
+      of your images without uploading them to any server.
     </p>
   </div>
 </section>
@@ -186,7 +233,7 @@ input[type=file]{
   <div class="about-card">
     <h2>More Tools</h2>
     <div class="tools-grid">
-      <div class="tool-preview"><h3>Age Calculator</h3><p>Calculate exact age.</p><span class="badge"><a href="age-calculate/">Use Tool</a></span></div>
+      <div class="tool-preview"><h3>Age Calculator</h3><p>Calculate exact age.</p><span class="badge"><a href="age-calculator/">Use Tool</a></span></div>
       <div class="tool-preview"><h3>Merge PDF</h3><p>Combine PDFs.</p><span class="badge"><a href="merge-pdf/">Use Tool</a></span></div>
       <div class="tool-preview"><h3>Remove Pages</h3><p>Remove PDF pages.</p><span class="badge"><a href="remove-pages/">Use Tool</a></span></div>
       <div class="tool-preview"><h3>Crop PDF</h3><p>Crop PDF easily.</p><span class="badge"><a href="crop-pdf/">Use Tool</a></span></div>
@@ -195,31 +242,37 @@ input[type=file]{
 </section>
 
 <footer class="footer">
-  <p><strong>Skill2Job Tools</strong> | <a href="/contact">Contact</a> | <a href="/privacy">Privacy</a></p>
+  <p><strong>Skill2Job Tools</strong> | <a href="/terms">terms</a> | <a href="/contact">Contact</a> | <a href="/privacy">Privacy</a></p>
   <p>© 2026 Skill2Job</p>
 </footer>
 
-<!-- JS UNCHANGED -->
 <script>
+document.getElementById('shareBtn')?.addEventListener('click',()=>{
+  if(navigator.share){
+    navigator.share({title:document.title,url:location.href});
+  }
+});
+
 const checkBtn=document.getElementById('checkBtn');
 const imgLoading=document.getElementById('imgLoading');
 const imgResult=document.getElementById('imgResult');
 const imageFile=document.getElementById('imageFile');
 
 checkBtn.addEventListener('click',()=>{
- const file=imageFile.files[0];
- imgResult.style.display='none';
- if(!file){imgResult.style.display='block';imgResult.textContent='Please upload an image first.';return}
- imgLoading.style.display='block';
- const img=new Image();img.src=URL.createObjectURL(file);
- img.onload=()=>{
-  setTimeout(()=>{
-   imgLoading.style.display='none';
-   imgResult.style.display='block';
-   imgResult.innerHTML=`<strong>Width:</strong> ${img.width}px<br><strong>Height:</strong> ${img.height}px<br><strong>Size:</strong> ${(file.size/1024).toFixed(2)} KB`;
-   URL.revokeObjectURL(img.src);
-  },800)
- }
+  const file=imageFile.files[0];
+  imgResult.style.display='none';
+  if(!file){imgResult.style.display='block';imgResult.textContent='Please upload an image first.';return}
+  imgLoading.style.display='block';
+  const img=new Image();
+  img.src=URL.createObjectURL(file);
+  img.onload=()=>{
+    setTimeout(()=>{
+      imgLoading.style.display='none';
+      imgResult.style.display='block';
+      imgResult.innerHTML=`<strong>Width:</strong> ${img.width}px<br><strong>Height:</strong> ${img.height}px<br><strong>Size:</strong> ${(file.size/1024).toFixed(2)} KB`;
+      URL.revokeObjectURL(img.src);
+    },800)
+  }
 });
 </script>
 
