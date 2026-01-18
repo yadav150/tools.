@@ -3,3 +3,18 @@ layout: default
 title: "Skill2Job Tools – Free Online Tools"
 description: "Free online tools for students, job seekers, and professionals."
 ---
+<section class="about container" aria-labelledby="tools-title">
+  <div class="about-card">
+    <div class="tools-grid" role="list" aria-label="Tools list">
+      {% for tool in site.data.tools %}
+      <div class="tool-preview" role="listitem">
+        <h3>{{ tool.name }}</h3>
+        <p>{{ tool.description }}</p>
+        <span class="badge">
+          <a href="{{ tool.link }}/" rel="noopener" aria-label="Use {{ tool.name }} tool">Use Tool</a>
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
