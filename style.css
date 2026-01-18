@@ -31,6 +31,16 @@ h2{
 }
 
 /* IPC center preview */
+#imgPreview {
+  margin-top: 16px !important;  /* Reduced from 6vh */
+  margin-bottom: 8px !important;
+}
+
+#imgPreview img {
+  max-height: 250px !important;  /* Smaller preview */
+  margin: 8px auto !important;   /* Tight spacing */
+}
+
 /* ALL BLUE THEME - NO RED */
 #imgResult {
   display: none;
