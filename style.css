@@ -31,71 +31,54 @@ h2{
 }
 
 /* IPC center preview */
-#imgPreview {
-  margin-top: 16px !important;  /* Reduced from 6vh */
+/* CLEAN IPC STYLING - NO CONFLICTS */
+#imgResult {
+  display: none;
+  margin: 24px 0 12px 0 !important;  /* Top 24px, Bottom 12px */
+  padding: 20px !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  border: 2px solid var(--primary) !important;
+  border-radius: var(--radius) !important;
+  text-align: center !important;
+  font-size: 18px !important;
+  width: 100% !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+}
+
+#imgResult strong {
+  color: var(--primary) !important;
+  display: block !important;
+  font-size: 22px !important;
   margin-bottom: 8px !important;
 }
 
-#imgPreview img {
-  max-height: 250px !important;  /* Smaller preview */
-  margin: 8px auto !important;   /* Tight spacing */
-}
-
-/* ALL BLUE THEME - NO RED */
-#imgResult {
-  display: none;
-  margin: 24px 0;
-  padding: 28px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;  /* Light blue */
-  border: 2px solid var(--primary) !important;
-  border-radius: var(--radius);
-  text-align: center;
-  width: 100%;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
-}
-
-.result-header {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--primary) !important;  /* Blue */
-  margin-bottom: 20px;
-  display: block;
-}
-
-/* Warnings also blue */
-#imgResult .result-header {
-  color: #3b82f6 !important;  /* Blue, not red */
-}
-
-/* PERFECT CENTER PREVIEW */
 #imgPreview {
-  margin: 6vh 0 !important;  /* 26% spacing */
-  min-height: 320px;
+  margin: 12px 0 !important;  /* Tight 12px spacing */
+  min-height: 120px;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  width: 100%;
-  padding: 24px;
+  text-align: center !important;
+  width: 100% !important;
 }
 
-.preview-wrapper {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 100%;
-  max-width: 500px;
-}
-
-.preview-img {
+#imgPreview img {
   max-width: 90% !important;
-  max-height: 280px !important;
+  max-height: 250px !important;
   width: auto !important;
   height: auto !important;
   border-radius: var(--radius) !important;
-  border: 3px solid var(--border) !important;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.2) !important;
+  border: 2px solid var(--border) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
   display: block !important;
+  margin: 0 auto !important;
+}
+
+/* File input (already exists in your CSS) */
+#imageFile:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
 }
 
 /* IMAGE PIXEL CHECKER SPECIFIC */
