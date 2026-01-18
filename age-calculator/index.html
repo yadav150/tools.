@@ -1,15 +1,9 @@
----
-layout: default
-title: Age Calculator
-show_ads: true
----
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- BASIC META -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- TITLE -->
   <title>Age Calculator – Calculate Exact Age Online | Skill2Job Tools</title>
@@ -23,21 +17,21 @@ show_ads: true
   <!-- CANONICAL -->
   <link rel="canonical" href="https://tools.skill2job.site/age-calculator">
 
-  <!-- ICONS -->
+  <!-- FAVICON & TOUCH ICON -->
   <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
 
-  <!-- SOCIAL -->
+  <!-- SOCIAL / OG TAGS -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Age Calculator – Free Online Tool | Skill2Job">
-  <meta property="og:description" content="Calculate your exact age in years, months, and days instantly.">
+  <meta property="og:description" content="Calculate your exact age in years, months, and days instantly. Accurate, fast, and mobile-friendly.">
   <meta property="og:url" content="https://tools.skill2job.site/age-calculator">
   <meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
   <meta property="og:site_name" content="Skill2Job Tools">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Age Calculator – Skill2Job Tools">
-  <meta name="twitter:description" content="Free online Age Calculator by Skill2Job.">
+  <meta name="twitter:description" content="Free online Age Calculator by Skill2Job. Calculate your exact age easily.">
   <meta name="twitter:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
 
   <!-- FONTS (PERFORMANCE) -->
@@ -45,186 +39,198 @@ show_ads: true
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- STRUCTURED DATA -->
+  <!-- EXTERNAL CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- STRUCTURED DATA (JSON-LD) -->
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebApplication","name":"Age Calculator","url":"https://tools.skill2job.site/age-calculator","applicationCategory":"UtilityApplication","operatingSystem":"All","description":"Free online age calculator to calculate exact age.","author":{"@type":"Person","name":"Yadav Subba"},"publisher":{"@type":"Organization","name":"Skill2Job","logo":{"@type":"ImageObject","url":"https://i.postimg.cc/YCnzSpLg/Official_Logo.webp"}}}
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Age Calculator",
+    "url": "https://tools.skill2job.site/age-calculator",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "description": "Free online Age Calculator to calculate your exact age in years, months, and days instantly.",
+    "author": { "@type": "Person", "name": "Yadav Subba" },
+    "publisher": { 
+      "@type": "Organization",
+      "name": "Skill2Job",
+      "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" }
+    }
+  }
   </script>
-
-  <!-- OPTIMIZED CSS (ONLY USED STYLES) -->
-  <style>
-    :root{
-      --primary:#2563eb;
-      --primary-light:#e0ebff;
-      --dark:#1e293b;
-      --bg:#f1f5f9;
-      --card:#fff;
-      --border:#e2e8f0;
-      --text:#334155;
-    }
-
-    *,*::before,*::after{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Poppins,system-ui,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.6;
-    }
-    a{text-decoration:none;color:inherit}
-
-    /* HEADER (unchanged selectors) */
-    header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000}
-    .header-container{max-width:1200px;margin:auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-    .logo img{height:40px}
-    .share-btn{background:var(--primary);color:#fff;border:0;padding:8px 14px;border-radius:8px;font-size:14px;cursor:pointer}
-
-    /* TOOL */
-    .tool-section{padding:32px 16px}
-    .tool-card{
-      max-width:700px;
-      margin:auto;
-      background:var(--card);
-      border-radius:14px;
-      padding:24px;
-      box-shadow:0 10px 24px rgba(0,0,0,.08);
-    }
-    .tool-card h1{text-align:center;font-size:22px;margin-bottom:20px;color:var(--dark)}
-
-    .input-group{margin-bottom:18px}
-    .input-group label{display:block;margin-bottom:6px;font-weight:500}
-    .input-group input{
-      width:100%;
-      padding:12px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      font-size:15px;
-    }
-
-    .calculate-btn{
-      width:100%;
-      padding:12px;
-      background:var(--primary);
-      color:#fff;
-      border:0;
-      border-radius:8px;
-      font-size:15px;
-      cursor:pointer;
-    }
-
-    .loading,.result{display:none;margin-top:16px;text-align:center}
-    .spinner{
-      width:36px;height:36px;
-      border:4px solid #dbeafe;
-      border-top-color:var(--primary);
-      border-radius:50%;
-      animation:spin .8s linear infinite;
-      margin:auto;
-    }
-    .result{
-      background:var(--primary-light);
-      border-left:4px solid var(--primary);
-      padding:14px;
-      border-radius:8px;
-      font-size:15px;
-      text-align:left;
-    }
-
-    /* ABOUT + MORE TOOLS */
-    .about{max-width:1200px;margin:20px auto;padding:0 16px}
-    .about-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-    .about-card h2{margin-bottom:8px;font-size:18px}
-    .about-text{font-size:15px;margin-bottom:10px;text-align:justify}
-
-    .tools-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}
-    .tool-preview{border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
-    .tool-preview h3{font-size:15px;margin-bottom:6px}
-    .tool-preview p{font-size:14px;margin-bottom:8px;color:#475569}
-    .badge{font-size:13px;padding:5px 12px;border-radius:20px;background:#e5edff;color:var(--primary)}
-
-    .footer{border-top:1px solid #ddd;padding:8px 6px;text-align:center;font-size:13px;color:#444;margin-top:20px}
-
-    @media(min-width:640px){
-      .tools-grid{grid-template-columns:repeat(2,1fr)}
-      .tool-card h1{font-size:24px}
-    }
-    @media(min-width:980px){
-      .tools-grid{grid-template-columns:repeat(3,1fr)}
-      .header-container{padding:16px 24px}
-    }
-
-    @keyframes spin{to{transform:rotate(360deg)}}
-  </style>
 </head>
 
 <body>
 
-<section class="tool-section">
-  <div class="tool-card">
-    <h1>Age Calculator</h1>
-
-    <div class="input-group">
-      <label for="dob">Date of Birth</label>
-      <input type="date" id="dob">
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="logo">
+      <a href="/">
+        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+      </a>
     </div>
-
-    <button class="calculate-btn" id="calcBtn">Calculate Age</button>
-
-    <div class="loading" id="loading"><div class="spinner"></div></div>
-    <div class="result" id="result"></div>
+    <button class="share-btn" type="button">Share</button>
   </div>
-</section>
+</header>
 
-<section class="about">
-  <div class="about-card">
-    <h2>About This Tool</h2>
-    <p class="about-text">
-      This Age Calculator helps you calculate your exact age in years, months,
-      and days. It works fully on your device and does not store any personal data.
+<!-- MAIN -->
+<main class="site-main">
+
+  <!-- AGE CALCULATOR TOOL -->
+  <section class="section">
+    <div class="container">
+      <div class="card age-tool-card">
+
+        <h1 class="tool-title">Age Calculator</h1>
+
+        <div class="input-group">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob">
+        </div>
+
+        <button class="calculate-btn" id="calcBtn">Calculate Age</button>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+        </div>
+
+        <div class="result" id="result"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT TOOL -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2>About This Tool</h2>
+        <p>
+  Skill2Job’s free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth. 
+  This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations. 
+  All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked. 
+  Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy. 
+  Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online. 
+  Experience convenience, accuracy, and safety with Skill2Job’s Age Calculator today.
+</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORE TOOLS -->
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2>More Tools</h2>
+
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3>Merge PDF</h3>
+            <p>Combine multiple PDF files into one.</p>
+            <a class="tool-link" href="/merge-pdf/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Remove PDF Pages</h3>
+            <p>Delete selected pages from a PDF file.</p>
+            <a class="tool-link" href="/remove-pages/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Crop PDF</h3>
+            <p>Crop and adjust PDF pages easily.</p>
+            <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      <strong>Skill2Job Tools</strong> |
+      <a href="/">Home</a> |
+      <a href="/contact">Contact</a> |
+      <a href="/privacy">Privacy</a> |
+      <a href="/terms">Terms</a>
     </p>
+    <p>© 2026 Skill2Job</p>
   </div>
-</section>
-
-<section class="about">
-  <div class="about-card">
-    <h2>More Tools</h2>
-    <div class="tools-grid">
-      <div class="tool-preview"><h3>Merge PDF</h3><p>Combine multiple PDFs.</p><span class="badge"><a href="merge-pdf/">Use Tool</a></span></div>
-      <div class="tool-preview"><h3>Remove Pages</h3><p>Delete PDF pages.</p><span class="badge"><a href="remove-pages/">Use Tool</a></span></div>
-      <div class="tool-preview"><h3>Crop PDF</h3><p>Crop PDF pages.</p><span class="badge"><a href="crop-pdf/">Use Tool</a></span></div>
-    </div>
-  </div>
-</section>
-
-<footer class="footer">
-  <p><strong>Skill2Job Tools</strong> | <a href="/contact">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
-  <p>© 2026 Skill2Job</p>
 </footer>
 
-<!-- JS UNCHANGED -->
+<!-- JS -->
 <script>
-const btn=document.getElementById('calcBtn');
-const loading=document.getElementById('loading');
-const result=document.getElementById('result');
+const btn = document.getElementById('calcBtn');
+const loading = document.getElementById('loading');
+const result = document.getElementById('result');
 
-btn.addEventListener('click',()=>{
-  const dobValue=document.getElementById('dob').value;
-  result.style.display='none';loading.style.display='none';
-  if(!dobValue){result.style.display='block';result.textContent='Please select your date of birth.';return;}
-  loading.style.display='block';
-  setTimeout(()=>{
-    const dob=new Date(dobValue);const today=new Date();
-    let y=today.getFullYear()-dob.getFullYear();
-    let m=today.getMonth()-dob.getMonth();
-    let d=today.getDate()-dob.getDate();
-    if(d<0){m--;d+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
-    if(m<0){y--;m+=12;}
-    loading.style.display='none';
-    result.style.display='block';
-    result.innerHTML=`<strong>Your Age:</strong> ${y} years, ${m} months, ${d} days`;
-  },900);
+// AGE CALCULATION
+btn.addEventListener('click', () => {
+  const dobValue = document.getElementById('dob').value;
+  result.style.display = 'none';
+  loading.style.display = 'none';
+
+  if (!dobValue) {
+    result.style.display = 'block';
+    result.textContent = 'Please select your date of birth.';
+    return;
+  }
+
+  loading.style.display = 'block';
+
+  setTimeout(() => {
+    const dob = new Date(dobValue);
+    const today = new Date();
+
+    let y = today.getFullYear() - dob.getFullYear();
+    let m = today.getMonth() - dob.getMonth();
+    let d = today.getDate() - dob.getDate();
+
+    if (d < 0) {
+      m--;
+      d += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+    }
+    if (m < 0) {
+      y--;
+      m += 12;
+    }
+
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    result.innerHTML = `<strong>Your Age:</strong> ${y} years, ${m} months, ${d} days`;
+  }, 900);
+});
+
+// SHARE BUTTON
+const shareBtn = document.querySelector('.share-btn');
+
+shareBtn.addEventListener('click', () => {
+  const shareData = {
+    title: document.title,
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    // Mobile & supported browsers: opens native share options
+    navigator.share(shareData).catch(err => console.log('Share cancelled or failed', err));
+  } else {
+    // Desktop fallback: copy link to clipboard
+    navigator.clipboard.writeText(shareData.url).then(() => {
+      alert('Link copied to clipboard! You can now share it anywhere.');
+    }).catch(() => {
+      prompt('Copy this link:', shareData.url);
+    });
+  }
 });
 </script>
 
 </body>
-</html>
 </html>
