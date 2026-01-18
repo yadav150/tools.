@@ -426,77 +426,54 @@
 </footer>
 
 <script>
-<script>
-const checkBtn = document.getElementById('checkBtn');
-const resetBtn = document.getElementById('resetBtn');
-const imgLoading = document.getElementById('imgLoading');
-const imgResult = document.getElementById('imgResult');
-const imageFile = document.getElementById('imageFile');
+  const imageInput = document.getElementById("imageInput");
+  const widthEl = document.getElementById("imgWidth");
+  const heightEl = document.getElementById("imgHeight");
+  const loader = document.getElementById("loader");
 
-let previewImg;
+  // Create button dynamically (no HTML change)
+  const retryBtn = document.createElement("button");
+  retryBtn.textContent = "Check Another Image";
+  retryBtn.style.display = "none";
+  retryBtn.style.marginTop = "12px";
+  retryBtn.style.cursor = "pointer";
 
-checkBtn.addEventListener('click', () => {
-  const file = imageFile.files[0];
-  imgResult.style.display = 'none';
-  resetBtn.style.display = 'none';
+  widthEl.parentElement.appendChild(retryBtn);
 
-  if (!file) {
-    imgResult.style.display = 'block';
-    imgResult.textContent = 'Please upload an image first.';
-    return;
-  }
+  imageInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
 
-  imgLoading.style.display = 'block';
+    loader.style.display = "block";
+    widthEl.textContent = "-";
+    heightEl.textContent = "-";
+    retryBtn.style.display = "none";
 
-  const img = new Image();
-  img.src = URL.createObjectURL(file);
+    const img = new Image();
+    const reader = new FileReader();
 
-  img.onload = () => {
-    setTimeout(() => {
-      imgLoading.style.display = 'none';
+    reader.onload = e => img.src = e.target.result;
 
-      const sizeKB = (file.size / 1024).toFixed(2);
+    img.onload = () => {
+      loader.style.display = "none";
 
-      imgResult.style.display = 'block';
-      imgResult.innerHTML = `
-        <strong>Width:</strong> ${img.width} px<br>
-        <strong>Height:</strong> ${img.height} px<br>
-        <strong>File Size:</strong> ${sizeKB} KB
-      `;
+      // ✅ Separate width & height
+      widthEl.textContent = img.width + " px";
+      heightEl.textContent = img.height + " px";
 
-      // Image preview
-      if (!previewImg) {
-        previewImg = document.createElement('img');
-        previewImg.style.maxWidth = '100%';
-        previewImg.style.marginTop = '10px';
-        imgResult.appendChild(previewImg);
-      }
-      previewImg.src = img.src;
+      // ✅ Show button after result
+      retryBtn.style.display = "inline-block";
+    };
 
-      resetBtn.style.display = 'block';
+    reader.readAsDataURL(file);
+  });
 
-      URL.revokeObjectURL(img.src);
-    }, 800);
-  };
-
-  img.onerror = () => {
-    imgLoading.style.display = 'none';
-    imgResult.style.display = 'block';
-    imgResult.textContent = 'Unable to load image. Please try another file.';
-  };
-});
-
-resetBtn.addEventListener('click', () => {
-  imageFile.value = '';
-  imgResult.style.display = 'none';
-  imgLoading.style.display = 'none';
-  resetBtn.style.display = 'none';
-
-  if (previewImg) {
-    previewImg.remove();
-    previewImg = null;
-  }
-});
+  retryBtn.addEventListener("click", () => {
+    imageInput.value = "";
+    widthEl.textContent = "-";
+    heightEl.textContent = "-";
+    retryBtn.style.display = "none";
+  });
 </script>
 
 </body>
