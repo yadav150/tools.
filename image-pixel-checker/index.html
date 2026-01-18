@@ -445,14 +445,24 @@ checkBtn.addEventListener('click', () => {
   imgLoading.style.display = 'block';
 
   const img = new Image();
-  img.src = URL.createObjectURL(file);
+  const imgURL = URL.createObjectURL(file);
+  img.src = imgURL;
 
   img.onload = () => {
-    setTimeout(() => { // simulate loading
+    setTimeout(() => {
       imgLoading.style.display = 'none';
       imgResult.style.display = 'block';
-      imgResult.innerHTML = `<strong>Dimensions:</strong> ${img.width} px × ${img.height} px`;
-      URL.revokeObjectURL(img.src); // clean up
+
+      const sizeKB = (file.size / 1024).toFixed(2);
+
+      imgResult.innerHTML = `
+        <img src="${imgURL}" alt="Image Preview" style="max-width:100%;margin-bottom:10px;border-radius:6px;">
+        <strong>Width:</strong> ${img.width} px<br>
+        <strong>Height:</strong> ${img.height} px<br>
+        <strong>File Size:</strong> ${sizeKB} KB
+      `;
+
+      URL.revokeObjectURL(imgURL);
     }, 800);
   };
 
