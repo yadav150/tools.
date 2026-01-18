@@ -136,7 +136,6 @@
     const imageFile = document.getElementById('imageFile');
     
     btn.addEventListener('click', checkImage);
-    
     imageFile.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkImage();
     });
@@ -184,15 +183,14 @@
         const sizeKB = (file.size / 1024).toFixed(1);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${(sizeKB/1024).toFixed(1)} MB`;
         
-        // **WIDTH | HEIGHT | SIZE** - No "×"
+        // **PROFESSIONAL SINGLE-LINE FORMAT**
         result.innerHTML = `
-          <strong>Width:</strong> ${img.width}px<br>
-          <strong>Height:</strong> ${img.height}px<br>
-          <strong>Size:</strong> ${fileSize}
+          <strong>Width: ${img.width}px | Height: ${img.height}px | Size: ${fileSize}</strong>
         `;
         
+        // **REDUCED SPACING FOR PREVIEW**
         document.getElementById('imgPreview').innerHTML = 
-          `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:280px;border-radius:12px;display:block;margin:20px auto;">`;
+          `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:250px;border-radius:12px;display:block;margin:12px auto;">`;
         
       }, 800);
     };
