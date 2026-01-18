@@ -1,17 +1,3 @@
-title: Skill2Job Tools
-description: Free online tools for students, job seekers, and professionals.
-url: "https://tools.skill2job.site"   # Full URL of your tools subdomain
-baseurl: ""                           # Blank because site is at root of subdomain
-
-theme: minima                         # Or any Jekyll theme you prefer
-
+url: "https://tools.skill2job.site"
 plugins:
-  - jekyll-sitemap                     # Enables automatic sitemap generation
-
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
-
-markdown: kramdown
+  - jekyll-sitemap
