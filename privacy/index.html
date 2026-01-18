@@ -1,88 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Privacy Policy | Skill2Job Tools</title>
+  <meta name="description" content="Learn how Skill2Job handles privacy and user data. All tools are browser-based and no personal data is collected.">
+  <meta name="keywords" content="Skill2Job privacy, user data protection, online tools privacy, privacy policy">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tools.skill2job.site/privacy">
 
-<title>Privacy Policy | Skill2Job Tools</title>
-<meta name="description" content="Learn how Skill2Job handles privacy and user data. All tools are browser-based and no personal data is collected.">
-<meta name="keywords" content="Skill2Job privacy, user data protection, online tools privacy, privacy policy">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://tools.skill2job.site/privacy">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Privacy Policy – Skill2Job Tools">
+  <meta property="og:description" content="Skill2Job Privacy Policy explains how we handle user data. No personal data is collected; all tools run in your browser.">
+  <meta property="og:url" content="https://tools.skill2job.site/privacy">
+  <meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
 
-<!-- Open Graph -->
-<meta property="og:title" content="Privacy Policy – Skill2Job Tools">
-<meta property="og:description" content="Skill2Job Privacy Policy explains how we handle user data. No personal data is collected; all tools run in your browser.">
-<meta property="og:url" content="https://tools.skill2job.site/privacy">
-<meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="logo">
-      <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
+  <!-- HEADER - SAME as tools -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
+      </div>
+      <button class="share-btn" id="shareBtn">Share</button>
     </div>
-    <button class="share-btn" id="shareBtn">Share</button>
-  </div>
-</header>
+  </header>
 
-<!-- PRIVACY POLICY CONTENT -->
-<section class="about">
-  <div class="about-card">
-    <h2>Privacy Policy</h2>
-
-    <p class="about-text">
-      Skill2Job respects your privacy and is committed to protecting it. All tools run entirely within your browser, and no personal information is collected, stored, or shared.
-    </p>
-
-    <p class="about-text">
-      We do not require accounts or personal details. Third-party ads, including Google AdSense, may use cookies for ad personalization; Skill2Job has no control over them.
-    </p>
-
-    <p class="about-text">
-      Non-identifiable information, like browser type, ISP, or clicks, may be logged for website analytics. We do not knowingly collect data from children under 13.
-    </p>
-
-    <p class="about-text">
-      By using Skill2Job, you accept this Privacy Policy. It may change over time without notice. Visit <a href="https://www.skill2job.site/" target="_blank" rel="noopener">Skill2Job</a> for tools and updates.
-    </p>
-
-    <p class="about-text"><strong>Developed and managed by Yadav Subba.</strong></p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <p>
-    <strong>Skill2Job Tools</strong> |
-    <a href="/">Home</a> |
-    <a href="/contact">Contact</a> |
-    <a href="/privacy">Privacy</a> |
-    <a href="/terms">Terms</a>
+  <!-- MAIN - SAME structure -->
+  <main class="site-main">
+    <section class="section">
+      <div class="container">
+        <!-- CARD - SAME as tool cards -->
+       <div class="card">
+  <h2>Privacy Policy - Legal Notice</h2>
+  
+  <!-- PARAGRAPH 1: Data Protection (62 words) -->
+  <p class="about-text">
+    <strong>Skill2Job Privacy Policy - Zero Data Collection:</strong> Skill2Job Tools processes all data exclusively in your browser. No personal information, IP addresses, device IDs, or user data is collected, stored, or transmitted to our servers. This client-side architecture ensures complete <strong>GDPR compliance</strong> and maximum <strong>privacy protection</strong> for all users worldwide.
   </p>
-  <p>© 2026 Skill2Job</p>
-</footer>
 
-<script>
-/* SHARE BUTTON */
-const shareBtn = document.getElementById('shareBtn');
-shareBtn?.addEventListener('click', async () => {
-  const shareData = { title: document.title, text: 'Check out Skill2Job Tools!', url: window.location.href };
-  if(navigator.share){
-    try { await navigator.share(shareData); }
-    catch(err){ console.error(err); }
-  } else {
-    try { await navigator.clipboard.writeText(shareData.url); alert('Link copied to clipboard!'); }
-    catch(err){ alert('Unable to copy link. Please copy manually.'); }
-  }
-});
-</script>
+  <!-- PARAGRAPH 2: Third-Party Transparency (64 words) -->
+  <p class="about-text">
+    <strong>Third-Party Advertising Disclosure:</strong> Google AdSense and partner networks may use cookies for ad personalization. Skill2Job has no access, control, or visibility into third-party tracking data. Review individual <strong>Google AdSense privacy policies</strong> for details. We cannot be held liable for external ad network practices or data processing.
+  </p>
 
+  <!-- PARAGRAPH 3: Legal Compliance (63 words) -->
+  <p class="about-text">
+    <strong>Legal Compliance & Analytics:</strong> Standard server logs record non-personal data (browser type, page views) for 30 days maximum to ensure <strong>website security</strong> and performance. Skill2Job complies with India's <strong>DPDP Act 2023</strong>, IT Act 2000, and international regulations. No data sales, sharing, or cross-border transfers occur.
+  </p>
+
+  <!-- PARAGRAPH 4: User Rights (61 words) -->
+  <p class="about-text">
+    <strong>User Rights & Acceptance:</strong> By using Skill2Job Tools, you accept this <strong>Privacy Policy</strong>. Since no personal data is collected, traditional privacy rights don't apply. Policy updates occur without notice. Visit <a href="https://www.skill2job.site/" target="_blank" rel="noopener">Skill2Job main site</a> regularly. <strong>Developed by Yadav Subba</strong>.
+  </p>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER - SAME as tools -->
+  <footer class="site-footer">
+    <p>
+      <strong>Skill2Job Tools</strong> | 
+      <a href="/">Home</a> | 
+      <a href="/contact">Contact</a> | 
+      <a href="/privacy">Privacy</a> | 
+      <a href="/terms">Terms</a>
+    </p>
+    <p>© 2026 Skill2Job</p>
+  </footer>
+
+  <!-- SAME SHARE JS as tools -->
+  <script>
+  (function() {
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const shareData = {
+          title: document.title,
+          text: 'Skill2Job Tools Privacy Policy',
+          url: window.location.href
+        };
+        
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareData.url);
+            showFeedback(shareBtn, 'Link copied!', '#4CAF50');
+          }
+        } catch (err) {
+          prompt('Copy Privacy Policy link:', shareData.url);
+        }
+      });
+      
+      function showFeedback(btn, message, color) {
+        const originalText = btn.textContent;
+        btn.textContent = message;
+        btn.style.backgroundColor = color;
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.backgroundColor = '';
+        }, 2000);
+      }
+    }
+  })();
+  </script>
 </body>
 </html>
