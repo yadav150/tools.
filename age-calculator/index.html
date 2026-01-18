@@ -74,7 +74,7 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT (unchanged structure) -->
+  <!-- MAIN CONTENT -->
   <main class="site-main">
     <!-- AGE CALCULATOR -->
     <section class="section">
@@ -93,71 +93,66 @@
         </div>
       </div>
     </section>
-      <!-- ABOUT TOOL -->
-  <section class="section">
-    <div class="container">
-      <div class="card">
-        <h2>About This Tool</h2>
-        <p>
-  Skill2Job's free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth. 
-  This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations. 
-  All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked. 
-  Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy. 
-  Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online. 
-  Experience convenience, accuracy, and safety with Skill2Job's Age Calculator today.
-</p>
+
+    <!-- ABOUT TOOL -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>About This Tool</h2>
+          <p>
+Skill2Job's free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth. 
+This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations. 
+All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked. 
+Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy. 
+Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online. 
+Experience convenience, accuracy, and safety with Skill2Job's Age Calculator today.
+          </p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- MORE TOOLS -->
-  <section class="section">
-    <div class="container">
-      <div class="card">
-        <h2>More Tools</h2>
-
-        <div class="tools-grid">
-          <div class="tool-card">
-            <h3>Merge PDF</h3>
-            <p>Combine multiple PDF files into one.</p>
-            <a class="tool-link" href="/merge-pdf/">Use Tool</a>
-          </div>
-
-          <div class="tool-card">
-            <h3>Remove PDF Pages</h3>
-            <p>Delete selected pages from a PDF file.</p>
-            <a class="tool-link" href="/remove-pages/">Use Tool</a>
-          </div>
-
-          <div class="tool-card">
-            <h3>Crop PDF</h3>
-            <p>Crop and adjust PDF pages easily.</p>
-            <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+    <!-- MORE TOOLS -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>More Tools</h2>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h3>Merge PDF</h3>
+              <p>Combine multiple PDF files into one.</p>
+              <a class="tool-link" href="/merge-pdf/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Remove PDF Pages</h3>
+              <p>Delete selected pages from a PDF file.</p>
+              <a class="tool-link" href="/remove-pages/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Crop PDF</h3>
+              <p>Crop and adjust PDF pages easily.</p>
+              <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+            </div>
           </div>
         </div>
-
       </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="container">
-    <p>
-      <strong>Skill2Job Tools</strong> |
-      <a href="/">Home</a> |
-      <a href="/contact">Contact</a> |
-      <a href="/privacy">Privacy</a> |
-      <a href="/terms">Terms</a>
-    </p>
-    <p>© 2026 Skill2Job</p>
-  </div>
-</footer>
+    </section>
   </main>
 
-  <!-- IMPROVED SHARE SCRIPT (same as homepage - no conflicts) -->
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        <strong>Skill2Job Tools</strong> |
+        <a href="/">Home</a> |
+        <a href="/contact">Contact</a> |
+        <a href="/privacy">Privacy</a> |
+        <a href="/terms">Terms</a>
+      </p>
+      <p>© 2026 Skill2Job</p>
+    </div>
+  </footer>
+
+  <!-- IMPROVED SHARE SCRIPT -->
   <script>
   (function() {
     'use strict';
@@ -169,7 +164,6 @@
     }
     
     function init() {
-      // Age Calculator functionality
       const btn = document.getElementById('calcBtn');
       const loading = document.getElementById('loading');
       const result = document.getElementById('result');
@@ -177,12 +171,10 @@
       
       btn.addEventListener('click', calculateAge);
       
-      // Enter key support
       dobInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') calculateAge();
       });
       
-      // Share button (same as homepage)
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
         shareBtn.addEventListener('click', handleShare);
