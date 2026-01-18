@@ -1,20 +1,212 @@
----
-layout: default
-title: "Skill2Job Tools – Free Online Tools"
-description: "Free online tools for students, job seekers, and professionals."
----
-<section class="about container" aria-labelledby="tools-title">
-  <div class="about-card">
-    <div class="tools-grid" role="list" aria-label="Tools list">
-      {% for tool in site.data.tools %}
-      <div class="tool-preview" role="listitem">
-        <h3>{{ tool.name }}</h3>
-        <p>{{ tool.description }}</p>
-        <span class="badge">
-          <a href="{{ tool.link }}" rel="noopener" aria-label="Use {{ tool.name }} tool">Use Tool</a>
-        </span>
-      </div>
-      {% endfor %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skill2Job Tools – Free Online Tools</title>
+  <meta name="description" content="Free online tools by Skill2Job for students and job seekers.">
+  <meta name="author" content="Yadav Subba">
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="logo">
+      <a href="/">
+        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+      </a>
     </div>
+
+    <button class="share-btn" type="button" aria-label="Share Skill2Job Tools">Share</button>
   </div>
-</section>
+</header>
+
+<!-- MAIN -->
+<main class="site-main">
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <div class="tools-grid">
+          <div class="tool-card">
+            <h3>Age Calculator</h3>
+            <p>Calculate your exact age instantly.</p>
+            <a class="tool-link" href="age-calculator/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Merge PDF</h3>
+            <p>Merge multiple PDF files into one.</p>
+            <a class="tool-link" href="merge-pdf/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Remove PDF Pages</h3>
+            <p>Delete selected pages from PDF.</p>
+            <a class="tool-link" href="remove-pages/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Crop PDF</h3>
+            <p>Crop PDF pages quickly online.</p>
+            <a class="tool-link" href="crop-pdf/">Use Tool</a>
+          </div>
+
+          <div class="tool-card">
+            <h3>Image Dimensions</h3>
+            <p>Check image width and height.</p>
+            <a class="tool-link" href="image-pixel-checker/">Use Tool</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="card">
+        <h2>About Us</h2>
+        <p>
+          Skill2Job is an online tools and information platform created to support
+          students, job seekers, and competitive exam aspirants with simple,
+          fast, and reliable digital utilities. The platform offers useful tools
+          such as calculators, PDF utilities, and productivity resources designed
+          to make daily academic and job-related tasks easier and more efficient.
+        </p>
+        <p>
+          Skill2Job focuses on performance, privacy, and accessibility. All tools
+          are lightweight, mobile-friendly, and work smoothly across smartphones,
+          tablets, and desktop devices. The platform does not collect, store, or
+          track any personal user data, ensuring a safe and secure browsing experience.
+        </p>
+        <p>
+          Skill2Job is developed and independently managed by
+          <strong>Yadav Subba</strong> with a strong emphasis on accuracy, clarity,
+          and user-friendly design.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <p>
+      <strong>Skill2Job Tools</strong> |
+      <a href="/contact">Contact</a> |
+      <a href="/privacy">Privacy</a> |
+      <a href="/terms">Terms</a>
+    </p>
+    <p>© 2026 Skill2Job</p>
+  </div>
+</footer>
+
+<!-- SHARE API - NO CLASS CONFLICTS, WORKS WITH BROWSER SHARE MENU -->
+<script>
+(function() {
+  'use strict';
+  
+  // Wait for DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initShare);
+  } else {
+    initShare();
+  }
+  
+  function initShare() {
+    const shareBtn = document.querySelector('.share-btn');
+    if (!shareBtn) return;
+    
+    shareBtn.addEventListener('click', handleShareClick, { passive: false });
+    
+    // Keyboard accessibility
+    shareBtn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleShareClick();
+      }
+    });
+  }
+  
+  async function handleShareClick() {
+    const shareBtn = document.querySelector('.share-btn');
+    const originalText = shareBtn.textContent;
+    
+    // Share data optimized for browser native share sheet
+    const shareData = {
+      title: 'Skill2Job Tools – Free Online Tools',
+      text: 'Free online tools for students & job seekers: Age Calculator, PDF tools, Image checker. No signup required!',
+      url: window.location.href
+    };
+    
+    try {
+      // Native browser share dialog (appears in tab menu too)
+      if (navigator.share && navigator.canShare?.(shareData)) {
+        await navigator.share(shareData);
+        showFeedback(shareBtn, 'Shared!', '#4CAF50');
+      } else if (navigator.share) {
+        await navigator.share(shareData);
+        showFeedback(shareBtn, 'Shared!', '#4CAF50');
+      }
+      // Fallback: Clipboard (desktop)
+      else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareData.url);
+        showFeedback(shareBtn, 'Link copied!', '#2196F3');
+      }
+      // Ultimate fallback
+      else {
+        const url = encodeURIComponent(shareData.url);
+        const text = encodeURIComponent(shareData.text);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+      }
+    } catch (err) {
+      console.log('Share failed:', err);
+      // Silent fallback for aborted/canceled shares
+      if (err.name !== 'AbortError') {
+        fallbackCopy(shareData.url, shareBtn);
+      }
+    }
+  }
+  
+  function showFeedback(btn, message, color) {
+    const originalText = btn.textContent;
+    const originalBg = btn.style.backgroundColor;
+    
+    btn.textContent = message;
+    btn.style.backgroundColor = color;
+    btn.style.color = '#fff';
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.backgroundColor = originalBg;
+      btn.style.color = '';
+    }, 1800);
+  }
+  
+  function fallbackCopy(url, btn) {
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        showFeedback(btn, 'Link copied!', '#FF9800');
+      } else {
+        prompt('Copy this Skill2Job Tools link:', url);
+      }
+    } catch (e) {
+      prompt('Copy this Skill2Job Tools link:', url);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
