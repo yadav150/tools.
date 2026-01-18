@@ -167,7 +167,7 @@
     }
     
     if (!file.type.startsWith('image/')) {
-      result.textContent = 'Please upload a valid image file.';
+      result.textContent = 'Please upload a regular image file.';
       result.style.display = 'block';
       return;
     }
@@ -183,14 +183,14 @@
         const sizeKB = (file.size / 1024).toFixed(1);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${(sizeKB/1024).toFixed(1)} MB`;
         
-        // **PROFESSIONAL SINGLE-LINE FORMAT**
+        // **PLAIN TEXT - NO BLUE VALUES**
         result.innerHTML = `
-          <strong>Width: ${img.width}px | Height: ${img.height}px | Size: ${fileSize}</strong>
+          <strong>Results:</strong> Width ${img.width}px, Height ${img.height}px, Size ${fileSize}
         `;
         
-        // **REDUCED SPACING FOR PREVIEW**
+        // Compact preview
         document.getElementById('imgPreview').innerHTML = 
-          `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:250px;border-radius:12px;display:block;margin:12px auto;">`;
+          `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:8px auto;border:2px solid var(--border);">`;
         
       }, 800);
     };
@@ -235,5 +235,6 @@
   }
 })();
 </script>
+
 </body>
 </html>
