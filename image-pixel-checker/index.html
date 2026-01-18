@@ -120,7 +120,6 @@
     </div>
   </footer>
 
-  <!-- IMPROVED SCRIPT (same pattern as Age Calculator) -->
   <script>
 (function() {
   'use strict';
@@ -138,19 +137,18 @@
     const imageFile = document.getElementById('imageFile');
     const imgPreview = document.getElementById('imgPreview');
     
-    // Event listeners
     checkBtn.addEventListener('click', checkImage);
     imageFile.addEventListener('change', previewImage);
     
-    // Enter key support for file input
+    // Enter key support
     imageFile.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkImage();
     });
     
-    // Share button (same as Age Calculator)
+    // Share button
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
-      shareBtn.addEventListener('click', handleShare);
+      shareBtn.addEventEventListener('click', handleShare);
       shareBtn.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -164,10 +162,14 @@
     const file = document.getElementById('imageFile').files[0];
     const imgPreview = document.getElementById('imgPreview');
     
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        imgPreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview">`;
+        imgPreview.innerHTML = `
+          <div class="preview-wrapper">
+            <img src="${e.target.result}" alt="Image Preview" class="preview-img">
+          </div>
+        `;
       };
       reader.readAsDataURL(file);
     } else {
@@ -180,11 +182,16 @@
     const imgResult = document.getElementById('imgResult');
     const imgLoading = document.getElementById('imgLoading');
     
-    // Reset
     imgResult.style.display = 'none';
     
     if (!file) {
-      imgResult.innerHTML = '<strong>Please upload an image first.</strong>';
+      imgResult.innerHTML = '<strong style="color:#ef4444;">Please upload an image first.</strong>';
+      imgResult.style.display = 'block';
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      imgResult.innerHTML = '<strong style="color:#ef4444;">Please upload a valid image file.</strong>';
       imgResult.style.display = 'block';
       return;
     }
@@ -197,33 +204,36 @@
         imgLoading.style.display = 'none';
         imgResult.style.display = 'block';
         
-        // Calculate file size
         const bytes = file.size;
         const sizeKB = (bytes / 1024).toFixed(2);
         const sizeMB = (bytes / (1024 * 1024)).toFixed(2);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${sizeMB} MB`;
         
-        // Display results
         imgResult.innerHTML = `
-          <strong>✅ Image Analysis Complete!</strong>
-          <div class="dimension">
-            <strong>Width:</strong> <span style="color:var(--primary);font-size:20px;">${img.width}px</span>
-          </div>
-          <div class="dimension">
-            <strong>Height:</strong> <span style="color:var(--primary);font-size:20px;">${img.height}px</span>
-          </div>
-          <div class="dimension">
-            <strong>File Size:</strong> <span style="color:var(--primary);font-size:20px;">${fileSize}</span>
+          <div class="result-header">✅ Image Analysis Complete!</div>
+          <div class="dimension-row">
+            <div class="dimension">
+              <strong>Width</strong><br>
+              <span class="dimension-value">${img.width}px</span>
+            </div>
+            <div class="dimension">
+              <strong>Height</strong><br>
+              <span class="dimension-value">${img.height}px</span>
+            </div>
+            <div class="dimension">
+              <strong>File Size</strong><br>
+              <span class="dimension-value">${fileSize}</span>
+            </div>
           </div>
         `;
         
         URL.revokeObjectURL(img.src);
-      }, 800);
+      }, 1000);
     };
     
     img.onerror = () => {
       imgLoading.style.display = 'none';
-      imgResult.innerHTML = '<strong>❌ Invalid image file.</strong>';
+      imgResult.innerHTML = '<strong style="color:#ef4444;">Cannot process this image file.</strong>';
       imgResult.style.display = 'block';
     };
     
@@ -234,35 +244,30 @@
     const shareBtn = document.querySelector('.share-btn');
     const shareData = {
       title: 'Image Pixel Checker – Skill2Job Tools',
-      text: 'Check image width, height & size instantly! Free, private, browser-based 📏✨',
+      text: 'Instant image dimensions & size checker! 📏 Free, private, browser-based.',
       url: window.location.href
     };
     
     try {
-      if (navigator.share && navigator.canShare?.(shareData)) {
+      if (navigator.share) {
         await navigator.share(shareData);
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(shareData.url);
-        showFeedback(shareBtn, '🔗 Link copied!', '#4CAF50');
+        showFeedback(shareBtn, '🔗 Copied!', '#4CAF50');
       }
     } catch (err) {
-      if (err.name !== 'AbortError') {
-        prompt('Copy this Image Pixel Checker:', shareData.url);
-      }
+      prompt('Copy Image Pixel Checker link:', shareData.url);
     }
   }
   
   function showFeedback(btn, message, color) {
     const originalText = btn.textContent;
-    const originalBg = btn.style.backgroundColor;
-    
     btn.textContent = message;
     btn.style.backgroundColor = color;
     btn.style.color = '#fff';
-    
     setTimeout(() => {
       btn.textContent = originalText;
-      btn.style.backgroundColor = originalBg;
+      btn.style.backgroundColor = '';
       btn.style.color = '';
     }, 2000);
   }
