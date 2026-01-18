@@ -31,23 +31,51 @@ h2{
 }
 
 /* IPC center preview */
+/* IMAGE PREVIEW - PERFECTLY CENTERED */
 #imgPreview {
-  text-align: center;
-  margin-top: 24px;
-  display: flex;
+  margin-top: 40px;  /* 20%+ spacing from result */
+  display: flex !important;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 16px;
+  min-height: 120px;  /* Minimum space even when empty */
 }
 
 #imgPreview img {
   max-width: 100%;
-  max-height: 300px;
+  max-height: 280px;
   width: auto;
   height: auto;
   border-radius: var(--radius);
   border: 2px solid var(--border);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  display: block;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  display: block;  /* Essential for centering */
+  margin: 0 auto;  /* Double insurance for center */
+}
+
+/* RESULT AREA - More spacing at bottom */
+#imgResult {
+  display: none;
+  margin-top: 24px;
+  margin-bottom: 40px;  /* Extra space for preview */
+  padding: 24px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 18px;
+}
+
+#imgResult .dimension {
+  display: inline-block;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 12px 20px;
+  margin: 8px 4px;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 16px;
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 /* IMAGE PIXEL CHECKER SPECIFIC */
