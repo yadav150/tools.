@@ -445,8 +445,7 @@ checkBtn.addEventListener('click', () => {
   imgLoading.style.display = 'block';
 
   const img = new Image();
-  const imgURL = URL.createObjectURL(file);
-  img.src = imgURL;
+  img.src = URL.createObjectURL(file);
 
   img.onload = () => {
     setTimeout(() => {
@@ -456,15 +455,15 @@ checkBtn.addEventListener('click', () => {
       const sizeKB = (file.size / 1024).toFixed(2);
 
       imgResult.innerHTML = `
-        <div style="margin-bottom:10px;">
-          <img src="${imgURL}" alt="Image Preview" style="max-width:100%;height:auto;border-radius:6px;">
+        <div style="margin-bottom:8px">
+          <img src="${img.src}" alt="Preview" style="max-width:100%;border-radius:8px">
         </div>
         <strong>Width:</strong> ${img.width} px<br>
         <strong>Height:</strong> ${img.height} px<br>
         <strong>Image Size:</strong> ${sizeKB} KB
       `;
 
-      URL.revokeObjectURL(imgURL);
+      URL.revokeObjectURL(img.src);
     }, 800);
   };
 
@@ -473,6 +472,16 @@ checkBtn.addEventListener('click', () => {
     imgResult.style.display = 'block';
     imgResult.textContent = 'Unable to load image. Please try another file.';
   };
+});
+
+/* SHARE BUTTON */
+document.getElementById('shareBtn')?.addEventListener('click', () => {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Age Calculator – Skill2Job',
+      url: location.href
+    });
+  }
 });
 </script>
 
