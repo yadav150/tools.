@@ -119,7 +119,7 @@
       <p>© 2026 Skill2Job</p>
     </div>
   </footer>
-  <script>
+<script>
 (function() {
   'use strict';
   
@@ -137,12 +137,10 @@
     
     btn.addEventListener('click', checkImage);
     
-    // Enter key support (like Age Calculator)
     imageFile.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkImage();
     });
     
-    // Share button (identical to Age Calculator)
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -160,12 +158,10 @@
     const result = document.getElementById('imgResult');
     const loading = document.getElementById('imgLoading');
     
-    // EXACT SAME reset pattern as Age Calculator
     result.style.display = 'none';
     loading.style.display = 'none';
     
     if (!file) {
-      // EXACT SAME simple warning as Age Calculator
       result.textContent = 'Please upload an image first.';
       result.style.display = 'block';
       return;
@@ -185,18 +181,20 @@
         loading.style.display = 'none';
         result.style.display = 'block';
         
-        // File size (simple format)
         const sizeKB = (file.size / 1024).toFixed(1);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${(sizeKB/1024).toFixed(1)} MB`;
         
-        // EXACT Age Calculator result format
-        result.innerHTML = `<strong>Results:</strong> ${img.width} × ${img.height} px, ${fileSize}`;
+        // **WIDTH | HEIGHT | SIZE** - No "×"
+        result.innerHTML = `
+          <strong>Width:</strong> ${img.width}px<br>
+          <strong>Height:</strong> ${img.height}px<br>
+          <strong>Size:</strong> ${fileSize}
+        `;
         
-        // Simple centered preview using your existing CSS
         document.getElementById('imgPreview').innerHTML = 
           `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:280px;border-radius:12px;display:block;margin:20px auto;">`;
         
-      }, 800); // Same timing as Age Calculator
+      }, 800);
     };
     
     img.onerror = () => {
@@ -235,10 +233,9 @@
     setTimeout(() => {
       btn.textContent = originalText;
       btn.style.backgroundColor = '';
-    }, 2000); // Exact same as Age Calculator
+    }, 2000);
   }
 })();
 </script>
-
 </body>
 </html>
