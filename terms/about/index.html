@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>About Us | Skill2Job Tools</title>
+  <meta name="description" content="About Skill2Job Tools - Free online tools for job seekers, students & professionals. Developed by Yadav Subba. Browser-based calculators & utilities.">
+  <meta name="keywords" content="about Skill2Job, Skill2Job tools, Yadav Subba, free online tools, job seeker utilities">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tools.skill2job.site/about">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="About Us – Skill2Job Tools">
+  <meta property="og:description" content="Learn about Skill2Job Tools - Free browser-based utilities for students, job seekers & professionals.">
+  <meta property="og:url" content="https://tools.skill2job.site/about">
+  <meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <!-- HEADER - IDENTICAL -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
+      </div>
+      <button class="share-btn" id="shareBtn">Share</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT - SAME STRUCTURE -->
+  <main class="site-main">
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>About Skill2Job Tools</h2>
+          
+          <!-- PARAGRAPH 1: Mission -->
+          <p class="about-text">
+            <strong>Skill2Job Tools</strong> provides free, browser-based utilities designed for students, job seekers, 
+            and professionals across India. From age calculators to image pixel checkers, our tools help you prepare 
+            for interviews, optimize content, and boost productivity - all without collecting your personal data.
+          </p>
+
+          <!-- PARAGRAPH 2: Features -->
+          <p class="about-text">
+            <strong>100% Private & Offline:</strong> All processing happens in your browser using JavaScript. No data 
+            leaves your device, ensuring complete privacy. Tools work instantly without internet after initial load 
+            and support mobile, tablet, and desktop devices seamlessly.
+          </p>
+
+          <!-- PARAGRAPH 3: Purpose -->
+          <p class="about-text">
+            <strong>Empowering Job Seekers:</strong> Built specifically for India's competitive job market, our tools 
+            help with resume optimization, interview preparation, content creation for social media, and technical 
+            assessments. Perfect for Assam, Northeast, and pan-India job aspirants preparing for government exams, 
+            banking, and private sector opportunities.
+          </p>
+
+          <!-- PARAGRAPH 4: Creator -->
+          <p class="about-text">
+            <strong>Developed by Yadav Subba</strong> - Web developer, content creator, and BA English Honours student 
+            from Tinsukia, Assam. Connect via <a href="mailto:yadavsubba2003@gmail.com">email</a> or follow on 
+            <a href="https://aratt.ai/@skill2job_job_in_assam_northea" target="_blank" rel="noopener">Arattai</a> & 
+            <a href="https://whatsapp.com/channel/0029Vb1sPWRCBtxA5KiCPr3e" target="_blank" rel="noopener">WhatsApp</a>. 
+            Main site: <a href="https://www.skill2job.site/" target="_blank" rel="noopener">www.skill2job.site</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER - IDENTICAL -->
+  <footer class="site-footer">
+    <p>
+      <strong>Skill2Job Tools</strong> | 
+      <a href="/">Home</a> | 
+      <a href="/about">About</a> | 
+      <a href="/contact">Contact</a> | 
+      <a href="/privacy">Privacy</a> | 
+      <a href="/terms">Terms</a>
+    </p>
+    <p>© 2026 Skill2Job</p>
+  </footer>
+
+  <!-- SAME SHARE SCRIPT -->
+  <script>
+  (function() {
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const shareData = {
+          title: document.title,
+          text: 'About Skill2Job Tools - Free utilities for job seekers!',
+          url: window.location.href
+        };
+        
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareData.url);
+            const originalText = shareBtn.textContent;
+            shareBtn.textContent = 'Link copied!';
+            shareBtn.style.backgroundColor = '#4CAF50';
+            setTimeout(() => {
+              shareBtn.textContent = originalText;
+              shareBtn.style.backgroundColor = '';
+            }, 2000);
+          }
+        } catch (err) {
+          prompt('Copy About page link:', shareData.url);
+        }
+      });
+    }
+  })();
+  </script>
+</body>
+</html>
