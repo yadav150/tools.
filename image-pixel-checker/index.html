@@ -426,37 +426,54 @@
 </footer>
 
 <script>
-<script>
-  const imageInput = document.getElementById("imageInput");
-  const widthEl = document.getElementById("imgWidth");
-  const heightEl = document.getElementById("imgHeight");
-  const loader = document.getElementById("loader");
+const checkBtn = document.getElementById('checkBtn');
+const imgLoading = document.getElementById('imgLoading');
+const imgResult = document.getElementById('imgResult');
+const imageFile = document.getElementById('imageFile');
 
-  imageInput.addEventListener("change", function () {
-    const file = this.files[0];
-    if (!file) return;
+checkBtn.addEventListener('click', () => {
+  const file = imageFile.files[0];
+  imgResult.style.display = 'none';
 
-    loader.style.display = "block";
-    widthEl.textContent = "-";
-    heightEl.textContent = "-";
+  if (!file) {
+    imgResult.style.display = 'block';
+    imgResult.textContent = 'Please upload an image first.';
+    return;
+  }
 
-    const img = new Image();
-    const reader = new FileReader();
+  // Show spinner
+  imgLoading.style.display = 'block';
 
-    reader.onload = function (e) {
-      img.src = e.target.result;
-    };
+  const img = new Image();
+  const imgURL = URL.createObjectURL(file);
+  img.src = imgURL;
 
-    img.onload = function () {
-      loader.style.display = "none";
+  img.onload = () => {
+    setTimeout(() => {
+      imgLoading.style.display = 'none';
+      imgResult.style.display = 'block';
 
-      // ✅ Separate output
-      widthEl.textContent = img.width + " px";
-      heightEl.textContent = img.height + " px";
-    };
+      const sizeKB = (file.size / 1024).toFixed(2);
 
-    reader.readAsDataURL(file);
-  });
+      imgResult.innerHTML = `
+        <div style="margin-bottom:10px;">
+          <img src="${imgURL}" alt="Image Preview" style="max-width:100%;height:auto;border-radius:6px;">
+        </div>
+        <strong>Width:</strong> ${img.width} px<br>
+        <strong>Height:</strong> ${img.height} px<br>
+        <strong>Image Size:</strong> ${sizeKB} KB
+      `;
+
+      URL.revokeObjectURL(imgURL);
+    }, 800);
+  };
+
+  img.onerror = () => {
+    imgLoading.style.display = 'none';
+    imgResult.style.display = 'block';
+    imgResult.textContent = 'Unable to load image. Please try another file.';
+  };
+});
 </script>
 
 </body>
