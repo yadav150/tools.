@@ -7,189 +7,235 @@
 
   <title>Image Pixel / Dimensions Checker – Check Image Size Online | Skill2Job Tools</title>
 
-  <!-- SEO -->
+  <!-- SEO & Open Graph (same pattern as Age Calculator) -->
   <meta name="description" content="Use Skill2Job's free Image Pixel Checker to instantly view width, height, and file size of any image. Fast, browser-based, and secure.">
-  <meta name="keywords" content="image pixel checker, image dimensions, image size online, check image width height">
+  <meta name="keywords" content="image pixel checker, image dimensions, image size online, check image width height, Skill2Job tools">
   <meta name="author" content="Yadav Subba">
   <meta name="robots" content="index, follow">
-
   <link rel="canonical" href="https://tools.skill2job.site/image-pixel-checker">
-
-  <!-- Icons -->
   <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- CSS (use correct path: ../style.css if in subfolder) -->
+  <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="logo">
-      <a href="/">
-        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-      </a>
-    </div>
-    <button class="share-btn" type="button">Share</button>
-  </div>
-</header>
-
-<!-- MAIN -->
-<main class="site-main">
-
-  <!-- IMAGE PIXEL CHECKER TOOL -->
-  <section class="section">
-    <div class="container">
-      <div class="card image-tool-card">
-
-        <h1 class="tool-title">Image Pixel / Dimensions Checker</h1>
-
-        <div class="input-group">
-          <label for="imageFile">Upload Image</label>
-          <input type="file" id="imageFile" accept="image/*">
-        </div>
-
-        <button class="calculate-btn" id="checkBtn">Check Dimensions</button>
-
-        <div class="loading" id="imgLoading">
-          <div class="spinner"></div>
-        </div>
-
-        <div class="result" id="imgResult"></div>
-
-        <div id="imgPreview" style="text-align:center;margin-top:16px;"></div>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/">
+          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+        </a>
       </div>
+      <button class="share-btn" type="button" aria-label="Share Image Checker">Share</button>
     </div>
-  </section>
+  </header>
 
-  <!-- ABOUT TOOL -->
-  <section class="section">
-    <div class="container">
-      <div class="card">
-        <h2>About This Tool</h2>
-        <p>
-          The Image Pixel Checker instantly displays the width, height, and file size of your images.
-          It runs entirely in your browser, so your files remain private and are never uploaded to any server.
-        </p>
+  <!-- MAIN -->
+  <main class="site-main">
+    <!-- IMAGE PIXEL CHECKER -->
+    <section class="section">
+      <div class="container">
+        <div class="card image-tool-card">
+          <h1 class="tool-title">Image Pixel / Dimensions Checker</h1>
+          
+          <div class="input-group">
+            <label for="imageFile">Upload Image</label>
+            <input type="file" id="imageFile" accept="image/*">
+          </div>
+
+          <button class="calculate-btn" id="checkBtn">Check Dimensions</button>
+
+          <div class="loading" id="imgLoading">
+            <div class="spinner"></div>
+          </div>
+
+          <div class="result" id="imgResult"></div>
+          <div id="imgPreview"></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- MORE TOOLS -->
-  <section class="section">
-    <div class="container">
-      <div class="card">
-        <h2>More Tools</h2>
+    <!-- ABOUT TOOL -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>About This Tool</h2>
+          <p>
+  Skill2Job's Image Pixel Checker delivers instant, accurate analysis of any image's width, height (in pixels), and file size. 
+  Completely browser-based processing ensures zero server uploads—your images remain 100% private and secure on your device. 
+  Perfect for web developers optimizing responsive layouts, designers verifying asset specifications, content creators preparing social media graphics, 
+  photographers checking dimensions before editing, and students working on academic projects requiring precise measurements. 
+  No downloads, no signups, no watermarks—just upload and get professional-grade results instantly. 
+  Works seamlessly across all devices with lightning-fast performance and mobile-optimized interface.
+</p>
+        </div>
+      </div>
+    </section>
 
-        <div class="tools-grid">
-          <div class="tool-card">
-            <h3>Age Calculator</h3>
-            <p>Calculate exact age in years, months, and days.</p>
-            <a class="tool-link" href="/age-calculator/">Use Tool</a>
-          </div>
-
-          <div class="tool-card">
-            <h3>Merge PDF</h3>
-            <p>Combine multiple PDF files into one.</p>
-            <a class="tool-link" href="/merge-pdf/">Use Tool</a>
-          </div>
-
-          <div class="tool-card">
-            <h3>Remove PDF Pages</h3>
-            <p>Delete selected pages from a PDF file.</p>
-            <a class="tool-link" href="/remove-pages/">Use Tool</a>
-          </div>
-
-          <div class="tool-card">
-            <h3>Crop PDF</h3>
-            <p>Crop and adjust PDF pages easily.</p>
-            <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+    <!-- MORE TOOLS -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>More Tools</h2>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h3>Age Calculator</h3>
+              <p>Calculate exact age in years, months, days.</p>
+              <a class="tool-link" href="/age-calculator/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Merge PDF</h3>
+              <p>Combine multiple PDF files into one.</p>
+              <a class="tool-link" href="/merge-pdf/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Remove PDF Pages</h3>
+              <p>Delete selected pages from PDF file.</p>
+              <a class="tool-link" href="/remove-pages/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Crop PDF</h3>
+              <p>Crop and adjust PDF pages easily.</p>
+              <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+            </div>
           </div>
         </div>
-
       </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Skill2Job Tools</strong> | <a href="/">Home</a> | <a href="/contact">Contact</a> | <a href="/privacy">Privacy</a> | <a href="/terms">Terms</a></p>
+      <p>© 2026 Skill2Job</p>
     </div>
-  </section>
+  </footer>
 
-</main>
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="container">
-    <p>
-      <strong>Skill2Job Tools</strong> |
-      <a href="/contact">Contact</a> |
-      <a href="/privacy">Privacy</a> |
-      <a href="/terms">Terms</a>
-    </p>
-    <p>© 2026 Skill2Job</p>
-  </div>
-</footer>
-
-<!-- JS -->
-<script>
-/* ===== SHARE BUTTON ===== */
-const shareBtn = document.querySelector('.share-btn');
-
-shareBtn.addEventListener('click', async () => {
-  const shareData = {
-    title: document.title,
-    text: 'Check out this useful tool on Skill2Job!',
-    url: window.location.href
-  };
-
-  if (navigator.share) {
-    try { await navigator.share(shareData); }
-    catch(err) { console.error('Share canceled or failed:', err); }
-  } else {
-    try { await navigator.clipboard.writeText(shareData.url); alert('Link copied to clipboard!'); }
-    catch(err){ alert('Unable to copy link. Please copy manually.'); }
-  }
-});
-
-/* ===== IMAGE DIMENSIONS CHECKER ===== */
-const checkBtn = document.getElementById('checkBtn');
-const imgLoading = document.getElementById('imgLoading');
-const imgResult = document.getElementById('imgResult');
-const imageFile = document.getElementById('imageFile');
-const imgPreview = document.getElementById('imgPreview');
-
-checkBtn.addEventListener('click', () => {
-  const file = imageFile.files[0];
-  imgResult.style.display = 'none';
-  imgPreview.innerHTML = '';
-
-  if (!file) {
-    imgResult.style.display = 'block';
-    imgResult.textContent = 'Please upload an image first.';
-    return;
-  }
-
-  imgLoading.style.display = 'block';
-  const img = new Image();
-  img.src = URL.createObjectURL(file);
-  img.onload = () => {
-    setTimeout(() => {
-      imgLoading.style.display = 'none';
-      imgResult.style.display = 'block';
-      imgResult.innerHTML = `
-        <strong>Width:</strong> ${img.width}px<br>
-        <strong>Height:</strong> ${img.height}px<br>
-        <strong>Size:</strong> ${(file.size/1024).toFixed(2)} KB
-      `;
-      imgPreview.innerHTML = `<img src="${img.src}" alt="Image Preview" style="max-width:100%;border-radius:8px;margin-top:10px;">`;
-      URL.revokeObjectURL(img.src);
-    }, 800);
-  };
-});
-</script>
-
+  <!-- IMPROVED SCRIPT (same pattern as Age Calculator) -->
+  <script>
+  (function() {
+    'use strict';
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    
+    function init() {
+      const checkBtn = document.getElementById('checkBtn');
+      const imgLoading = document.getElementById('imgLoading');
+      const imgResult = document.getElementById('imgResult');
+      const imageFile = document.getElementById('imageFile');
+      const imgPreview = document.getElementById('imgPreview');
+      
+      checkBtn.addEventListener('click', checkImage);
+      imageFile.addEventListener('change', previewImage);
+      
+      // Share button
+      const shareBtn = document.querySelector('.share-btn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', handleShare);
+        shareBtn.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleShare();
+          }
+        });
+      }
+    }
+    
+    function previewImage() {
+      const file = document.getElementById('imageFile').files[0];
+      const imgPreview = document.getElementById('imgPreview');
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imgPreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imgPreview.innerHTML = '';
+      }
+    }
+    
+    function checkImage() {
+      const file = document.getElementById('imageFile').files[0];
+      const imgResult = document.getElementById('imgResult');
+      const imgLoading = document.getElementById('imgLoading');
+      
+      imgResult.style.display = 'none';
+      
+      if (!file) {
+        imgResult.textContent = 'Please upload an image first.';
+        imgResult.style.display = 'block';
+        return;
+      }
+      
+      imgLoading.style.display = 'block';
+      
+      const img = new Image();
+      img.onload = () => {
+        setTimeout(() => {
+          imgLoading.style.display = 'none';
+          imgResult.style.display = 'block';
+          
+          const sizeKB = (file.size / 1024).toFixed(2);
+          const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+          const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${sizeMB} MB`;
+          
+          imgResult.innerHTML = `
+            <strong>Image Analysis Complete!</strong>
+            <div class="dimension"><strong>Width:</strong> ${img.width}px</div>
+            <div class="dimension"><strong>Height:</strong> ${img.height}px</div>
+            <div class="dimension"><strong>File Size:</strong> ${fileSize}</div>
+          `;
+        }, 800);
+      };
+      
+      img.src = URL.createObjectURL(file);
+    }
+    
+    async function handleShare() {
+      const shareBtn = document.querySelector('.share-btn');
+      const shareData = {
+        title: 'Image Pixel Checker – Skill2Job Tools',
+        text: 'Check image dimensions & size instantly! Free, private, browser-based. 📏',
+        url: window.location.href
+      };
+      
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareData.url);
+          showFeedback(shareBtn, 'Link copied!', '#4CAF50');
+        }
+      } catch (err) {
+        prompt('Copy this Image Checker link:', shareData.url);
+      }
+    }
+    
+    function showFeedback(btn, message, color) {
+      const originalText = btn.textContent;
+      btn.textContent = message;
+      btn.style.backgroundColor = color;
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.backgroundColor = '';
+      }, 2000);
+    }
+  })();
+  </script>
 </body>
 </html>
