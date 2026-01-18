@@ -130,16 +130,18 @@
   }
   
   function init() {
-    const checkBtn = document.getElementById('checkBtn');
-    const imgLoading = document.getElementById('imgLoading');
-    const imgResult = document.getElementById('imgResult');
+    const btn = document.getElementById('checkBtn');
+    const loading = document.getElementById('imgLoading');
+    const result = document.getElementById('imgResult');
     const imageFile = document.getElementById('imageFile');
-    const imgPreview = document.getElementById('imgPreview');
     
-    // **ONLY Check button shows preview & result**
-    checkBtn.addEventListener('click', checkImage);
+    btn.addEventListener('click', checkImage);
     
-    // Share button
+    // Enter key support
+    imageFile.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') checkImage();
+    });
+    
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -154,33 +156,35 @@
   
   function checkImage() {
     const file = document.getElementById('imageFile').files[0];
-    const imgResult = document.getElementById('imgResult');
-    const imgLoading = document.getElementById('imgLoading');
+    const result = document.getElementById('imgResult');
+    const loading = document.getElementById('imgLoading');
     const imgPreview = document.getElementById('imgPreview');
     
-    // Reset everything
-    imgResult.style.display = 'none';
+    // Reset - SAME AS AGE CALCULATOR
+    result.style.display = 'none';
+    loading.style.display = 'none';
     imgPreview.innerHTML = '';
     
     if (!file) {
-      imgResult.innerHTML = '<div class="result-header">⚠️ Please upload an image first.</div>';
-      imgResult.style.display = 'block';
+      // EXACT SAME warning style as Age Calculator
+      result.textContent = 'Please upload an image first.';
+      result.style.display = 'block';
       return;
     }
     
     if (!file.type.startsWith('image/')) {
-      imgResult.innerHTML = '<div class="result-header">⚠️ Please upload a valid image file.</div>';
-      imgResult.style.display = 'block';
+      result.textContent = 'Please upload a valid image file.';
+      result.style.display = 'block';
       return;
     }
     
-    imgLoading.style.display = 'block';
+    loading.style.display = 'block';
     
     const img = new Image();
     img.onload = () => {
       setTimeout(() => {
-        imgLoading.style.display = 'none';
-        imgResult.style.display = 'block';
+        loading.style.display = 'none';
+        result.style.display = 'block';
         
         // File size calculation
         const bytes = file.size;
@@ -188,39 +192,20 @@
         const sizeMB = (bytes / (1024 * 1024)).toFixed(2);
         const fileSize = sizeKB < 1024 ? `${sizeKB} KB` : `${sizeMB} MB`;
         
-        // **SHOW PREVIEW + RESULT TOGETHER**
-        imgPreview.innerHTML = `
-          <div class="preview-wrapper">
-            <img src="${URL.createObjectURL(file)}" alt="Image Preview" class="preview-img">
-          </div>
-        `;
+        // Show preview
+        imgPreview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Preview" style="max-width:90%;max-height:280px;border-radius:12px;display:block;margin:0 auto;">`;
         
-        imgResult.innerHTML = `
-          <div class="result-header">✅ Image Analysis Complete!</div>
-          <div class="dimension-row">
-            <div class="dimension">
-              <strong>Width</strong><br>
-              <span class="dimension-value">${img.width}px</span>
-            </div>
-            <div class="dimension">
-              <strong>Height</strong><br>
-              <span class="dimension-value">${img.height}px</span>
-            </div>
-            <div class="dimension">
-              <strong>File Size</strong><br>
-              <span class="dimension-value">${fileSize}</span>
-            </div>
-          </div>
-        `;
+        // SIMPLE TEXT like Age Calculator
+        result.innerHTML = `<strong>Results:</strong> ${img.width}px × ${img.height}px, ${fileSize}`;
         
         URL.revokeObjectURL(img.src);
-      }, 1000);
+      }, 800);  // Same timing as Age Calculator
     };
     
     img.onerror = () => {
-      imgLoading.style.display = 'none';
-      imgResult.innerHTML = '<div class="result-header">⚠️ Cannot process this image.</div>';
-      imgResult.style.display = 'block';
+      loading.style.display = 'none';
+      result.textContent = 'Cannot process this image file.';
+      result.style.display = 'block';
     };
     
     img.src = URL.createObjectURL(file);
@@ -230,7 +215,7 @@
     const shareBtn = document.querySelector('.share-btn');
     const shareData = {
       title: 'Image Pixel Checker – Skill2Job Tools',
-      text: 'Check image dimensions instantly! 📏 Free & private.',
+      text: 'Check image dimensions instantly! 📏 Free tool.',
       url: window.location.href
     };
     
@@ -239,10 +224,10 @@
         await navigator.share(shareData);
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(shareData.url);
-        showFeedback(shareBtn, '🔗 Copied!', '#4CAF50');
+        showFeedback(shareBtn, 'Link copied!', '#4CAF50');
       }
     } catch (err) {
-      prompt('Copy Image Pixel Checker:', shareData.url);
+      prompt('Copy this Image Pixel Checker link:', shareData.url);
     }
   }
   
@@ -250,14 +235,13 @@
     const originalText = btn.textContent;
     btn.textContent = message;
     btn.style.backgroundColor = color;
-    btn.style.color = '#fff';
     setTimeout(() => {
       btn.textContent = originalText;
       btn.style.backgroundColor = '';
-      btn.style.color = '';
-    }, 2000);
+    }, 2000);  // Same timing as Age Calculator
   }
 })();
 </script>
+
 </body>
 </html>
