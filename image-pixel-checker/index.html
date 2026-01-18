@@ -426,19 +426,11 @@
 </footer>
 
 <script>
+<script>
   const imageInput = document.getElementById("imageInput");
   const widthEl = document.getElementById("imgWidth");
   const heightEl = document.getElementById("imgHeight");
   const loader = document.getElementById("loader");
-
-  // Create button dynamically (no HTML change)
-  const retryBtn = document.createElement("button");
-  retryBtn.textContent = "Check Another Image";
-  retryBtn.style.display = "none";
-  retryBtn.style.marginTop = "12px";
-  retryBtn.style.cursor = "pointer";
-
-  widthEl.parentElement.appendChild(retryBtn);
 
   imageInput.addEventListener("change", function () {
     const file = this.files[0];
@@ -447,32 +439,23 @@
     loader.style.display = "block";
     widthEl.textContent = "-";
     heightEl.textContent = "-";
-    retryBtn.style.display = "none";
 
     const img = new Image();
     const reader = new FileReader();
 
-    reader.onload = e => img.src = e.target.result;
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
 
-    img.onload = () => {
+    img.onload = function () {
       loader.style.display = "none";
 
-      // ✅ Separate width & height
+      // ✅ Separate output
       widthEl.textContent = img.width + " px";
       heightEl.textContent = img.height + " px";
-
-      // ✅ Show button after result
-      retryBtn.style.display = "inline-block";
     };
 
     reader.readAsDataURL(file);
-  });
-
-  retryBtn.addEventListener("click", () => {
-    imageInput.value = "";
-    widthEl.textContent = "-";
-    heightEl.textContent = "-";
-    retryBtn.style.display = "none";
   });
 </script>
 
