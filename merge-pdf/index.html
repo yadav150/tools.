@@ -77,6 +77,7 @@
   <!-- MAIN CONTENT -->
   <main class="site-main">
 <!-- PDF MERGE TOOL SECTION -->
+<!-- PDF MERGE TOOL SECTION - COMPLETE -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
@@ -98,7 +99,9 @@
       <!-- PDF LIST -->
       <div id="pdfList" style="display:none;margin-top:20px;"></div>
       
-      <button class="calculate-btn" id="mergeBtn" style="display:none;margin-top:16px;">Merge PDFs</button>
+      <!-- ✅ ADD MORE BUTTON (NEW) -->
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;margin-top:12px;">➕ Add More PDFs</button>
+      <button class="calculate-btn" id="mergeBtn" style="display:none;margin-top:12px;">🔗 Merge PDFs</button>
       
       <div class="loading" id="mergeLoading" style="display:none;">
         <div class="spinner"></div>
@@ -169,6 +172,8 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
 
   <!-- PDF-LIB CDN -->
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- PDF-LIB CDN (keep before script) -->
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
 <script>
 (function() {
@@ -183,8 +188,9 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   async function init() {
     const { PDFDocument } = PDFLib;
     
-    // ELEMENTS (same as Age Calculator)
+    // ALL ELEMENTS
     const uploadBtn = document.getElementById('uploadBtn');
+    const addMoreBtn = document.getElementById('addMoreBtn');  // ✅ NEW
     const mergeBtn = document.getElementById('mergeBtn');
     const uploadLoading = document.getElementById('uploadLoading');
     const mergeLoading = document.getElementById('mergeLoading');
@@ -195,15 +201,16 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
     
     let pdfDocs = [];
     
-    // EVENT LISTENERS (same pattern)
+    // EVENT LISTENERS
     uploadBtn.addEventListener('click', handleUpload);
     mergeBtn.addEventListener('click', handleMerge);
+    addMoreBtn.addEventListener('click', resetToUpload);  // ✅ NEW
     
     pdfFiles.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') handleUpload();
     });
     
-    // SHARE BUTTON (identical to Age Calculator)
+    // SHARE BUTTON (unchanged)
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -215,14 +222,19 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       });
     }
     
+    // ✅ NEW: Reset to file upload
+    function resetToUpload() {
+      pdfDocs = [];  // Clear PDFs
+      pdfFiles.value = '';  // Clear input
+      uploadResult.style.display = 'none';
+      pdfList.style.display = 'none';
+      addMoreBtn.style.display = 'none';
+      mergeBtn.style.display = 'none';
+      mergeResult.style.display = 'none';
+    }
+    
     async function handleUpload() {
       const files = Array.from(pdfFiles.files);
-      
-      // Reset (same as Age Calculator)
-      uploadResult.style.display = 'none';
-      mergeBtn.style.display = 'none';
-      pdfList.style.display = 'none';
-      mergeResult.style.display = 'none';
       
       if (files.length === 0) {
         uploadResult.textContent = 'Please select PDF files first.';
@@ -239,7 +251,8 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       uploadLoading.style.display = 'block';
       
       try {
-        pdfDocs = await Promise.all(
+        // Load PDFs
+        const newPdfs = await Promise.all(
           files.map(async (file) => {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await PDFDocument.load(arrayBuffer);
@@ -252,12 +265,16 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
           })
         );
         
+        // Append to existing (allows multiple uploads)
+        pdfDocs = pdfDocs.concat(newPdfs);
+        
         uploadLoading.style.display = 'none';
-        uploadResult.innerHTML = `<strong>✅ ${files.length} PDF(s) loaded successfully!</strong>`;
+        uploadResult.innerHTML = `<strong>✅ ${newPdfs.length} PDF(s) added! Total: ${pdfDocs.length}</strong>`;
         uploadResult.style.display = 'block';
         
         renderPdfList();
         pdfList.style.display = 'block';
+        addMoreBtn.style.display = 'block';
         mergeBtn.style.display = 'block';
         
       } catch (error) {
@@ -290,7 +307,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       `;
     }
     
-    // GLOBAL FUNCTIONS (for onclick)
+    // GLOBAL FUNCTIONS (unchanged)
     window.movePdf = (index, direction) => {
       const newIndex = index + direction;
       if (newIndex >= 0 && newIndex < pdfDocs.length) {
@@ -304,6 +321,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       renderPdfList();
       if (pdfDocs.length === 0) {
         pdfList.style.display = 'none';
+        addMoreBtn.style.display = 'none';
         mergeBtn.style.display = 'none';
       }
     };
@@ -314,7 +332,6 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       
       try {
         const mergedPdf = await PDFDocument.create();
-        
         for (const docItem of pdfDocs) {
           const copiedPages = await mergedPdf.copyPages(docItem.pdf, docItem.pdf.getPageIndices());
           copiedPages.forEach(page => mergedPdf.addPage(page));
@@ -344,7 +361,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       }
     }
     
-    // SHARE FUNCTION (IDENTICAL to Age Calculator)
+    // SHARE FUNCTION (unchanged)
     async function handleShare() {
       const shareData = {
         title: 'PDF Merge Tool – Skill2Job Tools',
