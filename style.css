@@ -30,6 +30,110 @@ h2{
   margin-top: 0;
 }
 
+/* MPdf */
+/* AGE CALCULATOR SPECIFIC */
+.age-tool-card {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tool-title {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text);
+  font-size: 15px;
+}
+
+#dob {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-family: inherit;
+  background: var(--card);
+  color: var(--text);
+  transition: border-color 0.2s ease;
+}
+
+#dob:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.calculate-btn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.calculate-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.loading {
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.result {
+  display: none;
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 18px;
+}
+
+.result strong {
+  color: var(--primary);
+  display: block;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
 /* IPC center preview */
 /* CLEAN IPC STYLING - NO CONFLICTS */
 #imgResult {
