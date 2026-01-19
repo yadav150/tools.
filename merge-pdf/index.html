@@ -77,7 +77,6 @@
   <!-- MAIN CONTENT -->
   <main class="site-main">
 <!-- PDF MERGE TOOL SECTION -->
-<!-- PDF MERGE TOOL SECTION - COMPLETE -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
@@ -99,9 +98,9 @@
       <!-- PDF LIST -->
       <div id="pdfList" style="display:none;margin-top:20px;"></div>
       
-      <!-- ✅ ADD MORE BUTTON (NEW) -->
-      <button class="calculate-btn" id="addMoreBtn" style="display:none;margin-top:12px;">➕ Add More PDFs</button>
-      <button class="calculate-btn" id="mergeBtn" style="display:none;margin-top:12px;">🔗 Merge PDFs</button>
+      <!-- ADD MORE BUTTON & MERGE BUTTON -->
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;margin-top:12px;">Add More PDFs</button>
+      <button class="calculate-btn" id="mergeBtn" style="display:none;margin-top:12px;">Merge PDFs</button>
       
       <div class="loading" id="mergeLoading" style="display:none;">
         <div class="spinner"></div>
@@ -175,7 +174,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   <!-- PDF-LIB CDN (keep before script) -->
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
-<script>
+  <script>
 (function() {
   'use strict';
   
@@ -190,7 +189,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
     
     // ALL ELEMENTS
     const uploadBtn = document.getElementById('uploadBtn');
-    const addMoreBtn = document.getElementById('addMoreBtn');  // ✅ NEW
+    const addMoreBtn = document.getElementById('addMoreBtn');
     const mergeBtn = document.getElementById('mergeBtn');
     const uploadLoading = document.getElementById('uploadLoading');
     const mergeLoading = document.getElementById('mergeLoading');
@@ -204,13 +203,14 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
     // EVENT LISTENERS
     uploadBtn.addEventListener('click', handleUpload);
     mergeBtn.addEventListener('click', handleMerge);
-    addMoreBtn.addEventListener('click', resetToUpload);  // ✅ NEW
+    addMoreBtn.addEventListener('click', handleAddMore); // FIXED: Now triggers file picker
     
+    pdfFiles.addEventListener('change', handleFileChange); // FIXED: Direct file input trigger
     pdfFiles.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') handleUpload();
     });
     
-    // SHARE BUTTON (unchanged)
+    // SHARE BUTTON
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -222,15 +222,15 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       });
     }
     
-    // ✅ NEW: Reset to file upload
-    function resetToUpload() {
-      pdfDocs = [];  // Clear PDFs
-      pdfFiles.value = '';  // Clear input
-      uploadResult.style.display = 'none';
-      pdfList.style.display = 'none';
-      addMoreBtn.style.display = 'none';
-      mergeBtn.style.display = 'none';
-      mergeResult.style.display = 'none';
+    // FIXED: Handle Add More - Opens file picker without reset
+    async function handleAddMore() {
+      pdfFiles.value = ''; // Clear input to allow new selection
+      pdfFiles.click(); // Programmatically trigger file picker
+    }
+    
+    // FIXED: Direct file input handler
+    async function handleFileChange() {
+      await handleUpload();
     }
     
     async function handleUpload() {
@@ -242,8 +242,8 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         return;
       }
       
-      if (files.length > 10) {
-        uploadResult.textContent = 'Maximum 10 PDF files allowed.';
+      if (pdfDocs.length + files.length > 10) {
+        uploadResult.textContent = 'Maximum 10 PDF files total allowed.';
         uploadResult.style.display = 'block';
         return;
       }
@@ -269,7 +269,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         pdfDocs = pdfDocs.concat(newPdfs);
         
         uploadLoading.style.display = 'none';
-        uploadResult.innerHTML = `<strong>✅ ${newPdfs.length} PDF(s) added! Total: ${pdfDocs.length}</strong>`;
+        uploadResult.innerHTML = `<strong>${newPdfs.length} PDF(s) added! Total: ${pdfDocs.length}</strong>`;
         uploadResult.style.display = 'block';
         
         renderPdfList();
@@ -288,13 +288,13 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       const totalPages = pdfDocs.reduce((sum, doc) => sum + doc.pages, 0);
       pdfList.innerHTML = `
         <div style="text-align:center;margin:16px 0;padding:16px;background:rgba(37,99,235,0.08);border-radius:var(--radius);border:1px solid var(--border);">
-          <strong style="color:var(--primary);">📄 ${pdfDocs.length} file${pdfDocs.length > 1 ? 's' : ''}</strong>
+          <strong style="color:var(--primary);">${pdfDocs.length} file${pdfDocs.length > 1 ? 's' : ''}</strong>
           <br><span style="color:#64748b;font-size:14px;">${totalPages} total page${totalPages > 1 ? 's' : ''}</span>
         </div>
         <div style="max-height:280px;overflow-y:auto;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);">
           ${pdfDocs.map((doc, index) => `
             <div style="display:flex;align-items:center;padding:12px;margin-bottom:8px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-              <span style="flex:1;margin-right:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📄 ${doc.name}</span>
+              <span style="flex:1;margin-right:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${doc.name}</span>
               <span style="background:var(--primary);color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;">${doc.pages}p</span>
               <div style="margin-left:12px;">
                 <button onclick="movePdf(${index},-1)" style="width:30px;height:30px;border:none;background:var(--primary);color:white;border-radius:6px;cursor:pointer;margin-right:4px;font-weight:600;font-size:14px;" title="Move Up">↑</button>
@@ -307,7 +307,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       `;
     }
     
-    // GLOBAL FUNCTIONS (unchanged)
+    // GLOBAL FUNCTIONS
     window.movePdf = (index, direction) => {
       const newIndex = index + direction;
       if (newIndex >= 0 && newIndex < pdfDocs.length) {
@@ -344,28 +344,28 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         
         mergeLoading.style.display = 'none';
         mergeResult.innerHTML = `
-          <strong style="color:var(--primary);">✅ PDFs Merged Successfully!</strong>
+          <strong style="color:var(--primary);">PDFs Merged Successfully!</strong>
           <br style="margin:8px 0;"><span style="color:#64748b;">Total: ${totalPages} pages</span>
           <br><br>
           <a href="${url}" download="skill2job-merged-${Date.now()}.pdf" 
              style="display:inline-block;padding:16px 32px;background:var(--primary);color:white;font-weight:500;border-radius:var(--radius);text-decoration:none;box-shadow:0 4px 12px rgba(37,99,235,0.3);margin-top:12px;">
-            📥 Download Merged PDF
+            Download Merged PDF
           </a>
         `;
         mergeResult.style.display = 'block';
         
       } catch (error) {
         mergeLoading.style.display = 'none';
-        mergeResult.innerHTML = '<strong style="color:#ef4444;">❌ Merge failed. Please try again.</strong>';
+        mergeResult.innerHTML = '<strong style="color:#ef4444;">Merge failed. Please try again.</strong>';
         mergeResult.style.display = 'block';
       }
     }
     
-    // SHARE FUNCTION (unchanged)
+    // SHARE FUNCTION
     async function handleShare() {
       const shareData = {
         title: 'PDF Merge Tool – Skill2Job Tools',
-        text: 'Merge multiple PDFs instantly online! Free, private, no signup required. 🔗',
+        text: 'Merge multiple PDFs instantly online! Free, private, no signup required.',
         url: window.location.href
       };
       
@@ -393,5 +393,6 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   }
 })();
 </script>
+
 </body>
 </html>
