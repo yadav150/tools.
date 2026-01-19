@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- TITLE -->
+<title>Image Compressor – Compress to Target KB Online | Skill2Job Tools</title>
+
+<!-- PRIMARY SEO -->
+<meta name="description" content="Use Skill2Job's free Image Compressor to reduce image file size to exact KB target instantly. Client-side processing, fast, mobile-friendly, no uploads required.">
+<meta name="keywords" content="image compressor, compress image KB, image size reducer, optimize image size, reduce photo size, image optimizer, Skill2Job tools">
+<meta name="author" content="Yadav Subba">
+<meta name="robots" content="index, follow">
+
+<!-- CANONICAL -->
+<link rel="canonical" href="https://tools.skill2job.site/image-compressor">
+
+<!-- FAVICON & TOUCH ICON -->
+<link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
+<!-- SOCIAL / OG TAGS -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Image Compressor – Free KB Size Tool | Skill2Job">
+<meta property="og:description" content="Compress images to exact KB size instantly. Client-side processing, fast, secure, and mobile-friendly.">
+<meta property="og:url" content="https://tools.skill2job.site/image-compressor">
+<meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+<meta property="og:site_name" content="Skill2Job Tools">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Image Compressor – Skill2Job Tools">
+<meta name="twitter:description" content="Free online Image Compressor by Skill2Job. Reduce images to target KB size instantly.">
+<meta name="twitter:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
+<!-- FONTS (PERFORMANCE) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- EXTERNAL CSS -->
+<link rel="stylesheet" href="/style.css">
+
+<!-- STRUCTURED DATA (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Image Compressor",
+  "url": "https://tools.skill2job.site/image-compressor",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "All",
+  "description": "Free online Image Compressor to reduce image file size to exact KB target instantly. Client-side processing for complete privacy.",
+  "author": { "@type": "Person", "name": "Yadav Subba" },
+  "publisher": { 
+    "@type": "Organization",
+    "name": "Skill2Job",
+    "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" }
+  }
+}
+</script>
+<body>
+  <!-- HEADER (with improved share button) -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/">
+          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+        </a>
+      </div>
+      <button class="share-btn" type="button" aria-label="Share Age Calculator">Share</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="site-main">
+    <section class="section">
+  <div class="container">
+    <div class="card age-tool-card">
+      <h1 class="tool-title">Image Compressor</h1>
+      
+      <div class="input-group">
+        <label for="imageFile">Select Image</label>
+        <input type="file" id="imageFile" accept="image/*">
+      </div>
+      
+      <div class="input-group">
+        <label for="targetSize">Target Size (KB)</label>
+        <input type="number" id="targetSize" min="10" max="2000" value="100" placeholder="100">
+      </div>
+      
+      <button class="calculate-btn" id="compressBtn">Compress Image</button>
+      
+      <div class="loading" id="compressLoading">
+        <div class="spinner"></div>
+      </div>
+      
+      <div class="result" id="compressResult"></div>
+      
+      <!-- IMAGE PREVIEW LIST -->
+      <div id="imageList" style="display:none;margin-top:20px;"></div>
+      
+      <button class="calculate-btn" id="newImageBtn" style="display:none;margin-top:12px;">Compress New Image</button>
+      
+      <div class="result" id="downloadResult"></div>
+    </div>
+  </div>
+</section>
+
+    <!-- ABOUT TOOL -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>About This Tool</h2>
+          <p>
+Skill2Job's free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth. 
+This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations. 
+All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked. 
+Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy. 
+Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online. 
+Experience convenience, accuracy, and safety with Skill2Job's Age Calculator today.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MORE TOOLS -->
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>More Tools</h2>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h3>Merge PDF</h3>
+              <p>Combine multiple PDF files into one.</p>
+              <a class="tool-link" href="/merge-pdf/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Remove PDF Pages</h3>
+              <p>Delete selected pages from a PDF file.</p>
+              <a class="tool-link" href="/remove-pages/">Use Tool</a>
+            </div>
+            <div class="tool-card">
+              <h3>Crop PDF</h3>
+              <p>Crop and adjust PDF pages easily.</p>
+              <a class="tool-link" href="/crop-pdf/">Use Tool</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+  <p>
+    <strong>Skill2Job Tools</strong> | 
+    <a href="/">Home</a> | 
+    <a href="/about">About</a> | 
+    <a href="/contact">Contact</a> | 
+    <a href="/privacy">Privacy</a> | 
+    <a href="/terms">Terms</a>
+  </p>
+  <p>© 2026 Skill2Job</p>
+</footer>
+
+  <!-- IMPROVED SHARE SCRIPT -->
+  <script>
+(function() {
+  'use strict';
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  
+  async function init() {
+    // ALL ELEMENTS
+    const compressBtn = document.getElementById('compressBtn');
+    const newImageBtn = document.getElementById('newImageBtn');
+    const compressLoading = document.getElementById('compressLoading');
+    const compressResult = document.getElementById('compressResult');
+    const downloadResult = document.getElementById('downloadResult');
+    const imageList = document.getElementById('imageList');
+    const imageFile = document.getElementById('imageFile');
+    const targetSize = document.getElementById('targetSize');
+    
+    let compressedBlob = null;
+    let originalSize = 0;
+    
+    // EVENT LISTENERS
+    compressBtn.addEventListener('click', handleCompress);
+    newImageBtn.addEventListener('click', resetTool);
+    imageFile.addEventListener('change', handleFileSelect);
+    
+    // SHARE BUTTON
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', handleShare);
+      shareBtn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleShare();
+        }
+      });
+    }
+    
+    function handleFileSelect() {
+      if (imageFile.files.length > 0) {
+        compressBtn.disabled = false;
+      }
+    }
+    
+    async function handleCompress() {
+      const file = imageFile.files[0];
+      const targetKB = parseInt(targetSize.value) || 100;
+      
+      if (!file) {
+        compressResult.textContent = 'Please select an image first.';
+        compressResult.style.display = 'block';
+        return;
+      }
+      
+      if (targetKB < 10 || targetKB > 2000) {
+        compressResult.textContent = 'Target size must be between 10-2000 KB.';
+        compressResult.style.display = 'block';
+        return;
+      }
+      
+      compressLoading.style.display = 'block';
+      compressBtn.disabled = true;
+      
+      try {
+        originalSize = file.size / 1024; // KB
+        compressedBlob = await compressToTargetSize(file, targetKB);
+        
+        const compressedSize = compressedBlob.size / 1024;
+        const reduction = ((1 - (compressedSize / originalSize)) * 100).toFixed(1);
+        
+        compressLoading.style.display = 'none';
+        renderImageList(originalSize, compressedSize, reduction);
+        imageList.style.display = 'block';
+        newImageBtn.style.display = 'block';
+        compressBtn.style.display = 'none';
+        
+        showDownload();
+        
+      } catch (error) {
+        compressLoading.style.display = 'none';
+        compressResult.textContent = 'Error compressing image. Please try again.';
+        compressResult.style.display = 'block';
+        compressBtn.disabled = false;
+      }
+    }
+    
+    async function compressToTargetSize(file, targetKB) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.onload = function() {
+          let quality = 0.9;
+          let maxWidth = 1920;
+          let maxHeight = 1920;
+          
+          // Resize if too large
+          if (img.width > maxWidth || img.height > maxHeight) {
+            if (img.width > img.height) {
+              canvas.width = maxWidth;
+              canvas.height = (img.height / img.width) * maxWidth;
+            } else {
+              canvas.height = maxHeight;
+              canvas.width = (img.width / img.height) * maxHeight;
+            }
+          } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+          }
+          
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          function compressLoop(q) {
+            canvas.toBlob((blob) => {
+              if (blob.size / 1024 <= targetKB || q <= 0.1) {
+                resolve(blob);
+              } else {
+                compressLoop(q - 0.1);
+              }
+            }, 'image/jpeg', q);
+          }
+          
+          compressLoop(quality);
+        };
+        
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    
+    function renderImageList(originalKB, compressedKB, reduction) {
+      imageList.innerHTML = `
+        <div style="text-align:center;margin:16px 0;padding:16px;background:rgba(37,99,235,0.08);border-radius:var(--radius);border:1px solid var(--border);">
+          <strong style="color:var(--primary);">${(originalKB).toFixed(1)} KB → ${(compressedKB).toFixed(1)} KB</strong>
+          <br><span style="color:#10b981;font-weight:500;">${reduction}% smaller</span>
+        </div>
+        <div style="text-align:center;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);">
+          <div style="font-size:14px;color:#64748b;margin-bottom:12px;">
+            Original: <strong style="color:var(--primary);">${(originalKB).toFixed(1)} KB</strong> | 
+            Compressed: <strong style="color:#10b981;">${(compressedKB).toFixed(1)} KB</strong>
+          </div>
+        </div>
+      `;
+    }
+    
+    function showDownload() {
+      const timestamp = Date.now();
+      const filename = `compressed-${timestamp}.jpg`;
+      
+      downloadResult.innerHTML = `
+        <strong style="color:var(--primary);">Image Compressed Successfully!</strong>
+        <br><br>
+        <a href="${URL.createObjectURL(compressedBlob)}" download="${filename}" 
+           style="display:inline-block;padding:16px 32px;background:var(--primary);color:white;font-weight:500;border-radius:var(--radius);text-decoration:none;box-shadow:0 4px 12px rgba(37,99,235,0.3);margin-top:12px;">
+          Download Compressed Image
+        </a>
+      `;
+      downloadResult.style.display = 'block';
+    }
+    
+    function resetTool() {
+      imageFile.value = '';
+      targetSize.value = '100';
+      compressedBlob = null;
+      originalSize = 0;
+      imageList.style.display = 'none';
+      newImageBtn.style.display = 'none';
+      downloadResult.style.display = 'none';
+      compressResult.style.display = 'none';
+      compressBtn.style.display = 'block';
+      compressBtn.disabled = false;
+    }
+    
+    // SHARE FUNCTION (same as PDF tool)
+    async function handleShare() {
+      const shareData = {
+        title: 'Image Compressor – Skill2Job Tools',
+        text: 'Compress images to target KB size instantly! Free, private, client-side processing.',
+        url: window.location.href
+      };
+      
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareData.url);
+          showFeedback(shareBtn, 'Link copied!', '#4CAF50');
+        }
+      } catch (err) {
+        prompt('Copy Image Compressor link:', shareData.url);
+      }
+    }
+    
+    function showFeedback(btn, message, color) {
+      const originalText = btn.textContent;
+      btn.textContent = message;
+      btn.style.backgroundColor = color;
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.backgroundColor = '';
+      }, 2000);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
