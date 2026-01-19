@@ -3,37 +3,32 @@ name: Inject AdSense
 on:
   push:
     branches:
-      - main  # aapka default branch
+      - main
 
 jobs:
   inject:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Inject AdSense safely
+      - name: Inject AdSense into all HTML files
         run: |
-          CODE='<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
-<ins class="adsbygoogle" style="display:block" data-ad-client=\"ca-pub-1876390706944654\" data-ad-slot=\"5136857748\" data-ad-format=\"auto\" data-full-width-responsive=\"true\"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>'
+          ADSENSE='<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>'
 
-          # Loop through HTML files
-          for file in $(find . -name "*.html"); do
-            # Check if code already exists
-            if ! grep -q "adsbygoogle" "$file"; then
-              # Inject before </head>
-              awk -v code="$CODE" '{sub(/<\/head>/, code "\n</head>")}1' "$file" > temp.html && mv temp.html "$file"
-              echo "Injected AdSense into $file"
+          for f in $(find . -name "*.html"); do
+            if ! grep -q "pagead2.googlesyndication.com" "$f"; then
+              perl -0777 -i -pe "s|</head>|$ADSENSE\n</head>|i" "$f"
+              echo "Injected: $f"
             else
-              echo "AdSense already exists in $file"
+              echo "Already exists: $f"
             fi
           done
 
-      - name: Commit injected changes
+      - name: Commit changes
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Injected AdSense code" || echo "No changes to commit"
+          git commit -m "Auto inject AdSense" || echo "No changes"
           git push
