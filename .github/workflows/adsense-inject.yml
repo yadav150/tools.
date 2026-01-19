@@ -1,0 +1,85 @@
+name: AdSense Injector
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["Build & Deploy"]
+    types: [completed]
+
+jobs:
+  inject-adsense:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Inject YOUR AdSense Code
+        run: |
+          mkdir -p .github/scripts
+          cat > .github/scripts/inject-ads.js << EOF
+          // YOUR AdSense Client ID - already updated!
+          const ADSENSE_CLIENT = 'ca-pub-1876390706944654';
+          
+          // Load AdSense script (exact code tumne diya)
+          if (!document.querySelector('script[src*="adsbygoogle.js?client=ca-pub-1876390706944654"]')) {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654';
+            script.crossOrigin = 'anonymous';
+            document.head.appendChild(script);
+          }
+          
+          // Auto ad slots for Blogger
+          function addAds() {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }
+          
+          // Inject after content
+          document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+              // Post content ke baad
+              const adSlots = [
+                '.post-body h2 + p',
+                '.post-body p:nth-of-type(3)',
+                '.post-footer'
+              ];
+              
+              adSlots.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el && !el.querySelector('.adsbygoogle')) {
+                  const adDiv = document.createElement('div');
+                  adDiv.className = 'adsbygoogle';
+                  adDiv.style.margin = '25px 0';
+                  adDiv.setAttribute('data-ad-client', \`ca-pub-\${ADSENSE_CLIENT}\`);
+                  adDiv.setAttribute('data-ad-slot', 'YOUR-AD-SLOT-ID');
+                  adDiv.setAttribute('data-ad-format', 'auto');
+                  el.parentNode.insertBefore(adDiv, el.nextSibling);
+                  addAds();
+                }
+              });
+            }, 2000);
+          });
+          EOF
+          
+          # Add script to all HTML files
+          find . -name "*.html" -o -name "*.htm" | while read file; do
+            if ! grep -q "inject-ads.js" "$file"; then
+              echo '<script defer src="/.github/scripts/inject-ads.js"></script>' >> "$file"
+            fi
+          done
+      
+      - name: Commit AdSense injection
+        run: |
+          git config user.name "AdSense Bot"
+          git config user.email "adsense-bot@github.com"
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🤖 Auto inject AdSense ca-pub-1876390706944654 [skip ci]"
+            git push
+          fi
