@@ -1,0 +1,29 @@
+name: Inject AdSense
+
+on:
+  push:
+    branches:
+      - main  # aapka default branch name
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Inject AdSense into HTML
+        run: |
+          find . -name "*.html" -exec sed -i '/<\/head>/i \
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>\
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1876390706944654" data-ad-slot="5136857748" data-ad-format="auto" data-full-width-responsive="true"></ins>\
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>' {} \;
+
+      - name: Commit injected changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Injected AdSense code" || echo "No changes to commit"
+          git push
