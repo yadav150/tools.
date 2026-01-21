@@ -134,58 +134,16 @@ h2{
   margin-bottom: 8px;
 }
 
-/* crop pdf */
-/* PDF Preview Grid */
-.pdf-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 10px;
-  margin-top: 15px;
-}
-
-/* PDF page */
+/* crop */
 .pdf-page {
   position: relative;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background: #fff;
-  padding: 20px 0;
-  text-align: center;
-  font-weight: 500;
-  border-radius: var(--radius);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 16px;
 }
 
-.pdf-page:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.crop-rect {
+  border: 2px dashed red;
+  background: rgba(255,0,0,0.05);
 }
-
-/* Selected page */
-.pdf-page.selected {
-  border: 2px solid var(--primary);
-  opacity: 0.7;
-}
-
-/* Download button inside result */
-#cropResult .tool-link {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: #e5edff;
-  color: var(--primary);
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-#cropResult .tool-link:hover {
-  background: var(--primary);
-  color: #fff;
-}
-
 
 
 /* IPC center preview */
