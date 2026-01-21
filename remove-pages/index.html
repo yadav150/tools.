@@ -176,8 +176,8 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
    REMOVE PAGES FROM PDF TOOL - FIXED
 =========================== */
 
-let pdfBytes = null;
 let selectedPages = new Set();
+let pdfFile = null;
 
 const pdfInput  = document.getElementById('pdfInput');
 const calcBtn   = document.getElementById('calcBtn');
@@ -221,12 +221,13 @@ function uploadPDF(){
 
   setTimeout(() => {
     const file = pdfInput.files[0];
+    pdfFile = file; // store file for later
     const reader = new FileReader();
 
     reader.onload = async e => {
       try {
-        pdfBytes = new Uint8Array(e.target.result);
-        await renderPDFPages();
+        const arrayBuffer = e.target.result;
+        await renderPDFPages(arrayBuffer);
         loading.style.display = 'none';
         pagesWrap.style.display = 'grid';
         removeBtn.style.display = 'block';
@@ -245,8 +246,8 @@ function uploadPDF(){
 /* ===========================
    STEP 2: RENDER PDF PAGES
 =========================== */
-async function renderPDFPages(){
-  const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+async function renderPDFPages(arrayBuffer){
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
   for(let i = 1; i <= pdf.numPages; i++){
     const page = await pdf.getPage(i);
@@ -295,6 +296,12 @@ function togglePage(pageNo, el){
 async function removeSelectedPages(){
   result.style.display = 'none';
 
+  if(!pdfFile){
+    result.textContent = 'Please upload a PDF first.';
+    result.style.display = 'block';
+    return;
+  }
+
   if(selectedPages.size === 0){
     result.textContent = 'Please select pages to remove.';
     result.style.display = 'block';
@@ -303,14 +310,14 @@ async function removeSelectedPages(){
 
   loading.style.display = 'block';
 
-  // allow spinner to render
-  await new Promise(r => setTimeout(r, 120));
+  await new Promise(r => setTimeout(r, 120)); // spinner visible
 
   try {
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    // read fresh file as ArrayBuffer
+    const arrayBuffer = await pdfFile.arrayBuffer();
+    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
     const totalPages = pdfDoc.getPageCount();
 
-    // convert selected pages to 0-based & sort descending
     const pagesToRemove = [...selectedPages]
       .map(p => p - 1)
       .filter(p => p >= 0 && p < totalPages)
@@ -318,11 +325,10 @@ async function removeSelectedPages(){
 
     for(const p of pagesToRemove){
       pdfDoc.removePage(p);
-      await new Promise(r => setTimeout(r, 40)); // small delay for realism
+      await new Promise(r => setTimeout(r, 40)); // realistic spinner
     }
 
-    // simulate network / processing time
-    await new Promise(r => setTimeout(r, getDelay()));
+    await new Promise(r => setTimeout(r, getDelay())); // processing delay
 
     const newBytes = await pdfDoc.save();
     const blob = new Blob([newBytes], { type: 'application/pdf' });
@@ -336,7 +342,6 @@ async function removeSelectedPages(){
       </a>
     `;
     result.style.display = 'block';
-
   } catch(err){
     loading.style.display = 'none';
     result.innerHTML = 'Something went wrong while processing the PDF.<br>';
