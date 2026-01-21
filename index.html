@@ -103,7 +103,7 @@
 
           <div class="tool-card">
             <h3>Remove PDF Pages</h3>
-            <p>Combine selected pages from PDF.</p>
+            <p>Delete selected pages from a PDF file.</p>
             <a class="tool-link" href="remove-pages/">Use Tool</a>
           </div>
 
@@ -163,99 +163,78 @@
   <p>© 2026 Skill2Job</p>
 </footer>
 
-<!-- SHARE API - NO CLASS CONFLICTS, WORKS WITH BROWSER SHARE MENU -->
-<script>
+<!-- SHARE API - LIGHTWEIGHT, DEFERRED -->
+<script defer>
 (function() {
   'use strict';
-  
-  // Wait for DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initShare);
-  } else {
-    initShare();
-  }
-  
+
   function initShare() {
-    const shareBtn = document.querySelector('.share-btn');
-    if (!shareBtn) return;
-    
-    shareBtn.addEventListener('click', handleShareClick, { passive: false });
-    
-    // Keyboard accessibility
-    shareBtn.addEventListener('keydown', function(e) {
+    const btn = document.querySelector('.share-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', share, { passive: false });
+    btn.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        handleShareClick();
+        share();
       }
     });
   }
-  
-  async function handleShareClick() {
-    const shareBtn = document.querySelector('.share-btn');
-    const originalText = shareBtn.textContent;
-    
-    // Share data optimized for browser native share sheet
-    const shareData = {
+
+  async function share() {
+    const btn = document.querySelector('.share-btn');
+    if (!btn) return;
+
+    const data = {
       title: 'Skill2Job Tools – Free Online Tools',
       text: 'Free online tools for students & job seekers: Age Calculator, PDF tools, Image checker. No signup required!',
       url: window.location.href
     };
-    
+
     try {
-      // Native browser share dialog (appears in tab menu too)
-      if (navigator.share && navigator.canShare?.(shareData)) {
-        await navigator.share(shareData);
-        showFeedback(shareBtn, 'Shared!', '#4CAF50');
-      } else if (navigator.share) {
-        await navigator.share(shareData);
-        showFeedback(shareBtn, 'Shared!', '#4CAF50');
-      }
-      // Fallback: Clipboard (desktop)
-      else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(shareData.url);
-        showFeedback(shareBtn, 'Link copied!', '#2196F3');
-      }
-      // Ultimate fallback
-      else {
-        const url = encodeURIComponent(shareData.url);
-        const text = encodeURIComponent(shareData.text);
-        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+      if (navigator.share) {
+        await navigator.share(data);
+        feedback(btn, 'Shared!', '#4CAF50');
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(data.url);
+        feedback(btn, 'Link copied!', '#2196F3');
+      } else {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`, '_blank');
       }
     } catch (err) {
-      console.log('Share failed:', err);
-      // Silent fallback for aborted/canceled shares
-      if (err.name !== 'AbortError') {
-        fallbackCopy(shareData.url, shareBtn);
-      }
+      if (err.name !== 'AbortError') fallbackCopy(data.url, btn);
     }
   }
-  
-  function showFeedback(btn, message, color) {
-    const originalText = btn.textContent;
-    const originalBg = btn.style.backgroundColor;
-    
-    btn.textContent = message;
+
+  function feedback(btn, msg, color) {
+    const origText = btn.textContent, origBg = btn.style.backgroundColor;
+    btn.textContent = msg;
     btn.style.backgroundColor = color;
     btn.style.color = '#fff';
-    
     setTimeout(() => {
-      btn.textContent = originalText;
-      btn.style.backgroundColor = originalBg;
+      btn.textContent = origText;
+      btn.style.backgroundColor = origBg;
       btn.style.color = '';
     }, 1800);
   }
-  
+
   function fallbackCopy(url, btn) {
     try {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url);
-        showFeedback(btn, 'Link copied!', '#FF9800');
+        feedback(btn, 'Link copied!', '#FF9800');
       } else {
         prompt('Copy this Skill2Job Tools link:', url);
       }
-    } catch (e) {
+    } catch {
       prompt('Copy this Skill2Job Tools link:', url);
     }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initShare);
+  } else {
+    initShare();
   }
 })();
 </script>
