@@ -181,8 +181,19 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 </footer>
 
   <!-- MAIN JAVASCRIPT (Fully functional flow) -->
+<!-- ✅ FIXED PDF SCRIPTS - CORRECT ORDER -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.15.349/pdf.worker.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.15.349/pdf.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script defer>
+  // Set worker AFTER pdf.min.js loads
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.15.349/pdf.worker.min.js';
+</script>
+
+<!-- COMPLETE CROP PDF + SHARE JS -->
 <script defer>
 (function () {
+  // ===== CROP PDF TOOL (Main functionality) =====
   const pdfFileInput   = document.getElementById('pdfFile');
   const cropLoading    = document.getElementById('cropLoading');
   const cropStatus     = document.getElementById('cropStatus');
@@ -199,8 +210,6 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   let cropRect         = null;
   let canvasEl         = null;
   let viewport         = null;
-
-  // Drag variables
   let dragOffsetX = 0;
   let dragOffsetY = 0;
   let isDragging  = false;
@@ -239,6 +248,11 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
     setTimeout(async () => {
       try {
+        // Wait for pdfjsLib to be ready
+        if (typeof pdfjsLib === 'undefined') {
+          throw new Error('PDF.js library not loaded. Please refresh the page.');
+        }
+        
         pdfDocJs = await pdfjsLib.getDocument({ data: uploadedPDFBytes }).promise;
         cropLoading.style.display = 'none';
         showStatus('<strong>Upload successful!</strong> Please wait, preparing dashboard...');
@@ -262,7 +276,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
         }
 
         cropDashboard.style.display = 'block';
-        showStatus('<strong>Dashboard ready!</strong> Adjust the crop area, then click Crop PDF.');
+        showStatus('<strong>Dashboard ready!</strong> Drag/resize the red box to set crop area, then click Crop PDF.');
       } catch (err) {
         console.error('PDF.js error:', err);
         cropLoading.style.display = 'none';
@@ -271,11 +285,12 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     }, 900);
   });
 
+  // Page selector
   pageSelect.addEventListener('change', async function () {
     currentPageIndex = parseInt(this.value, 10) || 0;
     showStatus('Loading selected page. Please wait...');
     await renderPage(currentPageIndex);
-    showStatus('<strong>Dashboard ready!</strong> Adjust the crop area, then click Crop PDF.');
+    showStatus('<strong>Dashboard ready!</strong> Drag/resize the red box to set crop area, then click Crop PDF.');
   });
 
   async function renderPage(pageIndex) {
@@ -301,6 +316,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     cropRect.style.width = '80%';
     cropRect.style.height = '80%';
 
+    // Drag events
     cropRect.addEventListener('mousedown', onCropMouseDown);
     document.addEventListener('mousemove', onCropMouseMove);
     document.addEventListener('mouseup', onCropMouseUp);
@@ -314,7 +330,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     const rect = cropRect.getBoundingClientRect();
     const resizeZone = 16;
     if (e.clientX > rect.right - resizeZone && e.clientY > rect.bottom - resizeZone) {
-      return;
+      return; // Let native resize handle
     }
     e.preventDefault();
     isDragging = true;
@@ -345,15 +361,16 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     isDragging = false;
   }
 
+  // Crop button
   cropPDFBtn.addEventListener('click', async function () {
     if (!uploadedPDFBytes || !cropRect || !canvasEl || !viewport) {
-      showStatus('Please upload a PDF and set the crop area first.');
+      showStatus('Please upload a PDF and adjust the crop area first.');
       return;
     }
 
     cropResult.style.display = 'none';
     cropLoading.style.display = 'block';
-    showStatus('<strong>Processing...</strong> Preparing your cropped PDF. This may take some time.');
+    showStatus('<strong>Processing...</strong> Creating your cropped PDF. This may take a few moments.');
 
     setTimeout(async () => {
       try {
@@ -389,36 +406,48 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
         cropLoading.style.display = 'none';
         cropResult.innerHTML = `
-          <strong>Cropped PDF Ready!</strong>
-          <br><a href="${downloadUrl}" download="cropped.pdf" class="tool-link">Download PDF</a>
+          <strong>✅ Cropped PDF Ready!</strong>
+          <br><a href="${downloadUrl}" download="cropped-${currentPageIndex + 1}.pdf" class="tool-link">📥 Download PDF</a>
         `;
         cropResult.style.display = 'block';
         showStatus('<strong>Success!</strong> Your cropped PDF is ready to download.');
       } catch (err) {
         cropLoading.style.display = 'none';
         cropResult.style.display = 'none';
-        showStatus('Error cropping PDF. Please try again.');
-        console.error(err);
+        showStatus('Error creating PDF. Please try again.');
+        console.error('Crop error:', err);
       }
-    }, 1000);
+    }, 1200);
   });
+
+  // ===== SHARE BUTTON FUNCTIONALITY =====
+  const shareBtn = document.querySelector('.share-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Crop PDF Tool - Skill2Job',
+          text: 'Crop your PDF pages easily online!',
+          url: window.location.href
+        }).catch(() => {
+          fallbackCopy();
+        });
+      } else {
+        fallbackCopy();
+      }
+    });
+
+    function fallbackCopy() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('🔗 Link copied to clipboard!');
+      }).catch(() => {
+        prompt('Copy this link:', window.location.href);
+      });
+    }
+  }
 })();
 </script>
 
-  <!-- Share functionality JS (ADD THIS) -->
-<script defer>
-document.querySelector('.share-btn').addEventListener('click', function() {
-  if (navigator.share) {
-    navigator.share({
-      title: 'Crop PDF - Skill2Job Tools',
-      url: window.location.href
-    });
-  } else {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Link copied to clipboard!');
-  }
-});
-</script>
   
 </body>
 </html>
