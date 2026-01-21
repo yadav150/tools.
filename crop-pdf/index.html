@@ -79,30 +79,32 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <!-- TOOL SECTION: Crop PDF -->
+   <!-- TOOL SECTION: Crop PDF -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
       <h1 class="tool-title">Crop PDF</h1>
+
+      <!-- Upload -->
       <div class="input-group">
         <label for="pdfFile">Upload PDF</label>
         <input type="file" id="pdfFile" accept="application/pdf">
       </div>
-      
-      <!-- Crop button hidden initially -->
-      <button class="calculate-btn" id="cropBtn" style="display:none;">Crop PDF</button>
-      
+
+      <!-- Dashboard: hidden initially -->
+      <div id="cropDashboard" style="display:none;">
+        <div id="pdfPreviewGrid" class="pdf-grid"></div>
+        <button class="calculate-btn" id="cropBtn">Crop PDF</button>
+      </div>
+
+      <!-- Spinner and result -->
       <div class="loading" id="cropLoading">
         <div class="spinner"></div>
       </div>
       <div class="result" id="cropResult"></div>
-
-      <!-- PDF Preview Grid -->
-      <div id="pdfPreviewGrid" class="pdf-grid"></div>
     </div>
   </div>
 </section>
-
     <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
@@ -161,38 +163,43 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 </footer>
 
   <!-- IMPROVED SHARE SCRIPT -->
-  <script defer>
+ <script defer>
 (function(){
   'use strict';
 
-  const cropBtn = document.getElementById('cropBtn');
   const pdfFileInput = document.getElementById('pdfFile');
-  const cropResult = document.getElementById('cropResult');
+  const cropDashboard = document.getElementById('cropDashboard');
+  const cropBtn = document.getElementById('cropBtn');
   const cropLoading = document.getElementById('cropLoading');
+  const cropResult = document.getElementById('cropResult');
   const pdfPreviewGrid = document.getElementById('pdfPreviewGrid');
 
+  // Upload PDF
   pdfFileInput.addEventListener('change', handlePDFUpload);
 
-  function handlePDFUpload() {
+  function handlePDFUpload(){
     const file = pdfFileInput.files[0];
     cropResult.style.display='none';
     pdfPreviewGrid.innerHTML='';
-    
+    cropDashboard.style.display='none';
+    cropBtn.style.display='none';
+
     if(!file){
       cropResult.textContent='Please upload a PDF file first.';
       cropResult.style.display='block';
-      cropBtn.style.display='none';
       return;
     }
 
     cropLoading.style.display='block';
-    cropBtn.style.display='none';
 
-    // Simulate PDF loading delay
+    // Simulate PDF processing (replace with PDF.js later)
     setTimeout(()=>{
       cropLoading.style.display='none';
 
-      // Simulate PDF pages preview
+      // Show dashboard
+      cropDashboard.style.display='block';
+
+      // Simulate pages
       for(let i=1;i<=3;i++){
         const pageDiv=document.createElement('div');
         pageDiv.classList.add('pdf-page');
@@ -201,25 +208,34 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
         pdfPreviewGrid.appendChild(pageDiv);
       }
 
-      // Show crop button after preview ready
+      // Show crop button
       cropBtn.style.display='block';
-    },1200); // simulate loading time
+    },1200); // simulate load
   }
 
+  // Crop PDF
   cropBtn.addEventListener('click',()=>{
     cropLoading.style.display='block';
     cropResult.style.display='none';
+    cropBtn.style.display='none';
 
-    // Simulate crop processing time
+    // Simulate crop delay
     setTimeout(()=>{
       cropLoading.style.display='none';
-      cropResult.innerHTML='<strong>Cropped PDF Ready!</strong> Download your PDF.';
+
+      // Simulate cropped PDF blob
+      const pdfBlob = new Blob(['Cropped PDF content placeholder'], {type:'application/pdf'});
+      const downloadUrl = URL.createObjectURL(pdfBlob);
+
+      cropResult.innerHTML=`
+        <strong>Cropped PDF Ready!</strong><br>
+        <a href="${downloadUrl}" download="cropped.pdf" class="tool-link">Download PDF</a>
+      `;
       cropResult.style.display='block';
-      cropBtn.style.display='none';
     },1500);
   });
 
-  // Share button (universal)
+  // Share button
   const shareBtn=document.querySelector('.share-btn');
   if(shareBtn){
     shareBtn.addEventListener('click',handleShare);
