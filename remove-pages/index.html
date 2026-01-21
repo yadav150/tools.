@@ -174,7 +174,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 <script>
 /* ===========================
    REMOVE PAGES FROM PDF TOOL
-   FULL & STABLE VERSION
+   STABLE VERSION FIXED
 =========================== */
 
 let pdfBytes = null;
@@ -207,7 +207,6 @@ function uploadPDF(){
   result.style.display = 'none';
   loading.style.display = 'none';
 
-  // SAME AS AGE CALCULATOR BEHAVIOUR
   if(!pdfInput.files.length){
     result.textContent = 'Please upload a PDF file.';
     result.style.display = 'block';
@@ -226,11 +225,18 @@ function uploadPDF(){
     const reader = new FileReader();
 
     reader.onload = async e => {
-      pdfBytes = new Uint8Array(e.target.result);
-      await renderPDFPages();
-      loading.style.display = 'none';
-      pagesWrap.style.display = 'grid';
-      removeBtn.style.display = 'block';
+      try {
+        pdfBytes = new Uint8Array(e.target.result);
+        await renderPDFPages();
+        loading.style.display = 'none';
+        pagesWrap.style.display = 'grid';
+        removeBtn.style.display = 'block';
+      } catch(err){
+        loading.style.display = 'none';
+        result.textContent = 'Failed to load PDF. Please try again.';
+        result.style.display = 'block';
+        console.error(err);
+      }
     };
 
     reader.readAsArrayBuffer(file);
@@ -278,7 +284,7 @@ function togglePage(pageNo, el){
   if(selectedPages.has(pageNo)){
     selectedPages.delete(pageNo);
     el.classList.remove('selected');
-  }else{
+  } else {
     selectedPages.add(pageNo);
     el.classList.add('selected');
   }
@@ -303,21 +309,21 @@ async function removeSelectedPages(){
 
   try {
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    const totalPages = pdfDoc.getPageCount();
 
-    // simulate server / network preparation
-    await new Promise(r => setTimeout(r, getDelay()));
+    // validate selected pages
+    const pagesArray = [...selectedPages].filter(p => p > 0 && p <= totalPages);
+    pagesArray.sort((a,b) => b - a); // remove in reverse order
 
-    // remove pages safely (reverse order)
-    const pages = [...selectedPages].sort((a,b) => b - a);
-    for (const p of pages) {
+    for(const p of pagesArray){
       pdfDoc.removePage(p - 1);
-      await new Promise(r => setTimeout(r, 40)); // UI breathing
+      await new Promise(r => setTimeout(r, 40)); // small delay for realism
     }
 
-    // saving PDF (heavy task)
+    // simulate network / processing time
     await new Promise(r => setTimeout(r, getDelay()));
-    const newBytes = await pdfDoc.save();
 
+    const newBytes = await pdfDoc.save();
     const blob = new Blob([newBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
 
@@ -334,15 +340,14 @@ async function removeSelectedPages(){
     loading.style.display = 'none';
     result.innerHTML = 'Something went wrong while processing the PDF.<br>';
 
-    // create retry button
     const retryBtn = document.createElement('button');
     retryBtn.textContent = 'Try Again';
-    retryBtn.className = 'calculate-btn'; // reuse same button style
+    retryBtn.className = 'calculate-btn';
     retryBtn.style.marginTop = '12px';
     retryBtn.addEventListener('click', () => {
       result.style.display = 'none';
-      retryBtn.remove(); // remove button after click
-      removeSelectedPages(); // retry function
+      retryBtn.remove();
+      removeSelectedPages();
     });
 
     result.appendChild(retryBtn);
