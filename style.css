@@ -439,6 +439,59 @@ h2{
   color:#475569;
 }
 
+/* REMOVE */
+/* PDF GRID */
+.pdf-grid{
+  display:none;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:14px;
+  margin:20px 0;
+}
+
+/* PDF PAGE CARD */
+.pdf-page{
+  position:relative;
+  border:2px solid var(--border);
+  border-radius:8px;
+  padding:6px;
+  cursor:pointer;
+  background:#fff;
+  transition:.2s;
+}
+
+.pdf-page canvas{
+  width:100%;
+  height:auto;
+  border-radius:4px;
+}
+
+/* ❌ REMOVE MARK */
+.pdf-page .remove-mark{
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#dc2626;
+  color:#fff;
+  font-size:16px;
+  line-height:24px;
+  text-align:center;
+  display:none;
+}
+
+/* SELECTED = WILL BE REMOVED */
+.pdf-page.selected{
+  opacity:.6;
+  border-color:#dc2626;
+}
+
+.pdf-page.selected .remove-mark{
+  display:block;
+}
+
+
 /* TOOL LINK */
 .tool-link{
   display:inline-block;
