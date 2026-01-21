@@ -85,37 +85,81 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- SAME SHARE SCRIPT as other pages -->
-  <script>
-  (function() {
-    const shareBtn = document.getElementById('shareBtn');
-    if (shareBtn) {
-      shareBtn.addEventListener('click', async () => {
-        const shareData = {
-          title: document.title,
-          text: 'Skill2Job Tools Terms & Conditions',
-          url: window.location.href
-        };
-        
-        try {
-          if (navigator.share) {
-            await navigator.share(shareData);
-          } else if (navigator.clipboard) {
-            await navigator.clipboard.writeText(shareData.url);
-            const originalText = shareBtn.textContent;
-            shareBtn.textContent = 'Link copied!';
-            shareBtn.style.backgroundColor = '#4CAF50';
-            setTimeout(() => {
-              shareBtn.textContent = originalText;
-              shareBtn.style.backgroundColor = '';
-            }, 2000);
-          }
-        } catch (err) {
-          prompt('Copy Terms page link:', shareData.url);
-        }
-      });
+  <!-- SHARE API - LIGHTWEIGHT, DEFERRED -->
+<script defer>
+(function() {
+  'use strict';
+
+  function initShare() {
+    const btn = document.querySelector('.share-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', share, { passive: false });
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        share();
+      }
+    });
+  }
+
+  async function share() {
+    const btn = document.querySelector('.share-btn');
+    if (!btn) return;
+
+    const data = {
+      title: 'Skill2Job Tools – Free Online Tools',
+      text: 'Free online tools for students & job seekers: Age Calculator, PDF tools, Image checker. No signup required!',
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(data);
+        feedback(btn, 'Shared!', '#4CAF50');
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(data.url);
+        feedback(btn, 'Link copied!', '#2196F3');
+      } else {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`, '_blank');
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') fallbackCopy(data.url, btn);
     }
-  })();
-  </script>
+  }
+
+  function feedback(btn, msg, color) {
+    const origText = btn.textContent, origBg = btn.style.backgroundColor;
+    btn.textContent = msg;
+    btn.style.backgroundColor = color;
+    btn.style.color = '#fff';
+    setTimeout(() => {
+      btn.textContent = origText;
+      btn.style.backgroundColor = origBg;
+      btn.style.color = '';
+    }, 1800);
+  }
+
+  function fallbackCopy(url, btn) {
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        feedback(btn, 'Link copied!', '#FF9800');
+      } else {
+        prompt('Copy this Skill2Job Tools link:', url);
+      }
+    } catch {
+      prompt('Copy this Skill2Job Tools link:', url);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initShare);
+  } else {
+    initShare();
+  }
+})();
+</script>
+
 </body>
 </html>
