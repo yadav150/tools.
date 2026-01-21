@@ -77,42 +77,39 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <!-- REMOVE PAGES FROM PDF -->
+   <!-- REMOVE PDF PAGES -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
+
       <h1 class="tool-title">Remove Pages from PDF</h1>
 
-      <!-- FILE INPUT -->
       <div class="input-group">
-        <label for="pdfFile">Select PDF File</label>
-        <input type="file" id="pdfFile" accept="application/pdf">
+        <label for="pdfInput">Upload PDF</label>
+        <input type="file" id="pdfInput" accept="application/pdf">
       </div>
 
-      <!-- UPLOAD BUTTON (LIKE CALCULATE AGE) -->
-      <button class="calculate-btn" id="uploadBtn">
+      <button class="calculate-btn" id="calcBtn">
         Upload PDF
       </button>
 
-      <!-- SPINNER -->
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p id="loadingText">Uploading PDF…</p>
       </div>
 
-      <!-- PDF PREVIEW GRID -->
-      <div id="pdfPages" class="pdf-grid"></div>
+      <div class="result" id="result"></div>
 
-      <!-- REMOVE BUTTON -->
-      <button class="calculate-btn" id="removeBtn" style="display:none;">
+      <!-- PDF PAGE GRID -->
+      <div id="pagesWrap" class="pdf-grid"></div>
+
+      <button class="calculate-btn danger" id="removeBtn">
         Remove Selected Pages
       </button>
 
-      <!-- RESULT -->
-      <div class="result" id="result"></div>
     </div>
   </div>
 </section>
+
     <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
@@ -174,151 +171,171 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
 <script>
-(function(){
-  'use strict';
+/* ===========================
+   REMOVE PAGES FROM PDF TOOL
+   SAME BEHAVIOUR AS AGE CALCULATOR
+=========================== */
 
-  const pdfInput   = document.getElementById('pdfFile');
-  const uploadBtn  = document.getElementById('uploadBtn');
-  const removeBtn  = document.getElementById('removeBtn');
-  const loading    = document.getElementById('loading');
-  const loadingTxt = document.getElementById('loadingText');
-  const pagesWrap  = document.getElementById('pdfPages');
-  const result     = document.getElementById('result');
+let pdfBytes = null;
+let selectedPages = new Set();
 
-  let pdfBytes = null;
-  let removeSet = new Set();
+const pdfInput  = document.getElementById('pdfInput');
+const calcBtn   = document.getElementById('calcBtn');
+const removeBtn = document.getElementById('removeBtn');
+const loading   = document.getElementById('loading');
+const result    = document.getElementById('result');
+const pagesWrap = document.getElementById('pagesWrap');
 
-  uploadBtn.onclick = uploadPDF;
-  removeBtn.onclick = removePages;
+/* pdf.js worker */
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  /* STEP 1: UPLOAD BUTTON CLICK */
-  function uploadPDF(){
+/* upload button */
+calcBtn.addEventListener('click', uploadPDF);
+removeBtn.addEventListener('click', removeSelectedPages);
+
+/* fake delay (net + processing feel) */
+function getDelay(){
+  return Math.min(2200, 700 + Math.random() * 1300);
+}
+
+/* ===========================
+   STEP 1: UPLOAD PDF
+=========================== */
+function uploadPDF(){
+  // reset
+  result.style.display = 'none';
+  loading.style.display = 'none';
+
+  // SAME AS AGE CALCULATOR
+  if(!pdfInput.files.length){
+    result.textContent = 'Please upload a PDF file.';
+    result.style.display = 'block';
+    return;
+  }
+
+  pagesWrap.innerHTML = '';
+  pagesWrap.style.display = 'none';
+  removeBtn.style.display = 'none';
+  selectedPages.clear();
+
+  loading.style.display = 'block';
+
+  setTimeout(() => {
     const file = pdfInput.files[0];
-    if(!file){
-      alert('Please select a PDF file');
-      return;
-    }
+    const reader = new FileReader();
 
-    resetUI();
-    loadingTxt.textContent = 'Uploading PDF…';
-    loading.style.display = 'block';
-
-    // Artificial delay (Age Calculator style)
-    setTimeout(() => {
-      const reader = new FileReader();
-      reader.onload = async e => {
-        pdfBytes = new Uint8Array(e.target.result);
-        await renderPages();
-        loading.style.display = 'none';
-        pagesWrap.style.display = 'grid';
-        removeBtn.style.display = 'block';
-      };
-      reader.readAsArrayBuffer(file);
-    }, getDelay());
-  }
-
-  /* STEP 2: RENDER PDF PREVIEW */
-  async function renderPages(){
-    pagesWrap.innerHTML='';
-    removeSet.clear();
-
-    const pdf = await pdfjsLib.getDocument({data:pdfBytes}).promise;
-
-    for(let i=1;i<=pdf.numPages;i++){
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({scale:0.35});
-
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-
-      await page.render({canvasContext:ctx, viewport}).promise;
-
-      const div = document.createElement('div');
-      div.className = 'pdf-page';
-      div.innerHTML = '<div class="remove-mark">✕</div>';
-      div.appendChild(canvas);
-
-      div.onclick = () => toggleRemove(div, i-1);
-      pagesWrap.appendChild(div);
-    }
-  }
-
-  /* ❌ TOGGLE REMOVE */
-  function toggleRemove(el, index){
-    el.classList.toggle('selected');
-    el.classList.contains('selected')
-      ? removeSet.add(index)
-      : removeSet.delete(index);
-  }
-
-  /* STEP 3: REMOVE BUTTON */
-  async function removePages(){
-    if(removeSet.size === 0){
-      alert('Select pages to remove');
-      return;
-    }
-
-    loadingTxt.textContent = 'Removing selected pages…';
-    loading.style.display = 'block';
-    result.style.display = 'none';
-
-    setTimeout(async () => {
-      const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-      [...removeSet].sort((a,b)=>b-a).forEach(p=>pdfDoc.removePage(p));
-
-      const newPdf = await pdfDoc.save();
-      const blob = new Blob([newPdf],{type:'application/pdf'});
-      const url = URL.createObjectURL(blob);
-
+    reader.onload = async e => {
+      pdfBytes = new Uint8Array(e.target.result);
+      await renderPDFPages();
       loading.style.display = 'none';
-      result.style.display = 'block';
-      result.innerHTML = `
-        <strong>PDF Ready</strong>
-        <a href="${url}" download="removed-pages.pdf">Download PDF</a>
-      `;
-    }, getDelay());
-  }
-
-  function resetUI(){
-    pagesWrap.style.display='none';
-    pagesWrap.innerHTML='';
-    removeBtn.style.display='none';
-    result.style.display='none';
-  }
-
-  /* DYNAMIC DELAY (NET + DEVICE FEEL) */
-  function getDelay(){
-    return Math.min(2000 + (pdfInput.files[0]?.size || 0)/8000, 4500);
-  }
-
-  /* SHARE BUTTON */
-  const shareBtn = document.querySelector('.share-btn');
-  if(shareBtn){
-    shareBtn.onclick = async ()=>{
-      const data={
-        title:'Remove Pages from PDF – Skill2Job',
-        text:'Remove unwanted PDF pages easily online.',
-        url:location.href
-      };
-      try{
-        if(navigator.share) await navigator.share(data);
-        else{
-          await navigator.clipboard.writeText(data.url);
-          shareBtn.textContent='Link Copied!';
-          setTimeout(()=>shareBtn.textContent='Share',2000);
-        }
-      }catch(e){}
+      pagesWrap.style.display = 'grid';
+      removeBtn.style.display = 'block';
     };
+
+    reader.readAsArrayBuffer(file);
+  }, getDelay());
+}
+
+/* ===========================
+   STEP 2: RENDER PDF PAGES
+=========================== */
+async function renderPDFPages(){
+  const pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+
+  for(let i = 1; i <= pdf.numPages; i++){
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 0.35 });
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const box = document.createElement('div');
+    box.className = 'pdf-page';
+    box.dataset.page = i;
+
+    const cross = document.createElement('span');
+    cross.className = 'remove-mark';
+    cross.textContent = '✕';
+
+    box.appendChild(cross);
+    box.appendChild(canvas);
+
+    box.addEventListener('click', () => togglePage(i, box));
+
+    pagesWrap.appendChild(box);
+  }
+}
+
+/* ===========================
+   SELECT / DESELECT PAGE
+=========================== */
+function togglePage(pageNo, el){
+  if(selectedPages.has(pageNo)){
+    selectedPages.delete(pageNo);
+    el.classList.remove('selected');
+  }else{
+    selectedPages.add(pageNo);
+    el.classList.add('selected');
+  }
+}
+
+/* ===========================
+   STEP 3: REMOVE SELECTED PAGES
+=========================== */
+async function removeSelectedPages(){
+  result.style.display = 'none';
+
+  if(selectedPages.size === 0){
+    result.textContent = 'Please select pages to remove.';
+    result.style.display = 'block';
+    return;
   }
 
-})();
+  loading.style.display = 'block';
+
+  setTimeout(async () => {
+    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+
+    // remove from last to first
+    [...selectedPages]
+      .sort((a,b) => b - a)
+      .forEach(p => pdfDoc.removePage(p - 1));
+
+    const newBytes = await pdfDoc.save();
+    const blob = new Blob([newBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    loading.style.display = 'none';
+    result.innerHTML = `
+      PDF processed successfully.<br>
+      <a href="${url}" download="removed-pages.pdf">
+        Download PDF
+      </a>
+    `;
+    result.style.display = 'block';
+  }, getDelay());
+}
+
+/* ===========================
+   SHARE FUNCTION
+=========================== */
+function handleShare(){
+  if(navigator.share){
+    navigator.share({
+      title: 'Remove Pages from PDF',
+      text: 'Remove selected pages from PDF online',
+      url: location.href
+    });
+  }
+}
 </script>
+
 
 </body>
 </html>
