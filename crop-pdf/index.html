@@ -79,16 +79,19 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <!-- CROP PDF TOOL -->
+    <!-- TOOL SECTION: Crop PDF -->
 <section class="section">
   <div class="container">
-    <div class="card age-tool-card"> <!-- reusing age-tool-card for consistency -->
+    <div class="card age-tool-card">
       <h1 class="tool-title">Crop PDF</h1>
       <div class="input-group">
         <label for="pdfFile">Upload PDF</label>
         <input type="file" id="pdfFile" accept="application/pdf">
       </div>
-      <button class="calculate-btn" id="cropBtn">Crop PDF</button>
+      
+      <!-- Crop button hidden initially -->
+      <button class="calculate-btn" id="cropBtn" style="display:none;">Crop PDF</button>
+      
       <div class="loading" id="cropLoading">
         <div class="spinner"></div>
       </div>
@@ -159,7 +162,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
   <!-- IMPROVED SHARE SCRIPT -->
   <script defer>
-(function() {
+(function(){
   'use strict';
 
   const cropBtn = document.getElementById('cropBtn');
@@ -168,97 +171,76 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   const cropLoading = document.getElementById('cropLoading');
   const pdfPreviewGrid = document.getElementById('pdfPreviewGrid');
 
-  cropBtn.addEventListener('click', cropPDF);
+  pdfFileInput.addEventListener('change', handlePDFUpload);
 
-  pdfFileInput.addEventListener('keypress', function(e) {
-    if(e.key === 'Enter') cropPDF();
-  });
-
-  function cropPDF() {
+  function handlePDFUpload() {
     const file = pdfFileInput.files[0];
-    cropResult.style.display = 'none';
-    cropLoading.style.display = 'none';
-
-    if(!file) {
-      cropResult.textContent = 'Please upload a PDF file first.';
-      cropResult.style.display = 'block';
+    cropResult.style.display='none';
+    pdfPreviewGrid.innerHTML='';
+    
+    if(!file){
+      cropResult.textContent='Please upload a PDF file first.';
+      cropResult.style.display='block';
+      cropBtn.style.display='none';
       return;
     }
 
-    // Show loading
-    cropLoading.style.display = 'block';
-    pdfPreviewGrid.innerHTML = '';
+    cropLoading.style.display='block';
+    cropBtn.style.display='none';
 
-    // Simulate PDF preview load
-    setTimeout(() => {
-      cropLoading.style.display = 'none';
+    // Simulate PDF loading delay
+    setTimeout(()=>{
+      cropLoading.style.display='none';
 
-      // Mock preview pages (replace with real pdf.js or PDFLib integration)
+      // Simulate PDF pages preview
       for(let i=1;i<=3;i++){
-        const pageDiv = document.createElement('div');
+        const pageDiv=document.createElement('div');
         pageDiv.classList.add('pdf-page');
-        pageDiv.textContent = `Page ${i}`;
-        pageDiv.addEventListener('click', () => pageDiv.classList.toggle('selected'));
+        pageDiv.textContent=`Page ${i}`;
+        pageDiv.addEventListener('click',()=>pageDiv.classList.toggle('selected'));
         pdfPreviewGrid.appendChild(pageDiv);
       }
 
-      // Show crop button animation style (reuse calculate-btn)
-      cropBtn.classList.add('danger');
-      cropBtn.style.display = 'block';
-
-      // Cropping simulation
-      cropBtn.onclick = () => {
-        cropLoading.style.display = 'block';
-        cropResult.style.display = 'none';
-        setTimeout(() => {
-          cropLoading.style.display = 'none';
-          cropResult.innerHTML = '<strong>Cropped PDF Ready!</strong> Download your PDF.';
-          cropResult.style.display = 'block';
-          cropBtn.classList.remove('danger');
-        }, 1500);
-      };
-    }, 800);
+      // Show crop button after preview ready
+      cropBtn.style.display='block';
+    },1200); // simulate loading time
   }
 
-  // Share button (reuse existing age calc share script)
-  const shareBtn = document.querySelector('.share-btn');
+  cropBtn.addEventListener('click',()=>{
+    cropLoading.style.display='block';
+    cropResult.style.display='none';
+
+    // Simulate crop processing time
+    setTimeout(()=>{
+      cropLoading.style.display='none';
+      cropResult.innerHTML='<strong>Cropped PDF Ready!</strong> Download your PDF.';
+      cropResult.style.display='block';
+      cropBtn.style.display='none';
+    },1500);
+  });
+
+  // Share button (universal)
+  const shareBtn=document.querySelector('.share-btn');
   if(shareBtn){
-    shareBtn.addEventListener('click', handleShare);
-    shareBtn.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleShare();
-      }
+    shareBtn.addEventListener('click',handleShare);
+    shareBtn.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); handleShare();}
     });
   }
 
   async function handleShare(){
-    const shareData = {
-      title:'Crop PDF – Skill2Job Tools',
-      text:'Crop your PDF online instantly. Free, fast, mobile-friendly!',
-      url: window.location.href
-    };
-
+    const shareData={title:'Crop PDF – Skill2Job Tools',text:'Crop your PDF online instantly. Free, fast, mobile-friendly!',url:window.location.href};
     try{
-      if(navigator.share){
-        await navigator.share(shareData);
-      } else if(navigator.clipboard){
-        await navigator.clipboard.writeText(shareData.url);
-        showFeedback(shareBtn,'Link copied!','#4CAF50');
-      }
-    } catch(err){
-      prompt('Copy this Crop PDF link:', shareData.url);
-    }
+      if(navigator.share){ await navigator.share(shareData);}
+      else if(navigator.clipboard){ await navigator.clipboard.writeText(shareData.url); showFeedback(shareBtn,'Link copied!','#4CAF50');}
+    }catch(err){prompt('Copy this Crop PDF link:',shareData.url);}
   }
 
   function showFeedback(btn,message,color){
-    const originalText = btn.textContent;
-    btn.textContent = message;
-    btn.style.backgroundColor = color;
-    setTimeout(()=>{
-      btn.textContent = originalText;
-      btn.style.backgroundColor='';
-    },2000);
+    const originalText=btn.textContent;
+    btn.textContent=message;
+    btn.style.backgroundColor=color;
+    setTimeout(()=>{ btn.textContent=originalText; btn.style.backgroundColor='';},2000);
   }
 
 })();
