@@ -286,7 +286,6 @@ function togglePage(pageNo, el){
 
 /* ===========================
    STEP 3: REMOVE SELECTED PAGES
-   (FIXED STABLE VERSION)
 =========================== */
 async function removeSelectedPages(){
   result.style.display = 'none';
@@ -299,7 +298,7 @@ async function removeSelectedPages(){
 
   loading.style.display = 'block';
 
-  // allow spinner repaint
+  // allow spinner to render
   await new Promise(r => setTimeout(r, 120));
 
   try {
@@ -333,7 +332,20 @@ async function removeSelectedPages(){
 
   } catch(err){
     loading.style.display = 'none';
-    result.textContent = 'Something went wrong while processing the PDF.';
+    result.innerHTML = 'Something went wrong while processing the PDF.<br>';
+
+    // create retry button
+    const retryBtn = document.createElement('button');
+    retryBtn.textContent = 'Try Again';
+    retryBtn.className = 'calculate-btn'; // reuse same button style
+    retryBtn.style.marginTop = '12px';
+    retryBtn.addEventListener('click', () => {
+      result.style.display = 'none';
+      retryBtn.remove(); // remove button after click
+      removeSelectedPages(); // retry function
+    });
+
+    result.appendChild(retryBtn);
     result.style.display = 'block';
     console.error(err);
   }
@@ -342,18 +354,33 @@ async function removeSelectedPages(){
 /* ===========================
    SHARE FUNCTION
 =========================== */
-function handleShare(){
-  const data = {
-    title: 'Remove Pages from PDF',
-    text: 'Remove selected pages from a PDF online',
-    url: location.href
+const shareBtn = document.querySelector('.share-btn');
+if(shareBtn){
+  shareBtn.addEventListener('click', handleShare);
+  shareBtn.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleShare();
+    }
+  });
+}
+
+async function handleShare(){
+  const shareData = {
+    title: 'Remove Pages from PDF – Skill2Job Tools',
+    text: 'Remove selected pages from a PDF online quickly and safely.',
+    url: window.location.href
   };
 
-  if(navigator.share){
-    navigator.share(data);
-  }else if(navigator.clipboard){
-    navigator.clipboard.writeText(data.url);
-    alert('Link copied!');
+  try {
+    if(navigator.share){
+      await navigator.share(shareData);
+    } else if(navigator.clipboard){
+      await navigator.clipboard.writeText(shareData.url);
+      alert('Link copied!');
+    }
+  } catch(err){
+    prompt('Copy this link:', shareData.url);
   }
 }
 </script>
