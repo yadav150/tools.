@@ -143,6 +143,17 @@ h2{
 .crop-rect {
   border: 2px dashed red;
   background: rgba(255,0,0,0.05);
+  resize: both;
+  overflow: auto;
+}
+.pdf-page {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.crop-rect {
+  border: 2px dashed red;
+  background: rgba(255,0,0,0.05);
 }
 
 
