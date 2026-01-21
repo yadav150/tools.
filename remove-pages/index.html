@@ -77,34 +77,42 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <!-- REMOVE PDF PAGES TOOL -->
+    <!-- REMOVE PAGES FROM PDF -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
       <h1 class="tool-title">Remove Pages from PDF</h1>
 
+      <!-- FILE INPUT -->
       <div class="input-group">
-        <label for="pdfFile">Upload PDF File</label>
+        <label for="pdfFile">Select PDF File</label>
         <input type="file" id="pdfFile" accept="application/pdf">
       </div>
 
+      <!-- UPLOAD BUTTON (LIKE CALCULATE AGE) -->
+      <button class="calculate-btn" id="uploadBtn">
+        Upload PDF
+      </button>
+
+      <!-- SPINNER -->
       <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Uploading & processing PDF…</p>
+        <p id="loadingText">Uploading PDF…</p>
       </div>
 
-      <!-- PDF PAGE GRID -->
+      <!-- PDF PREVIEW GRID -->
       <div id="pdfPages" class="pdf-grid"></div>
 
+      <!-- REMOVE BUTTON -->
       <button class="calculate-btn" id="removeBtn" style="display:none;">
         Remove Selected Pages
       </button>
 
+      <!-- RESULT -->
       <div class="result" id="result"></div>
     </div>
   </div>
 </section>
-
     <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
@@ -166,46 +174,64 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
 <script>
 (function(){
   'use strict';
 
-  const pdfInput = document.getElementById('pdfFile');
-  const loading = document.getElementById('loading');
-  const pagesWrap = document.getElementById('pdfPages');
-  const removeBtn = document.getElementById('removeBtn');
-  const result = document.getElementById('result');
+  const pdfInput   = document.getElementById('pdfFile');
+  const uploadBtn  = document.getElementById('uploadBtn');
+  const removeBtn  = document.getElementById('removeBtn');
+  const loading    = document.getElementById('loading');
+  const loadingTxt = document.getElementById('loadingText');
+  const pagesWrap  = document.getElementById('pdfPages');
+  const result     = document.getElementById('result');
 
   let pdfBytes = null;
-  let selectedPages = new Set();
+  let removeSet = new Set();
 
-  pdfInput.addEventListener('change', handleUpload);
-  removeBtn.addEventListener('click', removePages);
+  uploadBtn.onclick = uploadPDF;
+  removeBtn.onclick = removePages;
 
-  async function handleUpload(){
+  /* STEP 1: UPLOAD BUTTON CLICK */
+  function uploadPDF(){
     const file = pdfInput.files[0];
-    if(!file) return;
+    if(!file){
+      alert('Please select a PDF file');
+      return;
+    }
 
     resetUI();
+    loadingTxt.textContent = 'Uploading PDF…';
     loading.style.display = 'block';
 
-    const reader = new FileReader();
-    reader.onload = async e => {
-      pdfBytes = new Uint8Array(e.target.result);
-      await renderPages(pdfBytes);
-      loading.style.display = 'none';
-      removeBtn.style.display = 'block';
-    };
-    reader.readAsArrayBuffer(file);
+    // Artificial delay (Age Calculator style)
+    setTimeout(() => {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        pdfBytes = new Uint8Array(e.target.result);
+        await renderPages();
+        loading.style.display = 'none';
+        pagesWrap.style.display = 'grid';
+        removeBtn.style.display = 'block';
+      };
+      reader.readAsArrayBuffer(file);
+    }, getDelay());
   }
 
-  async function renderPages(bytes){
-    pagesWrap.innerHTML = '';
-    const pdf = await pdfjsLib.getDocument({data:bytes}).promise;
+  /* STEP 2: RENDER PDF PREVIEW */
+  async function renderPages(){
+    pagesWrap.innerHTML='';
+    removeSet.clear();
+
+    const pdf = await pdfjsLib.getDocument({data:pdfBytes}).promise;
 
     for(let i=1;i<=pdf.numPages;i++){
       const page = await pdf.getPage(i);
-      const viewport = page.getViewport({scale:0.3});
+      const viewport = page.getViewport({scale:0.35});
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       canvas.width = viewport.width;
@@ -215,54 +241,60 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
       const div = document.createElement('div');
       div.className = 'pdf-page';
-      div.innerHTML = '';
+      div.innerHTML = '<div class="remove-mark">✕</div>';
       div.appendChild(canvas);
-      div.innerHTML += `<span>Page ${i}</span>`;
 
-      div.addEventListener('click',()=>{
-        div.classList.toggle('selected');
-        div.classList.contains('selected')
-          ? selectedPages.add(i-1)
-          : selectedPages.delete(i-1);
-      });
-
+      div.onclick = () => toggleRemove(div, i-1);
       pagesWrap.appendChild(div);
     }
   }
 
+  /* ❌ TOGGLE REMOVE */
+  function toggleRemove(el, index){
+    el.classList.toggle('selected');
+    el.classList.contains('selected')
+      ? removeSet.add(index)
+      : removeSet.delete(index);
+  }
+
+  /* STEP 3: REMOVE BUTTON */
   async function removePages(){
-    if(selectedPages.size===0){
-      alert('Please select pages to remove');
+    if(removeSet.size === 0){
+      alert('Select pages to remove');
       return;
     }
 
-    loading.style.display='block';
-    result.style.display='none';
+    loadingTxt.textContent = 'Removing selected pages…';
+    loading.style.display = 'block';
+    result.style.display = 'none';
 
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const totalPages = pdfDoc.getPageCount();
+    setTimeout(async () => {
+      const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+      [...removeSet].sort((a,b)=>b-a).forEach(p=>pdfDoc.removePage(p));
 
-    [...selectedPages].sort((a,b)=>b-a).forEach(p=>{
-      if(p < totalPages) pdfDoc.removePage(p);
-    });
+      const newPdf = await pdfDoc.save();
+      const blob = new Blob([newPdf],{type:'application/pdf'});
+      const url = URL.createObjectURL(blob);
 
-    const newPdf = await pdfDoc.save();
-    const blob = new Blob([newPdf],{type:'application/pdf'});
-    const url = URL.createObjectURL(blob);
-
-    loading.style.display='none';
-    result.style.display='block';
-    result.innerHTML = `
-      <strong>PDF Ready</strong>
-      <a href="${url}" download="edited.pdf">Download PDF</a>
-    `;
+      loading.style.display = 'none';
+      result.style.display = 'block';
+      result.innerHTML = `
+        <strong>PDF Ready</strong>
+        <a href="${url}" download="removed-pages.pdf">Download PDF</a>
+      `;
+    }, getDelay());
   }
 
   function resetUI(){
+    pagesWrap.style.display='none';
     pagesWrap.innerHTML='';
-    selectedPages.clear();
     removeBtn.style.display='none';
     result.style.display='none';
+  }
+
+  /* DYNAMIC DELAY (NET + DEVICE FEEL) */
+  function getDelay(){
+    return Math.min(2000 + (pdfInput.files[0]?.size || 0)/8000, 4500);
   }
 
   /* SHARE BUTTON */
@@ -270,8 +302,8 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   if(shareBtn){
     shareBtn.onclick = async ()=>{
       const data={
-        title:'Remove PDF Pages – Skill2Job',
-        text:'Remove unwanted pages from PDF easily.',
+        title:'Remove Pages from PDF – Skill2Job',
+        text:'Remove unwanted PDF pages easily online.',
         url:location.href
       };
       try{
@@ -284,7 +316,9 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
       }catch(e){}
     };
   }
+
 })();
 </script>
+
 </body>
 </html>
