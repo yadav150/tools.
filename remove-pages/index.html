@@ -173,8 +173,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
 <script>
 /* ===========================
-   REMOVE PAGES FROM PDF TOOL
-   STABLE VERSION FIXED
+   REMOVE PAGES FROM PDF TOOL - FIXED
 =========================== */
 
 let pdfBytes = null;
@@ -195,7 +194,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 calcBtn.addEventListener('click', uploadPDF);
 removeBtn.addEventListener('click', removeSelectedPages);
 
-/* dynamic delay (device + network feel) */
+/* dynamic delay (network + device feel) */
 function getDelay(){
   return Math.min(2500, 800 + Math.random() * 1500);
 }
@@ -267,8 +266,8 @@ async function renderPDFPages(){
     const cross = document.createElement('span');
     cross.className = 'remove-mark';
     cross.textContent = '✕';
-
     box.appendChild(cross);
+
     box.appendChild(canvas);
 
     box.addEventListener('click', () => togglePage(i, box));
@@ -311,12 +310,14 @@ async function removeSelectedPages(){
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
     const totalPages = pdfDoc.getPageCount();
 
-    // validate selected pages
-    const pagesArray = [...selectedPages].filter(p => p > 0 && p <= totalPages);
-    pagesArray.sort((a,b) => b - a); // remove in reverse order
+    // convert selected pages to 0-based & sort descending
+    const pagesToRemove = [...selectedPages]
+      .map(p => p - 1)
+      .filter(p => p >= 0 && p < totalPages)
+      .sort((a,b) => b - a);
 
-    for(const p of pagesArray){
-      pdfDoc.removePage(p - 1);
+    for(const p of pagesToRemove){
+      pdfDoc.removePage(p);
       await new Promise(r => setTimeout(r, 40)); // small delay for realism
     }
 
