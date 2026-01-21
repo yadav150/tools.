@@ -170,51 +170,62 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <!-- MAIN JAVASCRIPT (Fully functional flow) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.15.349/pdf.min.js"></script>
 <script>
+console.log('PDF.js loaded:', typeof pdfjsLib);
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.15.349/pdf.worker.min.js';
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
 <script>
-let pdfBytes, pdfDoc, pageNum = 0, cropBox;
-
 document.getElementById('pdfFile').onchange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('status').innerHTML = 'Loading PDF...';
-  
-  pdfBytes = await file.arrayBuffer();
-  pdfDoc = await pdfjsLib.getDocument(pdfBytes).promise;
-  
-  document.getElementById('loading').style.display = 'none';
-  
-  if (pdfDoc.numPages > 1) {
-    document.getElementById('pageSelect').style.display = 'block';
-    const select = document.getElementById('pageNum');
-    select.innerHTML = '';
-    for(let i=1; i<=pdfDoc.numPages; i++){
-      select.innerHTML += `<option value="${i-1}">Page ${i}</option>`;
+  try {
+    console.log('File selected');
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    console.log('Reading file...', file);
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('status').innerHTML = 'Reading file...';
+    
+    const pdfBytes = await file.arrayBuffer();
+    console.log('File read, bytes:', pdfBytes.byteLength);
+    
+    document.getElementById('status').innerHTML = 'Parsing PDF...';
+    console.log('pdfjsLib available:', typeof pdfjsLib);
+    
+    const pdfDoc = await pdfjsLib.getDocument({data: pdfBytes}).promise;
+    console.log('PDF loaded:', pdfDoc.numPages, 'pages');
+    
+    // Hide loading
+    document.getElementById('loading').style.display = 'none';
+    
+    // Show page selector if multi-page
+    const pageSelect = document.getElementById('pageSelect');
+    const pageNum = document.getElementById('pageNum');
+    if (pdfDoc.numPages > 1) {
+      pageSelect.style.display = 'block';
+      pageNum.innerHTML = '';
+      for(let i=1; i<=pdfDoc.numPages; i++){
+        pageNum.innerHTML += `<option value="${i-1}">Page ${i}</option>`;
+      }
     }
+    
+    await showPage(0, pdfDoc);
+    document.getElementById('cropArea').style.display = 'block';
+    document.getElementById('status').innerHTML = 'Drag red box to crop → Click Crop PDF';
+    
+  } catch (error) {
+    console.error('FULL ERROR:', error);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('status').innerHTML = `ERROR: ${error.message}`;
   }
-  
-  await showPage(0);
-  document.getElementById('cropArea').style.display = 'block';
-  document.getElementById('status').innerHTML = 'Drag red box to crop → Click Crop PDF';
 };
 
-document.getElementById('pageNum').onchange = (e) => {
-  pageNum = parseInt(e.target.value);
-  showPage(pageNum);
-};
-
-async function showPage(n) {
+async function showPage(n, pdfDoc) {
   const page = await pdfDoc.getPage(n+1);
   const viewport = page.getViewport({scale: 1.2});
   const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
   canvas.height = viewport.height;
-  canvas.style.maxWidth = '100%';
   
   await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
   
@@ -235,49 +246,7 @@ async function showPage(n) {
   wrapper.appendChild(cropBox);
   container.appendChild(wrapper);
 }
-
-document.getElementById('cropBtn').onclick = async () => {
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('status').innerHTML = 'Cropping PDF...';
-  
-  setTimeout(async () => {
-    const pdf = await PDFLib.PDFDocument.load(pdfBytes);
-    const newPdf = await PDFLib.PDFDocument.create();
-    const [page] = await newPdf.copyPages(pdf, [pageNum]);
-    
-    const rect = cropBox.getBoundingClientRect();
-    const canvasRect = cropBox.parentElement.querySelector('canvas').getBoundingClientRect();
-    
-    const scaleX = page.getWidth() / canvasRect.width;
-    const scaleY = page.getHeight() / canvasRect.height;
-    
-    page.setCropBox(
-      (rect.left - canvasRect.left) * scaleX,
-      (canvasRect.height - rect.bottom + canvasRect.top) * scaleY,
-      rect.width * scaleX,
-      rect.height * scaleY
-    );
-    
-    newPdf.addPage(page);
-    const finalBytes = await newPdf.save();
-    
-    const blob = new Blob([finalBytes], {type: 'application/pdf'});
-    const url = URL.createObjectURL(blob);
-    
-    document.getElementById('result').innerHTML = 
-      `<strong>✅ Ready!</strong><br><a href="${url}" download="cropped.pdf" class="tool-link">Download PDF</a>`;
-    document.getElementById('result').style.display = 'block';
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('status').innerHTML = 'Download ready!';
-  }, 500);
-};
-
-// SHARE
-document.querySelector('.share-btn')?.addEventListener('click', () => {
-  navigator.clipboard.writeText(window.location.href);
-  alert('Link copied!');
-});
 </script>
-  
+
 </body>
 </html>
