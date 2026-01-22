@@ -178,22 +178,18 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <p>© 2026 Skill2Job</p>
 </footer>
 
- <!-- Required libraries (pdf.js + pdf-lib). Keep these lines. -->
+<!-- Required libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-// ---------- Configuration & DOM ----------
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-// PDF.js library must be included in your HTML
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.180/pdf.min.js"></script>
 
 let pdfDoc = null;
 let selectedPageNum = null;
 let cropRect = null;
 
-// DOM Elements
 const pdfFileInput = document.getElementById('pdfFile');
 const chooseBtn = document.getElementById('chooseBtn');
 const uploadBtn = document.getElementById('uploadBtn');
@@ -206,42 +202,29 @@ const cropContainer = document.getElementById('cropContainer');
 const cropBtn = document.getElementById('cropBtn');
 const backToPages = document.getElementById('backToPages');
 
-// --------------------
 // FILE SELECTION
-// --------------------
 chooseBtn.addEventListener('click', () => pdfFileInput.click());
 
 pdfFileInput.addEventListener('change', () => {
-  if (pdfFileInput.files.length > 0) {
-    uploadBtn.style.display = 'block';
-  } else {
-    uploadBtn.style.display = 'none';
-  }
+  if (pdfFileInput.files.length > 0) uploadBtn.style.display = 'block';
+  else uploadBtn.style.display = 'none';
 });
 
-// --------------------
 // UPLOAD PDF
-// --------------------
 uploadBtn.addEventListener('click', () => {
-  if (!pdfFileInput.files.length) {
-    alert("Please select a PDF first!");
-    return;
-  }
+  if (!pdfFileInput.files.length) { alert("Please select a PDF first!"); return; }
 
   loading.style.display = 'block';
   statusMsg.style.display = 'none';
 
-  const file = pdfFileInput.files[0];
   const reader = new FileReader();
-
   reader.onload = function() {
     const typedarray = new Uint8Array(this.result);
-
     pdfjsLib.getDocument(typedarray).promise.then(doc => {
       pdfDoc = doc;
       loading.style.display = 'none';
       statusMsg.style.display = 'block';
-      statusMsg.innerHTML = `<strong>PDF loaded successfully!</strong> Select a page to crop.`;
+      statusMsg.innerHTML = `<strong>PDF loaded successfully!</strong> Hover a thumbnail & click to select a page to crop.`;
       pageDashboard.style.display = 'block';
       uploadBtn.style.display = 'none';
       renderPageThumbnails();
@@ -250,15 +233,14 @@ uploadBtn.addEventListener('click', () => {
       alert("Failed to load PDF: " + err.message);
     });
   };
-
-  reader.readAsArrayBuffer(file);
+  reader.onerror = () => { alert("Failed to read PDF file."); };
+  reader.readAsArrayBuffer(pdfFileInput.files[0]);
 });
 
-// --------------------
 // RENDER PAGE THUMBNAILS
-// --------------------
 function renderPageThumbnails() {
   pagesWrap.innerHTML = '';
+  pagesWrap.style.display = 'grid'; // show the thumbnails grid
   for (let i = 0; i < pdfDoc.numPages; i++) {
     const pageDiv = document.createElement('div');
     pageDiv.classList.add('pdf-page');
@@ -266,14 +248,11 @@ function renderPageThumbnails() {
     const canvas = document.createElement('canvas');
     pageDiv.appendChild(canvas);
 
-    const ctx = canvas.getContext('2d');
-
     pdfDoc.getPage(i + 1).then(page => {
       const viewport = page.getViewport({ scale: 0.3 });
       canvas.width = viewport.width;
       canvas.height = viewport.height;
-
-      page.render({ canvasContext: ctx, viewport: viewport });
+      page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
     });
 
     pageDiv.addEventListener('click', () => {
@@ -286,9 +265,7 @@ function renderPageThumbnails() {
   }
 }
 
-// --------------------
-// OPEN CROP DASHBOARD
-// --------------------
+// CROP DASHBOARD
 function openCropDashboard(pageNum) {
   cropContainer.innerHTML = '';
   cropDashboard.style.display = 'block';
@@ -297,13 +274,12 @@ function openCropDashboard(pageNum) {
     const canvas = document.createElement('canvas');
     canvas.id = 'cropCanvas';
     cropContainer.appendChild(canvas);
-    const ctx = canvas.getContext('2d');
+
     const viewport = page.getViewport({ scale: 1.5 });
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
-    page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
-      // CREATE DRAGGABLE CROP RECTANGLE
+    page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise.then(() => {
       cropRect = document.createElement('div');
       cropRect.classList.add('crop-rect');
       cropRect.style.width = '200px';
@@ -316,20 +292,10 @@ function openCropDashboard(pageNum) {
   });
 }
 
-// --------------------
-// MAKE CROP RECT DRAGGABLE & RESIZABLE
-// --------------------
+// DRAGGABLE CROP RECT
 function makeDraggableResizable(element) {
-  let isDragging = false;
-  let offsetX, offsetY;
-
-  element.addEventListener('mousedown', e => {
-    isDragging = true;
-    offsetX = e.offsetX;
-    offsetY = e.offsetY;
-    element.style.cursor = 'move';
-  });
-
+  let isDragging = false, offsetX, offsetY;
+  element.addEventListener('mousedown', e => { isDragging = true; offsetX = e.offsetX; offsetY = e.offsetY; element.style.cursor = 'move'; });
   document.addEventListener('mousemove', e => {
     if (!isDragging) return;
     const rect = cropContainer.getBoundingClientRect();
@@ -337,36 +303,22 @@ function makeDraggableResizable(element) {
     let y = e.clientY - rect.top - offsetY;
     x = Math.max(0, Math.min(x, rect.width - element.offsetWidth));
     y = Math.max(0, Math.min(y, rect.height - element.offsetHeight));
-    element.style.left = x + 'px';
-    element.style.top = y + 'px';
+    element.style.left = x + 'px'; element.style.top = y + 'px';
   });
-
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    element.style.cursor = 'default';
-  });
+  document.addEventListener('mouseup', () => { isDragging = false; element.style.cursor = 'default'; });
 }
 
-// --------------------
 // BACK BUTTON
-// --------------------
-backToPages.addEventListener('click', () => {
-  cropDashboard.style.display = 'none';
-  pageDashboard.style.display = 'block';
-});
+backToPages.addEventListener('click', () => { cropDashboard.style.display = 'none'; pageDashboard.style.display = 'block'; });
 
-// --------------------
 // CROP & DOWNLOAD
-// --------------------
 cropBtn.addEventListener('click', () => {
   if (!selectedPageNum || !cropRect) return;
-
   loading.style.display = 'block';
 
   const canvas = document.getElementById('cropCanvas');
   const scaleX = canvas.width / canvas.offsetWidth;
   const scaleY = canvas.height / canvas.offsetHeight;
-
   const cropX = parseInt(cropRect.style.left) * scaleX;
   const cropY = parseInt(cropRect.style.top) * scaleY;
   const cropW = parseInt(cropRect.offsetWidth) * scaleX;
@@ -376,24 +328,14 @@ cropBtn.addEventListener('click', () => {
   croppedCanvas.width = cropW;
   croppedCanvas.height = cropH;
   const ctx = croppedCanvas.getContext('2d');
-
   ctx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
 
-  // Convert cropped canvas to PDF
-  const pdf = new jspdf.jsPDF({
-    orientation: cropW > cropH ? 'landscape' : 'portrait',
-    unit: 'px',
-    format: [cropW, cropH]
-  });
-
+  // USE jsPDF (from included library)
+  const pdf = new jspdf.jsPDF({ orientation: cropW > cropH ? 'landscape' : 'portrait', unit: 'px', format: [cropW, cropH] });
   pdf.addImage(croppedCanvas.toDataURL('image/png'), 'PNG', 0, 0, cropW, cropH);
 
-  setTimeout(() => { // simulate spinner for large file
-    loading.style.display = 'none';
-    pdf.save('cropped.pdf');
-  }, 500);
+  setTimeout(() => { loading.style.display = 'none'; pdf.save('cropped.pdf'); }, 500);
 });
-
 </script>
   
 </body>
