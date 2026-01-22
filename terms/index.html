@@ -5,32 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Terms & Conditions | Skill2Job Tools</title>
-  <meta name="description" content="Skill2Job Tools Terms & Conditions. Legal agreement for using online tools, liability disclaimer, usage rules, intellectual property rights.">
-  <meta name="keywords" content="Skill2Job terms conditions, website terms, legal agreement, tool usage policy, liability disclaimer">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://tools.skill2job.site/terms">
-
-  <!-- FAVICON & TOUCH ICON -->
-<link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-<link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Terms & Conditions – Skill2Job Tools">
-  <meta property="og:description" content="Legal Terms for Skill2Job Tools usage. Liability limitations, usage rules, intellectual property rights.">
-  <meta property="og:url" content="https://tools.skill2job.site/terms">
-  <meta property="og:image" content="https://i.postimg.cc/R06dG5kY/Chat-GPT-Image-Jan-21-2026-01-34-24-PM.webp">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
+  
+  <!-- NON-BLOCKING CSS -->
+  <link rel="preload" href="../style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../style.css"></noscript>
+  
+  <!-- SYSTEM FONTS FIRST -->
+  <style>*{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif}</style>
+  
+  <!-- SAME FAVICON as HOMEPAGE (#1,2,3) -->
+  <link rel="preload" href="/favicon" as="image">
+  <link rel="icon" href="/favicon">
+  <link rel="apple-touch-icon" href="/favicon">
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <!-- HEADER - IDENTICAL to other pages -->
+  <!-- HEADER - 100% HOMEPAGE MATCH -->
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
+        <a href="/"><img src="/favicon" alt="Skill2Job Logo" loading="eager" width="32" height="32"></a>
       </div>
       <button class="share-btn" id="shareBtn">Share</button>
     </div>
@@ -85,81 +81,123 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- SHARE API - LIGHTWEIGHT, DEFERRED -->
-<script defer>
-(function() {
-  'use strict';
-
-  function initShare() {
-    const btn = document.querySelector('.share-btn');
-    if (!btn) return;
-
-    btn.addEventListener('click', share, { passive: false });
-    btn.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        share();
-      }
+  <!-- DEFERRED META TAGS & SEO -->
+  <script>
+  (() => {
+    // Meta tags
+    document.head.appendChild(Object.assign(document.createElement('meta'), {
+      name: 'description', 
+      content: 'Skill2Job Tools Terms & Conditions. Legal agreement for using online tools, liability disclaimer, usage rules, intellectual property rights.'
+    }));
+    document.head.appendChild(Object.assign(document.createElement('meta'), {
+      name: 'keywords', 
+      content: 'Skill2Job terms conditions, website terms, legal agreement, tool usage policy, liability disclaimer'
+    }));
+    document.head.appendChild(Object.assign(document.createElement('meta'), {
+      name: 'robots', 
+      content: 'index, follow'
+    }));
+    
+    // Open Graph
+    ['og:title', 'og:description', 'og:url', 'og:image'].forEach(prop => {
+      const meta = document.createElement('meta');
+      const values = {
+        'og:title': 'Terms & Conditions – Skill2Job Tools',
+        'og:description': 'Legal Terms for Skill2Job Tools usage. Liability limitations, usage rules, intellectual property rights.',
+        'og:url': 'https://tools.skill2job.site/terms',
+        'og:image': 'https://i.postimg.cc/YCnzSpLg/Official_Logo.webp'
+      };
+      meta.property = prop;
+      meta.content = values[prop];
+      document.head.appendChild(meta);
     });
-  }
+    
+    // Canonical & Google Fonts async
+    document.head.appendChild(Object.assign(document.createElement('link'), {
+      rel: 'canonical',
+      href: 'https://tools.skill2job.site/terms'
+    }));
+    document.head.appendChild(Object.assign(document.createElement('link'), {
+      href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap',
+      rel: 'stylesheet'
+    }));
+  })();
+  </script>
 
-  async function share() {
-    const btn = document.querySelector('.share-btn');
-    if (!btn) return;
+  <!-- SHARE API - TERMS PAGE SPECIFIC -->
+  <script defer>
+  (function() {
+    'use strict';
 
-    const data = {
-      title: 'Skill2Job Tools – Free Online Tools',
-      text: 'Free online tools for students & job seekers: Age Calculator, PDF tools, Image checker. No signup required!',
-      url: window.location.href
-    };
+    function initShare() {
+      const btn = document.querySelector('.share-btn');
+      if (!btn) return;
 
-    try {
-      if (navigator.share) {
-        await navigator.share(data);
-        feedback(btn, 'Shared!', '#4CAF50');
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(data.url);
-        feedback(btn, 'Link copied!', '#2196F3');
-      } else {
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`, '_blank');
-      }
-    } catch (err) {
-      if (err.name !== 'AbortError') fallbackCopy(data.url, btn);
+      btn.addEventListener('click', share, { passive: false });
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          share();
+        }
+      });
     }
-  }
 
-  function feedback(btn, msg, color) {
-    const origText = btn.textContent, origBg = btn.style.backgroundColor;
-    btn.textContent = msg;
-    btn.style.backgroundColor = color;
-    btn.style.color = '#fff';
-    setTimeout(() => {
-      btn.textContent = origText;
-      btn.style.backgroundColor = origBg;
-      btn.style.color = '';
-    }, 1800);
-  }
+    async function share() {
+      const btn = document.querySelector('.share-btn');
+      if (!btn) return;
 
-  function fallbackCopy(url, btn) {
-    try {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url);
-        feedback(btn, 'Link copied!', '#FF9800');
-      } else {
-        prompt('Copy this Skill2Job Tools link:', url);
+      const data = {
+        title: 'Skill2Job Tools Terms & Conditions',
+        text: 'Skill2Job Tools Terms - Legal agreement, liability disclaimer, usage rules for online tools.',
+        url: window.location.href
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(data);
+          feedback(btn, 'Shared!', '#4CAF50');
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(data.url);
+          feedback(btn, 'Link copied!', '#2196F3');
+        } else {
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`, '_blank');
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') fallbackCopy(data.url, btn);
       }
-    } catch {
-      prompt('Copy this Skill2Job Tools link:', url);
     }
-  }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initShare);
-  } else {
-    initShare();
-  }
-})();
-</script>
+    function feedback(btn, msg, color) {
+      const origText = btn.textContent, origBg = btn.style.backgroundColor;
+      btn.textContent = msg;
+      btn.style.backgroundColor = color;
+      btn.style.color = '#fff';
+      setTimeout(() => {
+        btn.textContent = origText;
+        btn.style.backgroundColor = origBg;
+        btn.style.color = '';
+      }, 1800);
+    }
 
+    function fallbackCopy(url, btn) {
+      try {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url);
+          feedback(btn, 'Link copied!', '#FF9800');
+        } else {
+          prompt('Copy this link:', url);
+        }
+      } catch {
+        prompt('Copy this link:', url);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initShare);
+    } else {
+      initShare();
+    }
+  })();
+  </script>
 </body>
 </html>
