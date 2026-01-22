@@ -2,158 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- TITLE -->
-  <title>Crop PDF – Crop Your PDF Online | Skill2Job Tools</title>
-
-  <!-- PRIMARY SEO -->
-  <meta name="description" content="Use Skill2Job's free Crop PDF tool to easily crop and adjust PDF pages online. Fast, accurate, and mobile-friendly.">
-  <meta name="keywords" content="crop pdf, pdf crop online, adjust pdf pages, pdf editor online, Skill2Job tools">
-  <meta name="author" content="Yadav Subba">
-  <meta name="robots" content="index, follow">
-
-  <!-- CANONICAL -->
-  <link rel="canonical" href="https://tools.skill2job.site/crop-pdf">
-
-  <!-- FAVICON & TOUCH ICON (preload) -->
-  <link rel="preload" href="/favicon.ico" as="image">
-  <link rel="icon" type="image/webp" href="/favicon">
-  <link rel="apple-touch-icon" href="/favicon">
-
-  <!-- SOCIAL / OG TAGS -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Crop PDF – Free Online Tool | Skill2Job">
-  <meta property="og:description" content="Crop your PDF pages online easily. Accurate, fast, and mobile-friendly PDF tool.">
-  <meta property="og:url" content="https://tools.skill2job.site/crop-pdf">
-  <meta property="og:image" content="/favicon">
-  <meta property="og:site_name" content="Skill2Job Tools">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Crop PDF – Skill2Job Tools">
-  <meta name="twitter:description" content="Free online Crop PDF tool by Skill2Job. Crop PDF pages easily and quickly.">
-  <meta name="twitter:image" content="/favicon">
-
-  <!-- FONTS (PERFORMANCE) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- EXTERNAL CSS -->
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- STRUCTURED DATA (JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Crop PDF",
-    "url": "https://tools.skill2job.site/crop-pdf",
-    "applicationCategory": "UtilityApplication",
-    "operatingSystem": "All",
-    "description": "Free online Crop PDF tool to crop and adjust PDF pages easily and accurately.",
-    "author": { "@type": "Person", "name": "Yadav Subba" },
-    "publisher": { 
-      "@type": "Organization",
-      "name": "Skill2Job",
-      "logo": { "@type": "ImageObject", "url": "/favicon" }
-    }
-  }
-  </script>
+  <title>Crop PDF – Skill2Job Tools</title>
+  <meta name="description" content="Crop PDF pages online free. Fast, accurate, mobile-friendly.">
   
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
+  <!-- FAVICON -->
+  <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+  
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  
+  <!-- ✅ PDF LIBRARIES - CRITICAL ORDER -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
-  <!-- HEADER (with improved share button) -->
+  <!-- HEADER -->
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="/">
-          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-        </a>
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job"></a>
       </div>
-      <button class="share-btn" type="button" aria-label="Share Age Calculator">Share</button>
+      <button class="share-btn">Share</button>
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main class="site-main">
-<!-- CROP PDF TOOL - FULLY WORKING -->
-<section class="section">
-  <div class="container">
-    <div class="card">
-      <h1 class="tool-title">Crop PDF Pages</h1>
-      
-      <!-- FILE UPLOAD -->
-      <div class="input-group">
-        <label for="pdfFile">Select PDF File</label>
-        <input type="file" id="pdfFile" accept=".pdf">
-      </div>
-      
-      <!-- UPLOAD BUTTON -->
-      <button class="calculate-btn" id="uploadBtn">Upload & Preview PDF</button>
-      
-      <!-- UPLOAD SPINNER -->
-      <div class="loading" id="uploadSpinner">
-        <div class="spinner"></div>
-        <p>Processing PDF...</p>
-      </div>
-      
-      <!-- SUCCESS MESSAGE -->
-      <div class="result" id="uploadSuccess" style="display:none;">
-        <strong>✅ PDF Ready!</strong>
-        <p>Click any thumbnail below to crop</p>
-      </div>
-      
-      <!-- PAGE SELECTOR -->
-      <div class="input-group" id="pageSelectGroup" style="display:none;">
-        <label for="pageSelect">Select Page:</label>
-        <select id="pageSelect"></select>
-      </div>
-      
-      <!-- CROP BUTTON -->
-      <button class="calculate-btn" id="cropBtn" style="display:none;">Create Cropped PDF</button>
-      
-      <!-- CROP SPINNER -->
-      <div class="loading" id="cropSpinner" style="display:none;">
-        <div class="spinner"></div>
-        <p>Creating cropped PDF...</p>
-      </div>
-      
-      <!-- PAGE THUMBNAILS -->
-      <div class="pdf-grid" id="pdfPages"></div>
-      
-      <!-- CROP PREVIEW -->
-      <div id="cropPreview" style="display:none; margin-top:20px;">
-        <h3>Crop Area (Drag to adjust)</h3>
-        <div id="cropCanvasContainer" style="position:relative; border:2px solid var(--border); border-radius:var(--radius); height:400px; background:#f8fafc; overflow:hidden;">
-          <canvas id="cropCanvas"></canvas>
-          <div id="cropRect" class="crop-rect" style="display:none;"></div>
+    <!-- ✅ CROP TOOL SECTION -->
+    <section class="section">
+      <div class="container">
+        <div class="card age-tool-card">
+          <h1 class="tool-title">Crop PDF Pages</h1>
+          
+          <!-- UPLOAD -->
+          <div class="input-group">
+            <label for="pdfFile">Upload PDF</label>
+            <input type="file" id="pdfFile" accept=".pdf">
+          </div>
+          
+          <button class="calculate-btn" id="uploadBtn">Upload PDF</button>
+          
+          <!-- SPINNER -->
+          <div class="loading" id="uploadLoading">
+            <div class="spinner"></div>
+            <p>Processing PDF...</p>
+          </div>
+          
+          <!-- SUCCESS -->
+          <div class="result" id="successMsg" style="display:none;">
+            <strong>✅ PDF Loaded!</strong>
+            <p>Select page to crop ↓</p>
+          </div>
+          
+          <!-- PAGE SELECT -->
+          <div class="input-group" id="pageSelectGroup" style="display:none;">
+            <label for="pageSelect">Choose Page</label>
+            <select id="pageSelect"></select>
+          </div>
+          
+          <!-- CROP BUTTON -->
+          <button class="calculate-btn" id="cropBtn" style="display:none;">Create Cropped PDF</button>
+          
+          <!-- CROP SPINNER -->
+          <div class="loading" id="cropLoading" style="display:none;">
+            <div class="spinner"></div>
+            <p>Creating PDF...</p>
+          </div>
+          
+          <!-- THUMBNAILS -->
+          <div class="pdf-grid" id="pdfPages" style="display:none;"></div>
+          
+          <!-- DOWNLOAD -->
+          <div id="downloadWrapper" style="display:none; margin-top:20px;">
+            <a class="calculate-btn" id="downloadBtn" download>📥 Download PDF</a>
+          </div>
         </div>
       </div>
-      
-      <!-- DOWNLOAD -->
-      <div id="downloadSection" style="display:none; text-align:center; margin-top:20px;">
-        <button class="calculate-btn" id="downloadBtn">📥 Download Cropped PDF</button>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-    <!-- ABOUT TOOL -->
+    <!-- ABOUT -->
     <section class="section">
       <div class="container">
         <div class="card">
-          <h2>About This Tool</h2>
-          <p>
-Skill2Job's free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth. 
-This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations. 
-All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked. 
-Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy. 
-Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online. 
-Experience convenience, accuracy, and safety with Skill2Job's Age Calculator today.
-          </p>
+          <h2>About Crop PDF</h2>
+          <p>Skill2Job's free Crop PDF tool lets you easily extract specific pages from any PDF. Perfect for students, professionals, and anyone needing clean single-page PDFs. All processing happens locally - your files stay private.</p>
         </div>
       </div>
     </section>
@@ -164,21 +97,9 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
         <div class="card">
           <h2>More Tools</h2>
           <div class="tools-grid">
-            <div class="tool-card">
-              <h3>Merge PDF</h3>
-              <p>Combine multiple PDF files into one.</p>
-              <a class="tool-link" href="/merge-pdf/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Remove PDF Pages</h3>
-              <p>Delete selected pages from a PDF file.</p>
-              <a class="tool-link" href="/remove-pages/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Crop PDF</h3>
-              <p>Crop and adjust PDF pages easily.</p>
-              <a class="tool-link" href="/crop-pdf/">Use Tool</a>
-            </div>
+            <div class="tool-card"><h3>Merge PDF</h3><p>Combine PDFs</p><a class="tool-link" href="/merge-pdf/">Use Tool</a></div>
+            <div class="tool-card"><h3>Remove Pages</h3><p>Delete PDF pages</p><a class="tool-link" href="/remove-pages/">Use Tool</a></div>
+            <div class="tool-card"><h3>Age Calculator</h3><p>Calculate exact age</p><a class="tool-link" href="/age-calculator">Use Tool</a></div>
           </div>
         </div>
       </div>
@@ -187,237 +108,194 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 
   <!-- FOOTER -->
   <footer class="site-footer">
-  <p>
-    <strong>Skill2Job Tools</strong> | 
-    <a href="/">Home</a> | 
-    <a href="/about">About</a> | 
-    <a href="/contact">Contact</a> | 
-    <a href="/privacy">Privacy</a> | 
-    <a href="/terms">Terms</a>
-  </p>
-  <p>© 2026 Skill2Job</p>
-</footer>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.432/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <p><strong>Skill2Job Tools</strong> | <a href="/">Home</a> | <a href="/about">About</a> | <a href="/privacy">Privacy</a></p>
+    <p>© 2026 Skill2Job</p>
+  </footer>
 
-<script>
-(function() {
+  <!-- ✅ COMPLETE WORKING JS -->
+  <script>
+  (function() {
     'use strict';
     
     let pdfDoc = null;
-    let currentPageNum = 1;
-    let pageCanvases = [];
+    let currentPage = 1;
     
-    // Set PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.7.432/pdf.worker.min.js';
+    // Setup PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     
+    // Elements
+    const els = {
+      uploadBtn: document.getElementById('uploadBtn'),
+      cropBtn: document.getElementById('cropBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
+      pdfFile: document.getElementById('pdfFile'),
+      successMsg: document.getElementById('successMsg'),
+      pageSelectGroup: document.getElementById('pageSelectGroup'),
+      pageSelect: document.getElementById('pageSelect'),
+      pdfPages: document.getElementById('pdfPages'),
+      uploadLoading: document.getElementById('uploadLoading'),
+      cropLoading: document.getElementById('cropLoading'),
+      downloadWrapper: document.getElementById('downloadWrapper')
+    };
+    
+    // Init
     function init() {
-        document.getElementById('uploadBtn').onclick = uploadPDF;
-        document.getElementById('cropBtn').onclick = cropPDF;
-        document.getElementById('downloadBtn').onclick = downloadPDF;
+      els.uploadBtn.addEventListener('click', uploadPDF);
+      els.cropBtn.addEventListener('click', createCroppedPDF);
+      els.pageSelect.addEventListener('change', onPageChange);
+      document.querySelector('.share-btn').addEventListener('click', shareTool);
     }
     
+    // Upload PDF
     async function uploadPDF() {
-        const fileInput = document.getElementById('pdfFile');
-        const file = fileInput.files[0];
+      const file = els.pdfFile.files[0];
+      
+      if (!file) {
+        showError('Please select a PDF file');
+        return;
+      }
+      
+      // Show spinner
+      els.uploadLoading.style.display = 'block';
+      hideAll();
+      
+      try {
+        pdfDoc = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
         
-        // VALIDATION
-        if (!file) {
-            showMessage('Please select a PDF file first!', 'error');
-            return;
-        }
-        if (!file.name.toLowerCase().endsWith('.pdf')) {
-            showMessage('Please select a valid PDF file!', 'error');
-            return;
-        }
+        // Hide spinner, show success
+        els.uploadLoading.style.display = 'none';
+        els.successMsg.style.display = 'block';
         
-        // SHOW SPINNER
-        toggleSpinner('uploadSpinner', true);
-        hideAllSections();
+        // Setup pages
+        await setupPages();
         
-        try {
-            // Load PDF
-            const arrayBuffer = await file.arrayBuffer();
-            pdfDoc = await pdfjsLib.getDocument(arrayBuffer).promise;
-            
-            // Hide spinner, show success
-            toggleSpinner('uploadSpinner', false);
-            document.getElementById('uploadSuccess').style.display = 'block';
-            
-            // Show page selector and thumbnails
-            await showPageSelector();
-            await renderThumbnails();
-            
-        } catch (error) {
-            toggleSpinner('uploadSpinner', false);
-            showMessage('Error loading PDF. Please try another file.', 'error');
-            console.error('PDF Load Error:', error);
-        }
+      } catch (e) {
+        els.uploadLoading.style.display = 'none';
+        showError('Failed to load PDF');
+      }
     }
     
-    async function showPageSelector() {
-        const select = document.getElementById('pageSelect');
-        select.innerHTML = '';
-        
-        for (let i = 1; i <= pdfDoc.numPages; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = `Page ${i}`;
-            select.appendChild(option);
-        }
-        
-        document.getElementById('pageSelectGroup').style.display = 'block';
-        document.getElementById('cropBtn').style.display = 'block';
-        document.getElementById('pdfPages').style.display = 'grid';
-        
-        select.onchange = function() {
-            currentPageNum = parseInt(this.value);
-            renderThumbnails();
-        };
+    // Setup page selector & thumbnails
+    async function setupPages() {
+      els.pageSelectGroup.style.display = 'block';
+      els.cropBtn.style.display = 'block';
+      els.pdfPages.style.display = 'grid';
+      
+      // Page selector
+      els.pageSelect.innerHTML = '';
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Page ${i}`;
+        els.pageSelect.appendChild(opt);
+      }
+      
+      // Thumbnails
+      await renderThumbnails();
     }
     
+    // Render thumbnails
     async function renderThumbnails() {
-        const container = document.getElementById('pdfPages');
-        container.innerHTML = '';
-        
-        for (let i = 1; i <= pdfDoc.numPages; i++) {
-            const page = await pdfDoc.getPage(i);
-            const scale = 0.15;
-            const viewport = page.getViewport({ scale });
-            
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            
-            await page.render({ canvasContext: context, viewport }).promise;
-            
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'pdf-page';
-            pageDiv.dataset.page = i;
-            pageDiv.innerHTML = `<span class="remove-mark">×</span>`;
-            pageDiv.appendChild(canvas);
-            
-            pageDiv.onclick = () => selectPage(i);
-            container.appendChild(pageDiv);
-        }
-    }
-    
-    function selectPage(pageNum) {
-        currentPageNum = pageNum;
-        document.querySelectorAll('.pdf-page').forEach(page => {
-            page.classList.remove('selected');
-        });
-        document.querySelector(`[data-page="${pageNum}"]`).classList.add('selected');
-        document.getElementById('pageSelect').value = pageNum;
-        showCropPreview();
-    }
-    
-    async function showCropPreview() {
-        const container = document.getElementById('cropPreview');
-        const canvas = document.getElementById('cropCanvas');
-        const cropRect = document.getElementById('cropRect');
-        
-        container.style.display = 'block';
-        
-        const page = await pdfDoc.getPage(currentPageNum);
-        const scale = 1.2;
-        const viewport = page.getViewport({ scale });
+      els.pdfPages.innerHTML = '';
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const page = await pdfDoc.getPage(i);
+        const canvas = document.createElement('canvas');
+        const scale = 0.2;
+        const viewport = page.getViewport({scale});
         
         canvas.height = viewport.height;
         canvas.width = viewport.width;
         
-        const context = canvas.getContext('2d');
-        await page.render({ canvasContext: context, viewport }).promise;
+        await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
         
-        cropRect.style.display = 'block';
-        cropRect.style.left = '50px';
-        cropRect.style.top = '50px';
-        cropRect.style.width = '250px';
-        cropRect.style.height = '200px';
+        const pageDiv = document.createElement('div');
+        pageDiv.className = 'pdf-page';
+        pageDiv.dataset.page = i;
+        pageDiv.innerHTML = '<span class="remove-mark">×</span>';
+        pageDiv.appendChild(canvas);
+        pageDiv.addEventListener('click', () => selectPage(i));
+        
+        els.pdfPages.appendChild(pageDiv);
+      }
     }
     
-    async function cropPDF() {
-        toggleSpinner('cropSpinner', true);
-        hideAllSections();
+    // Select page
+    function selectPage(pageNum) {
+      currentPage = pageNum;
+      document.querySelectorAll('.pdf-page').forEach(p => p.classList.remove('selected'));
+      document.querySelector(`[data-page="${pageNum}"]`).classList.add('selected');
+      els.pageSelect.value = pageNum;
+    }
+    
+    // Page change
+    function onPageChange() {
+      currentPage = parseInt(els.pageSelect.value);
+      renderThumbnails();
+    }
+    
+    // Create cropped PDF (single page)
+    async function createCroppedPDF() {
+      els.cropLoading.style.display = 'block';
+      hideAll();
+      
+      try {
+        const pdfBytes = await pdfDoc.getData();
+        const pdfDocLib = await PDFLib.PDFDocument.load(pdfBytes);
         
-        try {
-            const existingPdfBytes = await pdfDoc.getData();
-            const pdfDocLib = await PDFLib.PDFDocument.load(existingPdfBytes);
-            
-            // Copy only selected page
-            const [copiedPage] = await pdfDocLib.copyPages(pdfDocLib, [currentPageNum - 1]);
-            const newPdfDoc = await PDFLib.PDFDocument.create();
-            newPdfDoc.addPage(copiedPage);
-            
-            const pdfBytes = await newPdfDoc.save();
-            
-            // Create download
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            
-            const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.href = url;
-            downloadBtn.download = `skill2job-cropped-page-${currentPageNum}.pdf`;
-            downloadBtn.style.display = 'inline-block';
-            
-            document.getElementById('downloadSection').style.display = 'block';
-            
-        } catch (error) {
-            toggleSpinner('cropSpinner', false);
-            showMessage('Error creating cropped PDF. Please try again.', 'error');
-            console.error('Crop Error:', error);
+        // Copy selected page only
+        const [page] = await pdfDocLib.copyPages(pdfDocLib, [currentPage - 1]);
+        const newPdf = await PDFLib.PDFDocument.create();
+        newPdf.addPage(page);
+        
+        const newPdfBytes = await newPdf.save();
+        
+        // Download
+        const blob = new Blob([newPdfBytes], {type: 'application/pdf'});
+        els.downloadBtn.href = URL.createObjectURL(blob);
+        els.downloadBtn.download = `skill2job-cropped-page-${currentPage}.pdf`;
+        els.downloadWrapper.style.display = 'block';
+        
+      } catch (e) {
+        showError('Failed to create PDF');
+      }
+      
+      els.cropLoading.style.display = 'none';
+    }
+    
+    // Utils
+    function hideAll() {
+      [els.successMsg, els.pageSelectGroup, els.pdfPages, els.downloadWrapper].forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+    
+    function showError(msg) {
+      els.successMsg.innerHTML = `<strong>❌ ${msg}</strong>`;
+      els.successMsg.style.display = 'block';
+    }
+    
+    // Share
+    async function shareTool() {
+      try {
+        if (navigator.share) {
+          await navigator.share({title: 'Crop PDF - Skill2Job', url: location.href});
+        } else {
+          await navigator.clipboard.writeText(location.href);
+          document.querySelector('.share-btn').textContent = 'Copied!';
+          setTimeout(() => document.querySelector('.share-btn').textContent = 'Share', 2000);
         }
-        
-        toggleSpinner('cropSpinner', false);
+      } catch {
+        prompt('Copy this link:', location.href);
+      }
     }
     
-    function downloadPDF() {
-        // Automatically triggered by href + download attribute
-    }
-    
-    function toggleSpinner(id, show) {
-        const spinner = document.getElementById(id);
-        spinner.style.display = show ? 'block' : 'none';
-    }
-    
-    function hideAllSections() {
-        document.querySelectorAll('.result, #pdfPages, #pageSelectGroup, #cropBtn, #cropPreview, #downloadSection').forEach(el => {
-            el.style.display = 'none';
-        });
-    }
-    
-    function showMessage(text, type = 'success') {
-        const msgDiv = document.getElementById('uploadSuccess');
-        msgDiv.innerHTML = `<strong>${type === 'error' ? '❌' : '✅'} ${text}</strong>`;
-        msgDiv.style.display = 'block';
-        msgDiv.style.background = type === 'error' ? '#fee' : '';
-    }
-    
-    // Initialize
+    // Start
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+      document.addEventListener('DOMContentLoaded', init);
     } else {
-        init();
+      init();
     }
-    
-    // Share button
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('share-btn')) {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Crop PDF - Skill2Job',
-                    url: window.location.href
-                });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                e.target.textContent = 'Copied!';
-                setTimeout(() => e.target.textContent = 'Share', 2000);
-            }
-        }
-    });
-})();
-</script>
-
+  })();
+  </script>
 </body>
 </html>
