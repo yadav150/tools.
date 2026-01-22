@@ -182,148 +182,180 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <p>© 2026 Skill2Job</p>
 </footer>
 
-  <!-- MAIN JAVASCRIPT (Fully functional flow) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-<script>
-const chooseBtn = document.getElementById('chooseBtn');
-const uploadBtn = document.getElementById('uploadBtn');
-const pdfFileInput = document.getElementById('pdfFile');
-const loading = document.getElementById('loading');
-const statusMsg = document.getElementById('statusMsg');
-const pageDashboard = document.getElementById('pageDashboard');
-const pagesWrap = document.getElementById('pagesWrap');
-const backToUpload = document.getElementById('backToUpload');
-const cropDashboard = document.getElementById('cropDashboard');
-const cropContainer = document.getElementById('cropContainer');
-const cropBtn = document.getElementById('cropBtn');
-const backToPages = document.getElementById('backToPages');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+  <script>
+    // ----- CROP PDF TOOL JS -----
+
+const chooseBtn = document.getElementById("chooseBtn");
+const pdfFileInput = document.getElementById("pdfFile");
+const uploadBtn = document.getElementById("uploadBtn");
+const loading = document.getElementById("loading");
+const statusMsg = document.getElementById("statusMsg");
+const pageDashboard = document.getElementById("pageDashboard");
+const pagesWrap = document.getElementById("pagesWrap");
+const backToUpload = document.getElementById("backToUpload");
+const cropDashboard = document.getElementById("cropDashboard");
+const cropContainer = document.getElementById("cropContainer");
+const cropBtn = document.getElementById("cropBtn");
+const backToPages = document.getElementById("backToPages");
+const fileStep = document.getElementById("fileStep");
 
 let pdfDoc = null;
-let selectedPage = null;
-let cropBox = null;
+let selectedPageIndex = 0;
+let cropRect = null;
+let canvas, ctx;
 
-// STEP 1: Choose File
-chooseBtn.addEventListener('click', () => pdfFileInput.click());
-pdfFileInput.addEventListener('change', () => {
-  if (pdfFileInput.files.length > 0) uploadBtn.style.display = 'inline-block';
+// ---------- FILE SELECT ----------
+chooseBtn.addEventListener("click", () => pdfFileInput.click());
+
+pdfFileInput.addEventListener("change", () => {
+  if (pdfFileInput.files.length === 0) return;
+  uploadBtn.style.display = "block";
+  statusMsg.style.display = "none";
 });
 
-// STEP 2: Upload PDF
-uploadBtn.addEventListener('click', async () => {
-  loading.style.display = 'block';
-  statusMsg.textContent = '';
-  try {
-    const file = pdfFileInput.files[0];
-    const arrayBuffer = await file.arrayBuffer();
-    pdfDoc = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+// ---------- UPLOAD ----------
+uploadBtn.addEventListener("click", async () => {
+  const file = pdfFileInput.files[0];
+  if (!file) return;
 
-    pagesWrap.innerHTML = '';
-    for (let i = 1; i <= pdfDoc.numPages; i++) {
-      const pageDiv = document.createElement('div');
-      pageDiv.className = 'pdf-thumbnail';
-      pageDiv.textContent = `Page ${i}`;
-      pageDiv.style.cursor = 'pointer';
-      pageDiv.style.border = '1px solid #ccc';
-      pageDiv.style.padding = '10px';
-      pageDiv.style.margin = '5px';
-      pageDiv.addEventListener('click', () => selectPage(i));
-      pagesWrap.appendChild(pageDiv);
-    }
+  loading.style.display = "block";
+  statusMsg.style.display = "none";
 
-    pageDashboard.style.display = 'block';
-    fileStep.style.display = 'none';
-    uploadBtn.style.display = 'none';
-  } catch (err) {
-    statusMsg.textContent = 'Error loading PDF.';
-    console.error(err);
-  } finally {
-    loading.style.display = 'none';
+  const arrayBuffer = await file.arrayBuffer();
+  pdfDoc = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+
+  loading.style.display = "none";
+  statusMsg.style.display = "block";
+  statusMsg.textContent = "PDF loaded successfully!";
+  uploadBtn.style.display = "none";
+  fileStep.style.display = "none";
+
+  showPageDashboard();
+});
+
+// ---------- PAGE DASHBOARD ----------
+function showPageDashboard() {
+  pageDashboard.style.display = "block";
+  pagesWrap.innerHTML = "";
+
+  for (let i = 0; i < pdfDoc.numPages; i++) {
+    const div = document.createElement("div");
+    div.className = "pdf-page";
+    div.textContent = "Page " + (i+1);
+    div.addEventListener("click", () => selectPage(i));
+    pagesWrap.appendChild(div);
   }
-});
-
-// STEP 3: Back to Upload
-backToUpload.addEventListener('click', () => {
-  pageDashboard.style.display = 'none';
-  fileStep.style.display = 'block';
-  uploadBtn.style.display = pdfFileInput.files.length > 0 ? 'inline-block' : 'none';
-});
-
-// STEP 4: Select Page and Show Crop
-async function selectPage(pageNum) {
-  selectedPage = await pdfDoc.getPage(pageNum);
-
-  const viewport = selectedPage.getViewport({scale: 1.5});
-  cropContainer.innerHTML = '';
-  const canvas = document.createElement('canvas');
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  const ctx = canvas.getContext('2d');
-
-  await selectedPage.render({canvasContext: ctx, viewport}).promise;
-  cropContainer.appendChild(canvas);
-
-  // Add crop box
-  cropBox = document.createElement('div');
-  cropBox.style.position = 'absolute';
-  cropBox.style.border = '2px solid red';
-  cropBox.style.left = '50px';
-  cropBox.style.top = '50px';
-  cropBox.style.width = '200px';
-  cropBox.style.height = '200px';
-  cropBox.style.resize = 'both';
-  cropBox.style.overflow = 'auto';
-  cropContainer.appendChild(cropBox);
-
-  pageDashboard.style.display = 'none';
-  cropDashboard.style.display = 'block';
 }
 
-// STEP 5: Back to Pages
-backToPages.addEventListener('click', () => {
-  cropDashboard.style.display = 'none';
-  pageDashboard.style.display = 'block';
+backToUpload.addEventListener("click", () => {
+  pageDashboard.style.display = "none";
+  fileStep.style.display = "block";
+  pdfFileInput.value = "";
 });
 
-// STEP 6: Crop & Download
-cropBtn.addEventListener('click', async () => {
-  try {
-    const pdfBytes = await pdfFileInput.files[0].arrayBuffer();
-    const pdfLibDoc = await PDFLib.PDFDocument.load(pdfBytes);
+// ---------- SELECT PAGE & SHOW CROP ----------
+async function selectPage(index) {
+  selectedPageIndex = index;
+  pageDashboard.style.display = "none";
+  cropDashboard.style.display = "block";
+  cropContainer.innerHTML = "";
 
-    const pageIndex = selectedPage.pageNumber - 1;
-    const page = pdfLibDoc.getPage(pageIndex);
+  const page = await pdfDoc.getPage(index + 1);
+  const viewport = page.getViewport({ scale: 1.5 });
 
-    const {width: canvasWidth, height: canvasHeight} = cropContainer.querySelector('canvas');
-    const cropRect = cropBox.getBoundingClientRect();
-    const containerRect = cropContainer.getBoundingClientRect();
+  canvas = document.createElement("canvas");
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  ctx = canvas.getContext("2d");
 
-    const scaleX = page.getWidth() / canvasWidth;
-    const scaleY = page.getHeight() / canvasHeight;
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  cropContainer.appendChild(canvas);
 
-    const cropX = (cropRect.left - containerRect.left) * scaleX;
-    const cropY = (canvasHeight - (cropRect.bottom - containerRect.top)) * scaleY;
-    const cropWidth = cropRect.width * scaleX;
-    const cropHeight = cropRect.height * scaleY;
+  // ADD DRAGGABLE CROP RECTANGLE
+  cropRect = document.createElement("div");
+  cropRect.className = "crop-rect";
+  cropRect.style.width = "150px";
+  cropRect.style.height = "150px";
+  cropRect.style.left = "50px";
+  cropRect.style.top = "50px";
+  cropContainer.appendChild(cropRect);
 
-    page.setCropBox(cropX, cropY, cropWidth, cropHeight);
+  makeDraggableResizable(cropRect);
+}
 
-    const newPdfBytes = await pdfLibDoc.save();
-    const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'cropped.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    statusMsg.textContent = 'Error cropping PDF.';
-    console.error(err);
-  }
+// ---------- BACK ----------
+backToPages.addEventListener("click", () => {
+  cropDashboard.style.display = "none";
+  pageDashboard.style.display = "block";
 });
-</script>
 
+// ---------- DRAG & RESIZE ----------
+function makeDraggableResizable(el) {
+  let isDragging = false;
+  let startX, startY;
+
+  el.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    startX = e.clientX - el.offsetLeft;
+    startY = e.clientY - el.offsetTop;
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    let x = e.clientX - startX;
+    let y = e.clientY - startY;
+
+    x = Math.max(0, Math.min(canvas.width - el.offsetWidth, x));
+    y = Math.max(0, Math.min(canvas.height - el.offsetHeight, y));
+
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+  });
+
+  document.addEventListener("mouseup", () => isDragging = false);
+}
+
+// ---------- CROP & DOWNLOAD PDF ----------
+cropBtn.addEventListener("click", async () => {
+  const rect = cropRect.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width / canvasRect.width;
+  const scaleY = canvas.height / canvasRect.height;
+
+  const cropX = (rect.left - canvasRect.left) * scaleX;
+  const cropY = (rect.top - canvasRect.top) * scaleY;
+  const cropWidth = rect.width * scaleX;
+  const cropHeight = rect.height * scaleY;
+
+  // Create new canvas with cropped content
+  const croppedCanvas = document.createElement("canvas");
+  croppedCanvas.width = cropWidth;
+  croppedCanvas.height = cropHeight;
+  const croppedCtx = croppedCanvas.getContext("2d");
+  croppedCtx.drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+  // Convert cropped canvas to PNG
+  const imgData = croppedCanvas.toDataURL("image/png");
+
+  // Create new PDF using pdf-lib
+  const pdfDocNew = await PDFLib.PDFDocument.create();
+  const img = await pdfDocNew.embedPng(imgData);
+  const page = pdfDocNew.addPage([img.width, img.height]);
+  page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+
+  const pdfBytes = await pdfDocNew.save();
+  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "cropped.pdf";
+  link.click();
+});
+  </script>
+  
 </body>
 </html>
