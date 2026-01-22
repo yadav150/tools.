@@ -186,7 +186,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
   <script>
-    // PDF Crop Tool JS
+    // PDF Crop Tool JS (Enhanced Resizable Crop Box)
 let pdfDoc = null;
 let currentPage = 1;
 let totalPages = 0;
@@ -195,7 +195,6 @@ let cropRect = { x: 50, y: 50, width: 200, height: 200 };
 
 const pdfFileInput = document.getElementById("pdfFile");
 const chooseBtn = document.getElementById("chooseBtn");
-const uploadBtn = document.getElementById("uploadBtn");
 const statusMsg = document.getElementById("statusMsg");
 const loading = document.getElementById("loading");
 const pageDashboard = document.getElementById("pageDashboard");
@@ -220,7 +219,7 @@ pdfFileInput.addEventListener("change", async (e) => {
     try {
       pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
       totalPages = pdfDoc.numPages;
-      statusMsg.textContent = "PDF loaded successfully!";
+      statusMsg.textContent = "PDF loaded successfully! Select page to crop.";
       showPageDashboard();
     } catch (err) {
       console.error(err);
@@ -262,7 +261,6 @@ async function showPageDashboard() {
     };
     page.render(renderContext);
 
-    // click to select page
     pageDiv.addEventListener("click", () => {
       currentPage = i;
       showCropDashboard();
@@ -296,36 +294,102 @@ async function showCropDashboard() {
   cropBox.id = "cropBox";
   cropBox.style.position = "absolute";
   cropBox.style.border = "2px dashed red";
-  cropBox.style.cursor = "move";
   cropBox.style.left = cropRect.x + "px";
   cropBox.style.top = cropRect.y + "px";
   cropBox.style.width = cropRect.width + "px";
   cropBox.style.height = cropRect.height + "px";
+  cropBox.style.boxSizing = "border-box";
   cropContainer.style.position = "relative";
   cropContainer.appendChild(cropBox);
+
+  // Create resize handles
+  const handles = ["nw", "ne", "sw", "se"];
+  handles.forEach((dir) => {
+    const handle = document.createElement("div");
+    handle.className = "resize-handle " + dir;
+    handle.style.width = "10px";
+    handle.style.height = "10px";
+    handle.style.background = "red";
+    handle.style.position = "absolute";
+    handle.style.cursor = dir + "-resize";
+
+    switch (dir) {
+      case "nw":
+        handle.style.left = "-5px";
+        handle.style.top = "-5px";
+        break;
+      case "ne":
+        handle.style.right = "-5px";
+        handle.style.top = "-5px";
+        break;
+      case "sw":
+        handle.style.left = "-5px";
+        handle.style.bottom = "-5px";
+        break;
+      case "se":
+        handle.style.right = "-5px";
+        handle.style.bottom = "-5px";
+        break;
+    }
+    cropBox.appendChild(handle);
+
+    // Resize logic
+    handle.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startWidth = cropBox.offsetWidth;
+      const startHeight = cropBox.offsetHeight;
+      const startLeft = cropBox.offsetLeft;
+      const startTop = cropBox.offsetTop;
+
+      function resizeMove(ev) {
+        let dx = ev.clientX - startX;
+        let dy = ev.clientY - startY;
+
+        if (dir.includes("e")) cropBox.style.width = Math.max(20, startWidth + dx) + "px";
+        if (dir.includes("s")) cropBox.style.height = Math.max(20, startHeight + dy) + "px";
+        if (dir.includes("w")) {
+          cropBox.style.width = Math.max(20, startWidth - dx) + "px";
+          cropBox.style.left = startLeft + dx + "px";
+        }
+        if (dir.includes("n")) {
+          cropBox.style.height = Math.max(20, startHeight - dy) + "px";
+          cropBox.style.top = startTop + dy + "px";
+        }
+
+        cropRect.x = cropBox.offsetLeft;
+        cropRect.y = cropBox.offsetTop;
+        cropRect.width = cropBox.offsetWidth;
+        cropRect.height = cropBox.offsetHeight;
+      }
+
+      function stopResize() {
+        window.removeEventListener("mousemove", resizeMove);
+        window.removeEventListener("mouseup", stopResize);
+      }
+
+      window.addEventListener("mousemove", resizeMove);
+      window.addEventListener("mouseup", stopResize);
+    });
+  });
 
   // Drag crop box
   let isDragging = false;
   let startX, startY;
-
   cropBox.addEventListener("mousedown", (e) => {
+    if (e.target.classList.contains("resize-handle")) return;
     isDragging = true;
-    startX = e.offsetX;
-    startY = e.offsetY;
+    startX = e.clientX - cropBox.offsetLeft;
+    startY = e.clientY - cropBox.offsetTop;
   });
 
-  window.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
-
-  cropBox.addEventListener("mousemove", (e) => {
+  window.addEventListener("mouseup", () => (isDragging = false));
+  window.addEventListener("mousemove", (e) => {
     if (!isDragging) return;
-    let dx = e.offsetX - startX;
-    let dy = e.offsetY - startY;
-    let newX = cropBox.offsetLeft + dx;
-    let newY = cropBox.offsetTop + dy;
+    let newX = e.clientX - startX;
+    let newY = e.clientY - startY;
 
-    // Keep inside canvas
     newX = Math.max(0, Math.min(newX, canvas.width - cropBox.offsetWidth));
     newY = Math.max(0, Math.min(newY, canvas.height - cropBox.offsetHeight));
 
@@ -334,14 +398,6 @@ async function showCropDashboard() {
 
     cropRect.x = newX;
     cropRect.y = newY;
-  });
-
-  // Resize crop box (simple bottom-right drag)
-  cropBox.addEventListener("dblclick", () => {
-    cropBox.style.width = parseInt(cropBox.style.width) + 20 + "px";
-    cropBox.style.height = parseInt(cropBox.style.height) + 20 + "px";
-    cropRect.width = cropBox.offsetWidth;
-    cropRect.height = cropBox.offsetHeight;
   });
 }
 
@@ -355,15 +411,12 @@ cropBtn.addEventListener("click", async () => {
   canvas.height = cropRect.height;
   const ctx = canvas.getContext("2d");
 
-  const renderContext = {
+  await page.render({
     canvasContext: ctx,
     viewport: viewport,
     transform: [1, 0, 0, 1, -cropRect.x, -cropRect.y],
-  };
+  }).promise;
 
-  await page.render(renderContext).promise;
-
-  // Convert to PDF
   const croppedPdf = new jspdf.jsPDF({
     orientation: canvas.width > canvas.height ? "l" : "p",
     unit: "px",
@@ -381,8 +434,9 @@ backToUpload.addEventListener("click", () => {
   pdfFileInput.value = "";
 });
 
-backToPages.addEventListener("click", showPageDashboard);
-
+backToPages.addEventListener("click", () => {
+  showPageDashboard();
+});
   </script>
   
 </body>
