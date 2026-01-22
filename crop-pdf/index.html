@@ -79,41 +79,42 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
+<!-- PDF Crop Tool Section -->
 <section class="section">
   <div class="container">
-    <div class="card crop-tool-card">
+    <div class="card pdf-tool-card">
       <h1 class="tool-title">Crop PDF</h1>
 
-      <!-- PDF File Upload -->
-      <div class="input-group">
-        <label for="pdfFile">Select PDF to Crop</label>
-        <input type="file" id="pdfFile" accept="application/pdf" style="display:none">
+      <!-- UPLOAD -->
+      <div class="upload-wrapper">
+        <input type="file" id="pdfFile" accept="application/pdf" style="display:none;">
         <button id="chooseBtn" class="choose-btn">Choose PDF</button>
-        <button id="uploadBtn" class="upload-btn" style="display:none">Upload PDF</button>
-        <div class="small-icon-upload">
-          <img src="https://i.postimg.cc/zX1GW7Jv/Chat-GPT-Image-Jan-21-2026-06-08-49-PM.webp" alt="Upload Icon" style="width:40px;margin-top:10px;">
+        <button id="uploadBtn" class="upload-btn" style="display:none;">Upload</button>
+        <div class="small-upload-icon">
+          <img src="https://i.postimg.cc/zX1GW7Jv/Chat-GPT-Image-Jan-21-2026-06-08-49-PM.webp" alt="Upload Icon" />
+          <p>Select a PDF file to start cropping</p>
         </div>
       </div>
 
-      <!-- Loading & Status -->
-      <div class="loading" id="loading"><div class="spinner"></div></div>
-      <div id="statusMsg" style="display:none;"></div>
+      <div id="loading" class="loading" style="display:none;">
+        <div class="spinner"></div>
+      </div>
+      <div id="statusMsg" class="status-msg" style="display:none;"></div>
 
-      <!-- Pages Dashboard -->
-      <div id="pageDashboard" style="display:none;">
-        <h3>Select a page to crop:</h3>
+      <!-- PAGE THUMBNAILS -->
+      <div id="pageDashboard" class="page-dashboard" style="display:none;">
         <div id="pagesWrap" class="pages-wrap"></div>
       </div>
 
-      <!-- Crop Dashboard -->
-      <div id="cropDashboard" style="display:none;">
+      <!-- CROP DASHBOARD -->
+      <div id="cropDashboard" class="crop-dashboard" style="display:none;">
         <button id="backToPages" class="back-btn">← Back to Pages</button>
         <div id="cropContainer" class="crop-container"></div>
-        <button id="cropBtn" class="crop-btn">Crop Page</button>
-        <div id="downloadSection" style="display:none; margin-top:15px;">
-          <a id="downloadLink" href="#" class="download-link" download="cropped.pdf">Download Cropped PDF</a>
-        </div>
+        <button id="cropBtn" class="crop-btn">Crop PDF</button>
       </div>
+
+      <!-- DOWNLOAD LINK -->
+      <div id="downloadLinkContainer" style="margin-top:10px;"></div>
     </div>
   </div>
 </section>
@@ -199,17 +200,19 @@ const cropContainer = document.getElementById('cropContainer');
 const cropBtn = document.getElementById('cropBtn');
 const backToPages = document.getElementById('backToPages');
 
+// --------------------
 // FILE SELECTION
+// --------------------
 chooseBtn.addEventListener('click', () => pdfFileInput.click());
-
 pdfFileInput.addEventListener('change', () => {
-  if (pdfFileInput.files.length > 0) uploadBtn.style.display = 'block';
-  else uploadBtn.style.display = 'none';
+  uploadBtn.style.display = pdfFileInput.files.length ? 'block' : 'none';
 });
 
+// --------------------
 // UPLOAD PDF
+// --------------------
 uploadBtn.addEventListener('click', () => {
-  if (!pdfFileInput.files.length) { alert("Please select a PDF first!"); return; }
+  if (!pdfFileInput.files.length) { alert("Please select a PDF!"); return; }
 
   loading.style.display = 'block';
   statusMsg.style.display = 'none';
@@ -221,8 +224,8 @@ uploadBtn.addEventListener('click', () => {
       pdfDoc = doc;
       loading.style.display = 'none';
       statusMsg.style.display = 'block';
-      statusMsg.innerHTML = `<strong>PDF loaded successfully!</strong> Hover a thumbnail & click to select a page to crop.`;
-      pageDashboard.style.display = 'block';
+      statusMsg.innerHTML = `<strong>PDF loaded successfully!</strong> Hover a thumbnail & click to crop.`;
+      pageDashboard.style.display = 'grid';
       uploadBtn.style.display = 'none';
       renderPageThumbnails();
     }).catch(err => {
@@ -234,10 +237,12 @@ uploadBtn.addEventListener('click', () => {
   reader.readAsArrayBuffer(pdfFileInput.files[0]);
 });
 
+// --------------------
 // RENDER PAGE THUMBNAILS
+// --------------------
 function renderPageThumbnails() {
   pagesWrap.innerHTML = '';
-  pagesWrap.style.display = 'grid'; // show the thumbnails grid
+  pagesWrap.style.display = 'grid';
   for (let i = 0; i < pdfDoc.numPages; i++) {
     const pageDiv = document.createElement('div');
     pageDiv.classList.add('pdf-page');
@@ -262,10 +267,13 @@ function renderPageThumbnails() {
   }
 }
 
-// CROP DASHBOARD
+// --------------------
+// OPEN CROP DASHBOARD
+// --------------------
 function openCropDashboard(pageNum) {
   cropContainer.innerHTML = '';
   cropDashboard.style.display = 'block';
+  cropDashboard.style.transition = 'all 0.3s ease';
 
   pdfDoc.getPage(pageNum).then(page => {
     const canvas = document.createElement('canvas');
@@ -289,52 +297,55 @@ function openCropDashboard(pageNum) {
   });
 }
 
-// DRAGGABLE CROP RECT
+// --------------------
+// DRAGGABLE & RESIZABLE CROP RECT (Desktop + Mobile)
+// --------------------
 function makeDraggableResizable(element) {
   let isDragging = false, offsetX, offsetY;
-  element.addEventListener('mousedown', e => { isDragging = true; offsetX = e.offsetX; offsetY = e.offsetY; element.style.cursor = 'move'; });
-  document.addEventListener('mousemove', e => {
+
+  const startDrag = (e) => {
+    isDragging = true;
+    if (e.touches) {
+      offsetX = e.touches[0].clientX - element.getBoundingClientRect().left;
+      offsetY = e.touches[0].clientY - element.getBoundingClientRect().top;
+    } else {
+      offsetX = e.offsetX; offsetY = e.offsetY;
+    }
+    element.style.cursor = 'move';
+  };
+
+  const dragMove = (e) => {
     if (!isDragging) return;
     const rect = cropContainer.getBoundingClientRect();
-    let x = e.clientX - rect.left - offsetX;
-    let y = e.clientY - rect.top - offsetY;
+    let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    let x = clientX - rect.left - offsetX;
+    let y = clientY - rect.top - offsetY;
     x = Math.max(0, Math.min(x, rect.width - element.offsetWidth));
     y = Math.max(0, Math.min(y, rect.height - element.offsetHeight));
-    element.style.left = x + 'px'; element.style.top = y + 'px';
-  });
-  document.addEventListener('mouseup', () => { isDragging = false; element.style.cursor = 'default'; });
+    element.style.left = x + 'px';
+    element.style.top = y + 'px';
+  };
+
+  const endDrag = () => { isDragging = false; element.style.cursor = 'default'; };
+
+  element.addEventListener('mousedown', startDrag);
+  element.addEventListener('touchstart', startDrag);
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('touchmove', dragMove);
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('touchend', endDrag);
 }
 
+// --------------------
 // BACK BUTTON
-backToPages.addEventListener('click', () => { cropDashboard.style.display = 'none'; pageDashboard.style.display = 'block'; });
-
-// CROP & DOWNLOAD
-cropBtn.addEventListener('click', () => {
-  if (!selectedPageNum || !cropRect) return;
-  loading.style.display = 'block';
-
-  const canvas = document.getElementById('cropCanvas');
-  const scaleX = canvas.width / canvas.offsetWidth;
-  const scaleY = canvas.height / canvas.offsetHeight;
-  const cropX = parseInt(cropRect.style.left) * scaleX;
-  const cropY = parseInt(cropRect.style.top) * scaleY;
-  const cropW = parseInt(cropRect.offsetWidth) * scaleX;
-  const cropH = parseInt(cropRect.offsetHeight) * scaleY;
-
-  const croppedCanvas = document.createElement('canvas');
-  croppedCanvas.width = cropW;
-  croppedCanvas.height = cropH;
-  const ctx = croppedCanvas.getContext('2d');
-  ctx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-
-  // USE jsPDF (from included library)
-  const pdf = new jspdf.jsPDF({ orientation: cropW > cropH ? 'landscape' : 'portrait', unit: 'px', format: [cropW, cropH] });
-  pdf.addImage(croppedCanvas.toDataURL('image/png'), 'PNG', 0, 0, cropW, cropH);
-
-  setTimeout(() => { loading.style.display = 'none'; pdf.save('cropped.pdf'); }, 500);
+// --------------------
+backToPages.addEventListener('click', () => {
+  cropDashboard.style.display = 'none';
+  pageDashboard.style.display = 'grid';
 });
 
-  // --------------------
+// --------------------
 // CROP & SHOW DOWNLOAD LINK
 // --------------------
 cropBtn.addEventListener('click', () => {
@@ -355,26 +366,23 @@ cropBtn.addEventListener('click', () => {
   const ctx = croppedCanvas.getContext('2d');
   ctx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
 
-  const pdf = new jspdf.jsPDF({
-    orientation: cropW > cropH ? 'landscape' : 'portrait',
-    unit: 'px',
-    format: [cropW, cropH]
-  });
+  const pdf = new jspdf.jsPDF({ orientation: cropW > cropH ? 'landscape' : 'portrait', unit: 'px', format: [cropW, cropH] });
   pdf.addImage(croppedCanvas.toDataURL('image/png'), 'PNG', 0, 0, cropW, cropH);
 
-  // Convert PDF to Blob and create a downloadable link
-  pdf.save('cropped.pdf', { returnPromise:true }).then(() => {
-    // Show the download link
-    const pdfBlob = pdf.output('blob');
-    const url = URL.createObjectURL(pdfBlob);
-    const downloadSection = document.getElementById('downloadSection');
-    const downloadLink = document.getElementById('downloadLink');
-    downloadLink.href = url;
-    downloadSection.style.display = 'block';
-    loading.style.display = 'none';
-  });
-});
+  const pdfBlob = pdf.output('blob');
+  const url = URL.createObjectURL(pdfBlob);
 
+  let linkContainer = document.getElementById('downloadLinkContainer');
+  if (!linkContainer) {
+    linkContainer = document.createElement('div');
+    linkContainer.id = 'downloadLinkContainer';
+    linkContainer.style.marginTop = '10px';
+    cropContainer.appendChild(linkContainer);
+  }
+  linkContainer.innerHTML = `<a href="${url}" download="cropped.pdf" class="download-btn">Download Cropped PDF</a>`;
+
+  loading.style.display = 'none';
+});
 </script>
   
 </body>
