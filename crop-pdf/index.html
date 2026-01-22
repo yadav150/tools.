@@ -79,46 +79,54 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
+<!-- ---------- CROP PDF TOOL (HTML + CSS + JS) ---------- -->
+<!-- Add this section where your tool sits. It reuses your existing CSS. -->
 <section class="section">
   <div class="container">
     <div class="card age-tool-card">
       <h1 class="tool-title">Crop PDF</h1>
 
-      <!-- STEP 1: FILE SELECT -->
+      <!-- Step 1: file select -->
       <div class="input-group" id="fileStep">
         <label>Select PDF File</label>
         <input type="file" id="pdfFile" accept="application/pdf" hidden>
         <button class="calculate-btn" id="chooseBtn">Choose PDF</button>
+        <!-- "Remove Tool" semantics: if upload pressed w/o file -> show message, kept for parity -->
+        <button class="calculate-btn danger" id="removeAction" style="display:inline-block;margin-top:10px;">
+          Remove Tool
+        </button>
       </div>
 
-      <!-- STEP 2: UPLOAD BUTTON -->
-      <button class="calculate-btn" id="uploadBtn" style="display:none;">
+      <!-- Step 2: Upload button (appears after file chosen) -->
+      <button class="calculate-btn" id="uploadBtn" style="display:none; margin-top:8px;">
         Upload PDF
       </button>
 
-      <!-- LOADING -->
-      <div class="loading" id="loading" style="display:none;">
+      <!-- Spinner / Loading -->
+      <div class="loading" id="loading" style="display:none; margin-top:12px;">
         <div class="spinner"></div>
       </div>
 
-      <!-- STATUS MESSAGE -->
-      <div class="result" id="statusMsg"></div>
+      <!-- Status / Result messages -->
+      <div class="result" id="statusMsg" style="display:none; margin-top:12px;"></div>
 
-      <!-- PAGE SELECTION DASHBOARD -->
-      <div id="pageDashboard" style="display:none;">
-        <p style="text-align:center;font-weight:500;">Select page to crop</p>
-        <div id="pagesWrap" class="pdf-grid"></div>
-        <button class="calculate-btn danger" id="backToUpload">Back</button>
+      <!-- Page selection dashboard (thumbnails) -->
+      <div id="pageDashboard" style="display:none; margin-top:12px;">
+        <p style="text-align:center;font-weight:500;">Hover a thumbnail and click to select page to crop</p>
+        <div id="pagesWrap" class="pdf-grid" style="justify-content:center;"></div>
+        <button class="calculate-btn danger" id="backToUpload" style="margin-top:12px;">Back</button>
       </div>
 
-      <!-- CROP DASHBOARD -->
-      <div id="cropDashboard" style="display:none;">
-        <p style="text-align:center;font-weight:500;color:var(--primary);">
-          Drag & resize the red box to crop
-        </p>
-        <div class="pdf-page" id="cropContainer" style="position:relative;"></div>
-        <button class="calculate-btn" id="cropBtn">Crop & Download</button>
-        <button class="calculate-btn danger" id="backToPages">Back</button>
+      <!-- Crop dashboard -->
+      <div id="cropDashboard" style="display:none; margin-top:12px;">
+        <p style="text-align:center;font-weight:500;color:var(--primary);">Drag or resize the red box to set crop area</p>
+        <div id="cropContainer" class="pdf-page" style="min-height:200px; display:flex; align-items:center; justify-content:center;"></div>
+        <div style="display:flex; gap:12px; margin-top:12px;">
+          <button class="calculate-btn" id="cropBtn">Crop & Download</button>
+          <button class="calculate-btn danger" id="backToPages">Back</button>
+        </div>
+        <div class="loading" id="processing" style="display:none; margin-top:12px;"><div class="spinner"></div></div>
+        <div id="downloadArea" style="display:none; margin-top:12px; text-align:center;"></div>
       </div>
 
     </div>
@@ -182,262 +190,457 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <p>© 2026 Skill2Job</p>
 </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+ <!-- Required libraries (pdf.js + pdf-lib). Keep these lines. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
-  <script>
-    // PDF Crop Tool JS (Enhanced Resizable Crop Box)
+<script>
+// ---------- Configuration & DOM ----------
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const chooseBtn = document.getElementById('chooseBtn');
+const removeAction = document.getElementById('removeAction');
+const pdfFile = document.getElementById('pdfFile');
+const uploadBtn = document.getElementById('uploadBtn');
+const loading = document.getElementById('loading');
+const statusMsg = document.getElementById('statusMsg');
+const pageDashboard = document.getElementById('pageDashboard');
+const pagesWrap = document.getElementById('pagesWrap');
+const backToUpload = document.getElementById('backToUpload');
+const cropDashboard = document.getElementById('cropDashboard');
+const cropContainer = document.getElementById('cropContainer');
+const backToPages = document.getElementById('backToPages');
+const cropBtn = document.getElementById('cropBtn');
+const processing = document.getElementById('processing');
+const downloadArea = document.getElementById('downloadArea');
+
 let pdfDoc = null;
-let currentPage = 1;
+let fileBuffer = null;
 let totalPages = 0;
-let scale = 1.5;
-let cropRect = { x: 50, y: 50, width: 200, height: 200 };
+let currentPageIndex = 0;
+let cropBoxEl = null;      // DOM element for crop rectangle
+let activeHandle = null;   // which handle is dragging
+let dragging = false;
+let start = {};            // start positions for drag/resize
 
-const pdfFileInput = document.getElementById("pdfFile");
-const chooseBtn = document.getElementById("chooseBtn");
-const statusMsg = document.getElementById("statusMsg");
-const loading = document.getElementById("loading");
-const pageDashboard = document.getElementById("pageDashboard");
-const pagesWrap = document.getElementById("pagesWrap");
-const backToUpload = document.getElementById("backToUpload");
-const cropDashboard = document.getElementById("cropDashboard");
-const cropContainer = document.getElementById("cropContainer");
-const cropBtn = document.getElementById("cropBtn");
-const backToPages = document.getElementById("backToPages");
+/* Helper: show status message */
+function showStatus(text, show=true){
+  statusMsg.style.display = show ? 'block' : 'none';
+  statusMsg.innerHTML = text;
+}
 
-// Choose PDF
-chooseBtn.addEventListener("click", () => pdfFileInput.click());
+/* Helper: show spinner for loading state */
+function setLoading(on){
+  loading.style.display = on ? 'block' : 'none';
+}
 
-// Load PDF
-pdfFileInput.addEventListener("change", async (e) => {
-  if (e.target.files.length === 0) return;
-  const file = e.target.files[0];
-  const fileReader = new FileReader();
-  fileReader.onload = async function () {
-    const typedarray = new Uint8Array(this.result);
-    loading.style.display = "block";
-    try {
-      pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
-      totalPages = pdfDoc.numPages;
-      statusMsg.textContent = "PDF loaded successfully! Select page to crop.";
-      showPageDashboard();
-    } catch (err) {
-      console.error(err);
-      statusMsg.textContent = "Failed to load PDF.";
+/* Helper: show processing spinner */
+function setProcessing(on, text){
+  processing.style.display = on ? 'block' : 'none';
+  if(text) showStatus(text, on);
+}
+
+/* Reset state */
+function resetAll(){
+  pdfFile.value = '';
+  fileBuffer = null;
+  pdfDoc = null;
+  totalPages = 0;
+  pagesWrap.innerHTML = '';
+  pageDashboard.style.display = 'none';
+  cropDashboard.style.display = 'none';
+  downloadArea.style.display = 'none';
+  uploadBtn.style.display = 'none';
+  showStatus('', false);
+}
+
+/* Choose file button */
+chooseBtn.addEventListener('click', () => pdfFile.click());
+
+/* Remove action - mimic "remove tool" behavior when no file */
+removeAction.addEventListener('click', () => {
+  if(!fileBuffer){
+    alert('No file selected. Nothing to remove.');
+  } else {
+    if(confirm('Clear current file and reset tool?')){
+      resetAll();
     }
-    loading.style.display = "none";
-  };
-  fileReader.readAsArrayBuffer(file);
+  }
 });
 
-// Show thumbnails for all pages
-async function showPageDashboard() {
-  pagesWrap.innerHTML = "";
-  pageDashboard.style.display = "block";
-  cropDashboard.style.display = "none";
-  for (let i = 1; i <= totalPages; i++) {
-    const pageDiv = document.createElement("div");
-    pageDiv.className = "pdf-thumbnail";
-    pageDiv.style.cursor = "pointer";
-    pageDiv.style.border = "1px solid #ccc";
-    pageDiv.style.margin = "5px";
-    pageDiv.style.display = "inline-block";
-    pageDiv.style.width = "120px";
-    pageDiv.style.height = "160px";
-    pageDiv.style.textAlign = "center";
-    pageDiv.style.position = "relative";
+/* When file is picked */
+pdfFile.addEventListener('change', (e) => {
+  if(!e.target.files || e.target.files.length === 0) return;
+  uploadBtn.style.display = 'inline-block';
+  showStatus('File chosen. Click Upload to continue.', true);
+});
 
-    const canvas = document.createElement("canvas");
-    pageDiv.appendChild(canvas);
+/* Upload button clicked */
+uploadBtn.addEventListener('click', async () => {
+  if(!pdfFile.files || pdfFile.files.length === 0){
+    // exactly as requested: if Upload tapped without file -> show message
+    showStatus('<strong>Please select a PDF file before uploading.</strong>', true);
+    return;
+  }
 
-    const page = await pdfDoc.getPage(i);
-    const viewport = page.getViewport({ scale: 0.3 });
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+  // show spinner while reading & parsing
+  setLoading(true);
+  showStatus('', false);
+  downloadArea.style.display = 'none';
 
-    const renderContext = {
-      canvasContext: canvas.getContext("2d"),
-      viewport: viewport,
-    };
-    page.render(renderContext);
+  try{
+    fileBuffer = await pdfFile.files[0].arrayBuffer();
+    // simulate real-time processing delay implicitly from parsing/rendering
+    pdfDoc = await pdfjsLib.getDocument({ data: fileBuffer }).promise;
+    totalPages = pdfDoc.numPages;
+    // hide spinner, show success message
+    setLoading(false);
+    showStatus('<strong>PDF loaded successfully.</strong>', true);
 
-    pageDiv.addEventListener("click", () => {
-      currentPage = i;
-      showCropDashboard();
+    // show thumbnails dashboard after a short delay so user sees message briefly
+    setTimeout(() => {
+      showPageDashboard();
+    }, 600);
+  } catch(err){
+    setLoading(false);
+    showStatus('<strong>Error loading PDF.</strong> ' + (err.message || ''), true);
+    console.error('PDF load error', err);
+  }
+});
+
+/* Show thumbnails for pages */
+async function showPageDashboard(){
+  pagesWrap.innerHTML = '';
+  pageDashboard.style.display = 'block';
+  cropDashboard.style.display = 'none';
+  downloadArea.style.display = 'none';
+
+  // render thumbnails sequentially to avoid freezing large docs
+  for(let i=1; i<=totalPages; i++){
+    const thumbWrap = document.createElement('div');
+    thumbWrap.className = 'pdf-thumbnail';
+    thumbWrap.title = 'Click to select page ' + i;
+
+    const canvas = document.createElement('canvas');
+    // set sensible size for thumbnail canvas (pdf.js viewport will tell exact pixels)
+    thumbWrap.appendChild(canvas);
+    pagesWrap.appendChild(thumbWrap);
+
+    try{
+      const page = await pdfDoc.getPage(i);
+      const viewport = page.getViewport({ scale: 0.25 });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+    } catch(err){
+      // fallback: show page number if thumbnail fails
+      canvas.getContext('2d').fillText('Page ' + i, 10, 20);
+      console.error('Thumbnail render failed for page', i, err);
+    }
+
+    // click to select page
+    thumbWrap.addEventListener('click', () => {
+      currentPageIndex = i;
+      openCropDashboard(i);
     });
-
-    pagesWrap.appendChild(pageDiv);
   }
 }
 
-// Show crop dashboard with selected page
-async function showCropDashboard() {
-  pageDashboard.style.display = "none";
-  cropDashboard.style.display = "block";
-  cropContainer.innerHTML = "";
+/* Back to upload (from page dashboard) */
+backToUpload.addEventListener('click', () => {
+  pageDashboard.style.display = 'none';
+  showStatus('', false);
+  uploadBtn.style.display = (pdfFile.files && pdfFile.files.length>0) ? 'inline-block' : 'none';
+});
 
-  const page = await pdfDoc.getPage(currentPage);
-  const viewport = page.getViewport({ scale: scale });
+/* Open crop dashboard for a single page */
+async function openCropDashboard(pageNum){
+  pageDashboard.style.display = 'none';
+  cropDashboard.style.display = 'block';
+  downloadArea.style.display = 'none';
+  showStatus('', false);
 
-  const canvas = document.createElement("canvas");
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  canvas.style.border = "1px solid #ccc";
-  canvas.style.position = "relative";
-  cropContainer.appendChild(canvas);
+  // clear previous
+  cropContainer.innerHTML = '';
 
-  const ctx = canvas.getContext("2d");
-  await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+  // render the selected page at a good scale for cropping
+  try{
+    const page = await pdfDoc.getPage(pageNum);
+    const desiredScale = Math.min(1.5, Math.max(1, 800 / page.getViewport({scale:1}).width)); // adapt scale for very wide pages
+    const viewport = page.getViewport({ scale: desiredScale });
 
-  // Create crop box
-  const cropBox = document.createElement("div");
-  cropBox.id = "cropBox";
-  cropBox.style.position = "absolute";
-  cropBox.style.border = "2px dashed red";
-  cropBox.style.left = cropRect.x + "px";
-  cropBox.style.top = cropRect.y + "px";
-  cropBox.style.width = cropRect.width + "px";
-  cropBox.style.height = cropRect.height + "px";
-  cropBox.style.boxSizing = "border-box";
-  cropContainer.style.position = "relative";
-  cropContainer.appendChild(cropBox);
+    const canvas = document.createElement('canvas');
+    canvas.style.display = 'block';
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    canvas.style.maxWidth = '100%';
+    canvas.style.height = 'auto';
+    const ctx = canvas.getContext('2d');
 
-  // Create resize handles
-  const handles = ["nw", "ne", "sw", "se"];
-  handles.forEach((dir) => {
-    const handle = document.createElement("div");
-    handle.className = "resize-handle " + dir;
-    handle.style.width = "10px";
-    handle.style.height = "10px";
-    handle.style.background = "red";
-    handle.style.position = "absolute";
-    handle.style.cursor = dir + "-resize";
+    cropContainer.appendChild(canvas);
+    await page.render({ canvasContext: ctx, viewport }).promise;
 
-    switch (dir) {
-      case "nw":
-        handle.style.left = "-5px";
-        handle.style.top = "-5px";
-        break;
-      case "ne":
-        handle.style.right = "-5px";
-        handle.style.top = "-5px";
-        break;
-      case "sw":
-        handle.style.left = "-5px";
-        handle.style.bottom = "-5px";
-        break;
-      case "se":
-        handle.style.right = "-5px";
-        handle.style.bottom = "-5px";
-        break;
-    }
-    cropBox.appendChild(handle);
+    // create crop rectangle overlay
+    createCropBox(canvas);
 
-    // Resize logic
-    handle.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
-      const startX = e.clientX;
-      const startY = e.clientY;
-      const startWidth = cropBox.offsetWidth;
-      const startHeight = cropBox.offsetHeight;
-      const startLeft = cropBox.offsetLeft;
-      const startTop = cropBox.offsetTop;
+  } catch(err){
+    showStatus('<strong>Unable to render page preview.</strong>', true);
+    console.error('render crop page error', err);
+  }
+}
 
-      function resizeMove(ev) {
-        let dx = ev.clientX - startX;
-        let dy = ev.clientY - startY;
+/* Create crop box overlay (draggable + handles) */
+function createCropBox(canvas){
+  // Remove existing crop box if any
+  if(cropBoxEl) cropBoxEl.remove();
 
-        if (dir.includes("e")) cropBox.style.width = Math.max(20, startWidth + dx) + "px";
-        if (dir.includes("s")) cropBox.style.height = Math.max(20, startHeight + dy) + "px";
-        if (dir.includes("w")) {
-          cropBox.style.width = Math.max(20, startWidth - dx) + "px";
-          cropBox.style.left = startLeft + dx + "px";
-        }
-        if (dir.includes("n")) {
-          cropBox.style.height = Math.max(20, startHeight - dy) + "px";
-          cropBox.style.top = startTop + dy + "px";
-        }
+  // initial crop size (center area)
+  const initW = Math.min( Math.floor(canvas.width * 0.6), 600 );
+  const initH = Math.min( Math.floor(canvas.height * 0.6), 800 );
+  const initLeft = Math.max(10, Math.floor((canvas.width - initW) / 2));
+  const initTop  = Math.max(10, Math.floor((canvas.height - initH) / 2));
 
-        cropRect.x = cropBox.offsetLeft;
-        cropRect.y = cropBox.offsetTop;
-        cropRect.width = cropBox.offsetWidth;
-        cropRect.height = cropBox.offsetHeight;
-      }
+  // container must be positioned relative (we ensured #cropContainer css)
+  const rect = document.createElement('div');
+  rect.className = 'crop-rect';
+  rect.style.left = initLeft + 'px';
+  rect.style.top = initTop + 'px';
+  rect.style.width = initW + 'px';
+  rect.style.height = initH + 'px';
+  rect.style.zIndex = 10;
 
-      function stopResize() {
-        window.removeEventListener("mousemove", resizeMove);
-        window.removeEventListener("mouseup", stopResize);
-      }
+  // add 8 handles
+  const handles = ['nw','n','ne','e','se','s','sw','w'];
+  handles.forEach(h=>{
+    const hd = document.createElement('div');
+    hd.className = 'crop-handle handle-' + h + ' ' + (h==='nw'?'handle-nw':'') + (h==='ne'?'handle-ne':'');
+    hd.dataset.dir = h;
+    // position CSS for standard handles (we used dedicated classes in style)
+    // We'll set basic positions below if necessary
+    rect.appendChild(hd);
+  });
 
-      window.addEventListener("mousemove", resizeMove);
-      window.addEventListener("mouseup", stopResize);
+  // append rect on top of canvas
+  // ensure parent is positioned relative so px coords map correctly
+  canvas.parentElement.style.position = 'relative';
+  canvas.parentElement.appendChild(rect);
+  cropBoxEl = rect;
+
+  // track events for drag and resize using pointer events
+  let pointerDown = false;
+  let mode = null; // 'move' or 'resize'
+  let startX=0, startY=0, startLeft=0, startTop=0, startW=0, startH=0;
+
+  // helper to get rect and canvas bounding
+  function getBounds(){
+    const canvasRect = canvas.getBoundingClientRect();
+    const rectRect = rect.getBoundingClientRect();
+    const offsetX = canvasRect.left;
+    const offsetY = canvasRect.top;
+    return { canvasRect, rectRect, offsetX, offsetY };
+  }
+
+  // pointerdown on handles -> resize mode
+  rect.querySelectorAll('.crop-handle').forEach(hd => {
+    hd.addEventListener('pointerdown', (ev) => {
+      ev.stopPropagation();
+      pointerDown = true;
+      mode = 'resize';
+      activeHandle = hd.dataset.dir;
+      startX = ev.clientX;
+      startY = ev.clientY;
+      startLeft = parseFloat(rect.style.left);
+      startTop  = parseFloat(rect.style.top);
+      startW = rect.offsetWidth;
+      startH = rect.offsetHeight;
+      // capture pointer to continue receiving events
+      hd.setPointerCapture(ev.pointerId);
     });
   });
 
-  // Drag crop box
-  let isDragging = false;
-  let startX, startY;
-  cropBox.addEventListener("mousedown", (e) => {
-    if (e.target.classList.contains("resize-handle")) return;
-    isDragging = true;
-    startX = e.clientX - cropBox.offsetLeft;
-    startY = e.clientY - cropBox.offsetTop;
+  // pointerdown on rect -> move mode (unless clicked on handle)
+  rect.addEventListener('pointerdown', (ev) => {
+    if(ev.target.classList.contains('crop-handle')) return;
+    pointerDown = true;
+    mode = 'move';
+    startX = ev.clientX;
+    startY = ev.clientY;
+    startLeft = parseFloat(rect.style.left);
+    startTop  = parseFloat(rect.style.top);
+    rect.setPointerCapture(ev.pointerId);
   });
 
-  window.addEventListener("mouseup", () => (isDragging = false));
-  window.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    let newX = e.clientX - startX;
-    let newY = e.clientY - startY;
+  // pointermove on document
+  function onPointerMove(ev){
+    if(!pointerDown) return;
+    const canvasRect = canvas.getBoundingClientRect();
+    const maxLeft = canvasRect.width;
+    const maxTop = canvasRect.height;
 
-    newX = Math.max(0, Math.min(newX, canvas.width - cropBox.offsetWidth));
-    newY = Math.max(0, Math.min(newY, canvas.height - cropBox.offsetHeight));
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
 
-    cropBox.style.left = newX + "px";
-    cropBox.style.top = newY + "px";
+    if(mode === 'move'){
+      let newLeft = startLeft + dx;
+      let newTop = startTop + dy;
+      // clamp inside canvas
+      newLeft = Math.max(0, Math.min(newLeft, canvas.width - rect.offsetWidth));
+      newTop = Math.max(0, Math.min(newTop, canvas.height - rect.offsetHeight));
+      rect.style.left = newLeft + 'px';
+      rect.style.top = newTop + 'px';
+    } else if(mode === 'resize'){
+      // corner & edge resize based on activeHandle
+      let newLeft = startLeft, newTop = startTop, newW = startW, newH = startH;
+      switch(activeHandle){
+        case 'nw':
+          newLeft = startLeft + dx;
+          newTop = startTop + dy;
+          newW = startW - dx;
+          newH = startH - dy;
+          break;
+        case 'ne':
+          newTop = startTop + dy;
+          newW = startW + dx;
+          newH = startH - dy;
+          break;
+        case 'se':
+          newW = startW + dx;
+          newH = startH + dy;
+          break;
+        case 'sw':
+          newLeft = startLeft + dx;
+          newW = startW - dx;
+          newH = startH + dy;
+          break;
+        case 'n':
+          newTop = startTop + dy;
+          newH = startH - dy;
+          break;
+        case 's':
+          newH = startH + dy;
+          break;
+        case 'w':
+          newLeft = startLeft + dx;
+          newW = startW - dx;
+          break;
+        case 'e':
+          newW = startW + dx;
+          break;
+      }
+      // clamp width/height min and inside canvas
+      newW = Math.max(40, Math.min(newW, canvas.width - newLeft));
+      newH = Math.max(40, Math.min(newH, canvas.height - newTop));
+      newLeft = Math.max(0, Math.min(newLeft, canvas.width - 40));
+      newTop = Math.max(0, Math.min(newTop, canvas.height - 40));
 
-    cropRect.x = newX;
-    cropRect.y = newY;
-  });
+      rect.style.left = newLeft + 'px';
+      rect.style.top  = newTop + 'px';
+      rect.style.width = newW + 'px';
+      rect.style.height = newH + 'px';
+    }
+  }
+
+  function onPointerUp(ev){
+    pointerDown = false;
+    mode = null;
+    activeHandle = null;
+  }
+
+  // attach listeners globally while crop box exists
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
 }
 
-// Crop & Download PDF
-cropBtn.addEventListener("click", async () => {
-  const page = await pdfDoc.getPage(currentPage);
-  const viewport = page.getViewport({ scale: scale });
-
-  const canvas = document.createElement("canvas");
-  canvas.width = cropRect.width;
-  canvas.height = cropRect.height;
-  const ctx = canvas.getContext("2d");
-
-  await page.render({
-    canvasContext: ctx,
-    viewport: viewport,
-    transform: [1, 0, 0, 1, -cropRect.x, -cropRect.y],
-  }).promise;
-
-  const croppedPdf = new jspdf.jsPDF({
-    orientation: canvas.width > canvas.height ? "l" : "p",
-    unit: "px",
-    format: [canvas.width, canvas.height],
-  });
-  const imgData = canvas.toDataURL("image/jpeg");
-  croppedPdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height);
-  croppedPdf.save("cropped.pdf");
+/* Back button from crop to pages */
+backToPages.addEventListener('click', () => {
+  cropDashboard.style.display = 'none';
+  pageDashboard.style.display = 'block';
+  downloadArea.style.display = 'none';
 });
 
-// Navigation buttons
-backToUpload.addEventListener("click", () => {
-  pageDashboard.style.display = "none";
-  statusMsg.textContent = "";
-  pdfFileInput.value = "";
+/* Crop & Download - uses canvas cropping + pdf-lib to build a new PDF with the cropped image */
+cropBtn.addEventListener('click', async () => {
+  // ensure crop box exists
+  if(!cropBoxEl){
+    alert('Please select a page and set a crop area first.');
+    return;
+  }
+
+  // show processing spinner
+  setProcessing(true, '<strong>Processing crop...</strong>');
+
+  try{
+    // find canvas inside cropContainer (the rendered page)
+    const pageCanvas = cropContainer.querySelector('canvas');
+    if(!pageCanvas){
+      throw new Error('Preview canvas not found.');
+    }
+
+    // bounding rects to compute scale
+    const canvasRect = pageCanvas.getBoundingClientRect();
+    const cropRectDOM = cropBoxEl.getBoundingClientRect();
+
+    // scale from DOM pixels to actual canvas pixels:
+    const scaleX = pageCanvas.width / canvasRect.width;
+    const scaleY = pageCanvas.height / canvasRect.height;
+
+    // compute crop in canvas coordinate space
+    const cropX = Math.round((cropRectDOM.left - canvasRect.left) * scaleX);
+    const cropY = Math.round((cropRectDOM.top - canvasRect.top) * scaleY);
+    const cropW = Math.round(cropRectDOM.width * scaleX);
+    const cropH = Math.round(cropRectDOM.height * scaleY);
+
+    // create temp canvas and draw cropped pixels
+    const tmp = document.createElement('canvas');
+    tmp.width = cropW;
+    tmp.height = cropH;
+    const tctx = tmp.getContext('2d');
+    // drawImage(source, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    tctx.drawImage(pageCanvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+    // convert cropped canvas to PNG binary
+    const pngDataUrl = tmp.toDataURL('image/png');
+
+    // create new PDF with pdf-lib
+    const pdfDocNew = await PDFLib.PDFDocument.create();
+    const pngImage = await pdfDocNew.embedPng(pngDataUrl);
+    const pngDims = pngImage.scale(1); // returns {width,height} in PDF points
+
+    const page = pdfDocNew.addPage([pngDims.width, pngDims.height]);
+    page.drawImage(pngImage, { x: 0, y: 0, width: pngDims.width, height: pngDims.height });
+
+    const newPdfBytes = await pdfDocNew.save();
+
+    // create blob and download link
+    const blob = new Blob([newPdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    // show download area with button
+    downloadArea.style.display = 'block';
+    downloadArea.innerHTML = `
+      <strong>PDF prepared successfully.</strong><br>
+      <a class="tool-link" id="downloadLink" href="${url}" download="cropped-page-${currentPageIndex}.pdf" style="display:inline-block;margin-top:8px;padding:8px 14px;">
+        Download Cropped PDF
+      </a>
+    `;
+
+    // auto-click to start download immediately (optional)
+    const dl = document.getElementById('downloadLink');
+    if(dl) dl.click();
+
+  } catch(err){
+    console.error('Crop error:', err);
+    showStatus('<strong>Something went wrong while cropping.</strong> ' + (err.message || ''), true);
+  } finally {
+    // hide processing spinner
+    setProcessing(false);
+  }
 });
 
-backToPages.addEventListener("click", () => {
-  showPageDashboard();
-});
-  </script>
+/* init - reset */
+resetAll();
+</script>
   
 </body>
 </html>
