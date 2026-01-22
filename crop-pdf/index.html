@@ -81,41 +81,38 @@
   <main class="site-main">
 <section class="section">
   <div class="container">
-    <div class="card age-tool-card">
+    <div class="card crop-tool-card">
       <h1 class="tool-title">Crop PDF</h1>
 
-      <!-- STEP 1: FILE SELECT -->
-      <div class="input-group" id="fileStep">
-        <label>Select PDF File</label>
-        <input type="file" id="pdfFile" accept="application/pdf" hidden>
-        <button class="calculate-btn" id="chooseBtn">Choose PDF</button>
+      <!-- PDF File Upload -->
+      <div class="input-group">
+        <label for="pdfFile">Select PDF to Crop</label>
+        <input type="file" id="pdfFile" accept="application/pdf" style="display:none">
+        <button id="chooseBtn" class="choose-btn">Choose PDF</button>
+        <button id="uploadBtn" class="upload-btn" style="display:none">Upload PDF</button>
+        <div class="small-icon-upload">
+          <img src="https://i.postimg.cc/zX1GW7Jv/Chat-GPT-Image-Jan-21-2026-06-08-49-PM.webp" alt="Upload Icon" style="width:40px;margin-top:10px;">
+        </div>
       </div>
 
-      <!-- STEP 2: UPLOAD BUTTON -->
-      <button class="calculate-btn" id="uploadBtn" style="display:none;">Upload PDF</button>
+      <!-- Loading & Status -->
+      <div class="loading" id="loading"><div class="spinner"></div></div>
+      <div id="statusMsg" style="display:none;"></div>
 
-      <!-- LOADING -->
-      <div class="loading" id="loading">
-        <div class="spinner"></div>
-      </div>
-
-      <!-- STATUS MESSAGE -->
-      <div class="result" id="statusMsg"></div>
-
-      <!-- PAGE SELECTION DASHBOARD -->
+      <!-- Pages Dashboard -->
       <div id="pageDashboard" style="display:none;">
-        <p style="text-align:center;font-weight:500;">Hover & click a page to crop</p>
-        <div id="pagesWrap" class="pdf-grid"></div>
+        <h3>Select a page to crop:</h3>
+        <div id="pagesWrap" class="pages-wrap"></div>
       </div>
 
-      <!-- CROP DASHBOARD -->
+      <!-- Crop Dashboard -->
       <div id="cropDashboard" style="display:none;">
-        <p style="text-align:center;font-weight:500;color:var(--primary);">
-          Drag & resize the red box to crop
-        </p>
-        <div class="pdf-page" id="cropContainer"></div>
-        <button class="calculate-btn" id="cropBtn">Crop & Download</button>
-        <button class="calculate-btn danger" id="backToPages">Back</button>
+        <button id="backToPages" class="back-btn">← Back to Pages</button>
+        <div id="cropContainer" class="crop-container"></div>
+        <button id="cropBtn" class="crop-btn">Crop Page</button>
+        <div id="downloadSection" style="display:none; margin-top:15px;">
+          <a id="downloadLink" href="#" class="download-link" download="cropped.pdf">Download Cropped PDF</a>
+        </div>
       </div>
     </div>
   </div>
@@ -336,6 +333,48 @@ cropBtn.addEventListener('click', () => {
 
   setTimeout(() => { loading.style.display = 'none'; pdf.save('cropped.pdf'); }, 500);
 });
+
+  // --------------------
+// CROP & SHOW DOWNLOAD LINK
+// --------------------
+cropBtn.addEventListener('click', () => {
+  if (!selectedPageNum || !cropRect) return;
+  loading.style.display = 'block';
+
+  const canvas = document.getElementById('cropCanvas');
+  const scaleX = canvas.width / canvas.offsetWidth;
+  const scaleY = canvas.height / canvas.offsetHeight;
+  const cropX = parseInt(cropRect.style.left) * scaleX;
+  const cropY = parseInt(cropRect.style.top) * scaleY;
+  const cropW = parseInt(cropRect.offsetWidth) * scaleX;
+  const cropH = parseInt(cropRect.offsetHeight) * scaleY;
+
+  const croppedCanvas = document.createElement('canvas');
+  croppedCanvas.width = cropW;
+  croppedCanvas.height = cropH;
+  const ctx = croppedCanvas.getContext('2d');
+  ctx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+  const pdf = new jspdf.jsPDF({
+    orientation: cropW > cropH ? 'landscape' : 'portrait',
+    unit: 'px',
+    format: [cropW, cropH]
+  });
+  pdf.addImage(croppedCanvas.toDataURL('image/png'), 'PNG', 0, 0, cropW, cropH);
+
+  // Convert PDF to Blob and create a downloadable link
+  pdf.save('cropped.pdf', { returnPromise:true }).then(() => {
+    // Show the download link
+    const pdfBlob = pdf.output('blob');
+    const url = URL.createObjectURL(pdfBlob);
+    const downloadSection = document.getElementById('downloadSection');
+    const downloadLink = document.getElementById('downloadLink');
+    downloadLink.href = url;
+    downloadSection.style.display = 'block';
+    loading.style.display = 'none';
+  });
+});
+
 </script>
   
 </body>
