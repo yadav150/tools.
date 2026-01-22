@@ -30,6 +30,29 @@ h2{
   margin-top: 0;
 }
 
+/* MISSING CSS - ADD TO YOUR style.css */
+#cropCanvasContainer {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  height: 400px;
+  background: #f8fafc;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+#downloadWrapper {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
+#downloadWrapper a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+
 /* MPdf */
 /* AGE CALCULATOR SPECIFIC */
 .age-tool-card {
