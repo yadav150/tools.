@@ -183,6 +183,65 @@ h2{
   margin: 0 auto;
 }
 
+/* PDF page hover message */
+.pdf-page:hover::after {
+  content: "Select page to crop";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(37, 99, 235, 0.85);
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Ensure crop rectangle handles dragging/resizing */
+.crop-rect {
+  position: absolute;
+  border: 2px dashed red;
+  background: rgba(255, 0, 0, 0.05);
+  cursor: move;
+  resize: both;
+  overflow: hidden;
+  min-width: 40px;
+  min-height: 40px;
+  z-index: 10; /* stay above PDF page */
+}
+
+/* Crop dashboard container */
+#cropContainer {
+  position: relative;
+  width: 100%;
+  height: 500px; /* or auto based on page */
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* Crop download button wrapper (optional) */
+#cropDownloadWrapper {
+  display: none;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Tooltip arrow (optional) */
+.pdf-page:hover::before {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(37, 99, 235, 0.85) transparent transparent transparent;
+  pointer-events: none;
+}
+
+
 /* =========================
    PDF PAGE WRAPPER
    ========================= */
