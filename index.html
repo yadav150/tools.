@@ -33,15 +33,17 @@
   <meta name="twitter:description" content="Free productivity tools for jobs, study & work. No signup required.">
   <meta name="twitter:image" content="https://i.postimg.cc/zX1GW7Jv/Chat-GPT-Image-Jan-21-2026-06-08-49-PM.webp">
 
-  <!-- GOOGLE FONT -->
+  <!-- GOOGLE FONT (UNCHANGED - NOW NON-BLOCKING) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 
-  <!-- EXTERNAL CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- EXTERNAL CSS (NON-BLOCKING PRELOAD) -->
+  <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
 
-  <!-- STRUCTURED DATA (JSON-LD) -->
+  <!-- STRUCTURED DATA (NON-BLOCKING) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -69,8 +71,7 @@
   }
   </script>
   
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
-  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 <body>
 
