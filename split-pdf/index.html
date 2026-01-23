@@ -155,8 +155,292 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   <p>© 2026 Skill2Job</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
+// UPDATED SPLIT PDF JAVASCRIPT - Fixed Enter key warning
+<script>
+(function() {
+  'use strict';
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  
+  let pdfDoc = null;
+  let pdfPages = [];
+  let dragData = null;
+  
+  function init() {
+    const fileInput = document.getElementById('pdfFile');
+    const splitBtn = document.getElementById('splitBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const loading = document.getElementById('loading');
+    const result = document.getElementById('result');
+    const pdfGrid = document.getElementById('pdfGrid');
+    
+    fileInput.addEventListener('change', handleFileUpload);
+    
+    // Enter key on file input - warn like age calculator
+    fileInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!this.files || this.files.length === 0) {
+          showWarning('Please select a PDF file first.');
+        } else {
+          handleFileUpload({ target: this });
+        }
+      }
+    });
+    
+    splitBtn.addEventListener('click', handleSplit);
+    
+    // Enter key on split button - warn if no file
+    splitBtn.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSplit();
+      }
+    });
+    
+    downloadBtn.addEventListener('click', handleDownload);
+    downloadBtn.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleDownload();
+      }
+    });
+    
+    // Share button
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', handleShare);
+      shareBtn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleShare();
+        }
+      });
+    }
+  }
+  
+  // Rest of functions remain the same...
+  async function handleFileUpload(e) {
+    const file = e.target.files ? e.target.files[0] : null;
+    const result = document.getElementById('result');
+    const pdfGrid = document.getElementById('pdfGrid');
+    const splitBtn = document.getElementById('splitBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    if (!file) {
+      showWarning('Please select a PDF file.');
+      return;
+    }
+    
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      showWarning('Please upload a valid PDF file.');
+      return;
+    }
+    
+    // Rest of upload logic same...
+    const loading = document.getElementById('loading');
+    loading.style.display = 'block';
+    result.style.display = 'none';
+    pdfGrid.style.display = 'none';
+    downloadBtn.style.display = 'none';
+    
+    try {
+      pdfDoc = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
+      pdfPages = [];
+      
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const page = await pdfDoc.getPage(i);
+        const scale = 0.5;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+        
+        pdfPages.push({ canvas, pageNum: i });
+      }
+      
+      displayPages();
+      splitBtn.textContent = 'Prepare Split PDFs';
+      loading.style.display = 'none';
+      
+    } catch (error) {
+      loading.style.display = 'none';
+      showWarning('Error loading PDF. Please try another file.');
+    }
+  }
+  
+  function handleSplit() {
+    const splitBtn = document.getElementById('splitBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    if (pdfPages.length === 0) {
+      showWarning('Please upload a PDF file first.');
+      return;
+    }
+    
+    const loading = document.getElementById('loading');
+    loading.style.display = 'block';
+    
+    setTimeout(() => {
+      loading.style.display = 'none';
+      downloadBtn.style.display = 'block';
+      splitBtn.style.display = 'none';
+      showResult('PDF pages are ready! Reorder pages by dragging, then download split PDFs.');
+    }, 1200);
+  }
+  
+  // Keep all other functions (displayPages, handleDownload, drag handlers, share, etc.) exactly the same...
+  function displayPages() {
+    const pdfGrid = document.getElementById('pdfGrid');
+    pdfGrid.innerHTML = '';
+    pdfGrid.style.display = 'grid';
+    
+    pdfPages.forEach((pageData, index) => {
+      const pageDiv = document.createElement('div');
+      pageDiv.className = 'pdf-page';
+      pageDiv.draggable = true;
+      pageDiv.dataset.index = index;
+      
+      pageDiv.innerHTML = `
+        <canvas></canvas>
+        <div class="remove-mark" style="font-size:16px;color:red;cursor:pointer;">×</div>
+      `;
+      
+      const canvas = pageDiv.querySelector('canvas');
+      canvas.width = pageData.canvas.width;
+      canvas.height = pageData.canvas.height;
+      canvas.getContext('2d').drawImage(pageData.canvas, 0, 0);
+      
+      pageDiv.addEventListener('dragstart', handleDragStart);
+      pageDiv.addEventListener('dragover', handleDragOver);
+      pageDiv.addEventListener('drop', handleDrop);
+      pageDiv.addEventListener('dragend', handleDragEnd);
+      
+      pageDiv.querySelector('.remove-mark').addEventListener('click', () => {
+        pdfPages.splice(index, 1);
+        displayPages();
+      });
+      
+      pdfGrid.appendChild(pageDiv);
+    });
+  }
+  
+  function handleDownload() {
+    // Same download logic as before...
+    const loading = document.getElementById('loading');
+    loading.style.display = 'block';
+    
+    try {
+      const zip = new JSZip();
+      
+      for (let i = 0; i < pdfPages.length; i++) {
+        const pageData = pdfPages[i];
+        const pageBlob = await pdfDoc.getPage(pageData.pageNum).then(page => {
+          return page.getViewport({ scale: 2 }).convertToPdfDataUrl();
+        });
+        
+        zip.file(`page_${pageData.pageNum}.pdf`, pageBlob.split(',')[1], { base64: true });
+      }
+      
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'split-pdf.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      loading.style.display = 'none';
+      showResult('Split PDFs downloaded successfully as ZIP file!');
+      
+    } catch (error) {
+      loading.style.display = 'none';
+      showWarning('Error creating download. Please try again.');
+    }
+  }
+  
+  // Drag handlers (same)
+  function handleDragStart(e) {
+    dragData = this.dataset.index;
+    this.style.opacity = '0.5';
+  }
+  
+  function handleDragOver(e) {
+    e.preventDefault();
+  }
+  
+  function handleDrop(e) {
+    e.preventDefault();
+    const dropIndex = parseInt(this.dataset.index);
+    
+    if (dragData !== dropIndex.toString()) {
+      const draggedPage = pdfPages[dragData];
+      pdfPages.splice(dragData, 1);
+      pdfPages.splice(dropIndex, 0, draggedPage);
+      displayPages();
+    }
+  }
+  
+  function handleDragEnd(e) {
+    this.style.opacity = '1';
+  }
+  
+  function showWarning(message) {
+    const result = document.getElementById('result');
+    result.textContent = message;
+    result.style.color = '#d32f2f';
+    result.style.display = 'block';
+  }
+  
+  function showResult(message) {
+    const result = document.getElementById('result');
+    result.textContent = message;
+    result.style.color = '';
+    result.style.display = 'block';
+  }
+  
+  async function handleShare() {
+    const shareBtn = document.querySelector('.share-btn');
+    const shareData = {
+      title: 'Split PDF – Skill2Job Tools',
+      text: 'Split PDFs easily online! Drag, reorder, and download split pages. Free & fast! 📄',
+      url: window.location.href
+    };
+    
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareData.url);
+        showFeedback(shareBtn, 'Link copied!', '#4CAF50');
+      }
+    } catch (err) {
+      prompt('Copy this Split PDF tool link:', shareData.url);
+    }
+  }
+  
+  function showFeedback(btn, message, color) {
+    const originalText = btn.textContent;
+    btn.textContent = message;
+    btn.style.backgroundColor = color;
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.backgroundColor = '';
+    }, 2000);
+  }
+})();
+</script>
 </body>
 </html>
