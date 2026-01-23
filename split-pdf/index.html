@@ -80,29 +80,32 @@
   <main class="site-main">
    <section class="section">
   <div class="container">
-    <div class="card age-tool-card">
-      <h1 class="tool-title">Split PDF Pages</h1>
+    <div class="card pdf-tool-card">
+      <h1 class="tool-title">Split PDF Tool</h1>
 
-      <!-- Upload -->
+      <!-- PDF Upload -->
       <div class="input-group">
-        <label for="splitPdfFile">Upload PDF</label>
+        <label for="splitPdfFile">Select PDF</label>
         <input type="file" id="splitPdfFile" accept="application/pdf">
       </div>
 
-      <button class="calculate-btn" id="splitUploadBtn">Upload PDF</button>
+      <button class="calculate-btn" id="uploadSplitPdfBtn">Upload PDF</button>
 
-      <!-- Loading Spinner -->
-      <div class="loading" id="splitPdfLoading">
+      <div class="loading" id="uploadSplitPdfLoading">
         <div class="spinner"></div>
       </div>
 
-      <!-- PDF Pages Grid -->
-      <div class="pdf-grid" id="splitPdfPages"></div>
+      <!-- PDF Pages Preview -->
+      <div class="pdf-grid" id="splitPdfGrid"></div>
 
       <!-- Split PDF Button -->
       <button class="calculate-btn" id="splitPdfBtn" style="display:none;margin-top:12px;">Split PDF</button>
 
-      <!-- Result -->
+      <div class="loading" id="splitPdfProcessing">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Result / Download -->
       <div class="result" id="splitPdfResult"></div>
     </div>
   </div>
@@ -165,108 +168,113 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   <p>© 2026 Skill2Job</p>
 </footer>
 
-<!-- PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.13.141/pdf.min.js"></script>
-<!-- Sortable.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.16.0/Sortable.min.js"></script>
-<!-- PDF-Lib -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.21.0/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
 <script>
-(function() {
-  const fileInput = document.getElementById('splitPdfFile');
-  const uploadBtn = document.getElementById('splitUploadBtn');
-  const loading = document.getElementById('splitPdfLoading');
-  const pagesGrid = document.getElementById('splitPdfPages');
-  const splitBtn = document.getElementById('splitPdfBtn');
-  const resultDiv = document.getElementById('splitPdfResult');
+const uploadBtn = document.getElementById("uploadSplitPdfBtn");
+const pdfInput = document.getElementById("splitPdfFile");
+const uploadLoading = document.getElementById("uploadSplitPdfLoading");
+const pdfGrid = document.getElementById("splitPdfGrid");
+const splitBtn = document.getElementById("splitPdfBtn");
+const splitProcessing = document.getElementById("splitPdfProcessing");
+const splitResult = document.getElementById("splitPdfResult");
+let uploadedPdf = null;
+let pdfDoc = null;
+let pagesData = [];
 
-  let pdfDoc = null;
+uploadBtn.addEventListener("click", async () => {
+  if (!pdfInput.files[0]) return alert("Select a PDF first");
+  uploadLoading.style.display = "block";
+  pdfGrid.innerHTML = "";
+  splitResult.style.display = "none";
+  splitBtn.style.display = "none";
+  
+  const file = pdfInput.files[0];
+  const reader = new FileReader();
+  
+  reader.onload = async function(e) {
+    uploadedPdf = new Uint8Array(e.target.result);
+    pdfDoc = await pdfjsLib.getDocument({data: uploadedPdf}).promise;
+    pagesData = [];
+    pdfGrid.style.display = "grid";
 
-  uploadBtn.addEventListener('click', () => {
-    const file = fileInput.files[0];
-    if(!file) return alert('Please select a PDF!');
-    if(file.type !== 'application/pdf') return alert('Not a PDF file!');
+    for (let i = 1; i <= pdfDoc.numPages; i++) {
+      const page = await pdfDoc.getPage(i);
+      const viewport = page.getViewport({scale:0.5});
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({canvasContext: ctx, viewport: viewport}).promise;
 
-    pagesGrid.innerHTML = '';
-    resultDiv.style.display = 'none';
-    splitBtn.style.display = 'none';
-    loading.style.display = 'block';
+      const div = document.createElement("div");
+      div.className = "pdf-page";
+      div.dataset.pageIndex = i-1;
+      div.appendChild(canvas);
+      pdfGrid.appendChild(div);
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const typedarray = new Uint8Array(e.target.result);
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.13.141/pdf.worker.min.js';
-      pdfjsLib.getDocument(typedarray).promise.then(doc => {
-        pdfDoc = doc;
-        const total = doc.numPages;
-        let loaded = 0;
-
-        for(let i=1; i<=total; i++){
-          doc.getPage(i).then(page => {
-            const viewport = page.getViewport({scale:0.5});
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            page.render({canvasContext: canvas.getContext('2d'), viewport: viewport}).promise.then(()=>{
-              const pageDiv = document.createElement('div');
-              pageDiv.className = 'pdf-page';
-              pageDiv.dataset.pageNumber = i;
-              pageDiv.appendChild(canvas);
-              pagesGrid.appendChild(pageDiv);
-
-              loaded++;
-              if(loaded === total){
-                loading.style.display = 'none';
-                splitBtn.style.display = 'block';
-                new Sortable(pagesGrid,{animation:150});
-              }
-            });
-          });
-        }
-      }).catch(err => {
-        alert('Error loading PDF!');
-        loading.style.display = 'none';
-      });
-    };
-    reader.readAsArrayBuffer(file);
-  });
-
-  splitBtn.addEventListener('click', async () => {
-    if(!pdfDoc) return;
-    loading.style.display = 'block';
-    resultDiv.style.display = 'none';
-
-    const sortedPages = Array.from(pagesGrid.children).map(div => parseInt(div.dataset.pageNumber));
-    const { PDFDocument } = PDFLib;
-    const newPdf = await PDFDocument.create();
-    const origPdf = await PDFDocument.load(await fileInput.files[0].arrayBuffer());
-
-    for(const p of sortedPages){
-      const [copiedPage] = await newPdf.copyPages(origPdf,[p-1]);
-      newPdf.addPage(copiedPage);
+      pagesData.push(i-1);
     }
 
-    const pdfBytes = await newPdf.save();
-    const blob = new Blob([pdfBytes],{type:'application/pdf'});
-    const url = URL.createObjectURL(blob);
+    // Initialize drag & drop
+    Sortable.create(pdfGrid, {animation:150});
 
-    const downloadLink = document.createElement('a');
-    downloadLink.href = url;
-    downloadLink.download = 'split.pdf';
-    downloadLink.textContent = 'Download Split PDF';
-    downloadLink.className = 'tool-link';
+    uploadLoading.style.display = "none";
+    splitBtn.style.display = "inline-block";
+  };
+  
+  reader.readAsArrayBuffer(file);
+});
 
-    loading.style.display = 'none';
-    resultDiv.innerHTML = '';
-    resultDiv.appendChild(downloadLink);
-    resultDiv.style.display = 'block';
-  });
-})();
+// Split PDF
+splitBtn.addEventListener("click", async () => {
+  splitProcessing.style.display = "block";
+  splitResult.style.display = "none";
+  
+  const pdfLibDoc = await PDFLib.PDFDocument.load(uploadedPdf);
+  const newPdf = await PDFLib.PDFDocument.create();
+  
+  // Get the current order
+  const currentOrder = Array.from(pdfGrid.children).map(div => parseInt(div.dataset.pageIndex));
+  for (let idx of currentOrder) {
+    const [copiedPage] = await newPdf.copyPages(pdfLibDoc, [idx]);
+    newPdf.addPage(copiedPage);
+  }
+
+  const pdfBytes = await newPdf.save();
+  const blob = new Blob([pdfBytes], {type:"application/pdf"});
+  const url = URL.createObjectURL(blob);
+  splitProcessing.style.display = "none";
+
+  splitResult.innerHTML = `<a href="${url}" download="split.pdf">Download Split PDF</a>`;
+  splitResult.style.display = "block";
+});
 </script>
 
-<!-- Include PDFLib for splitting pages -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.21.0/pdf-lib.min.js"></script>
-
+<!-- SHARE BUTTON JS -->
+<script defer>
+(function(){
+  'use strict';
+  function initShare(){
+    const btn=document.querySelector('.share-btn');if(!btn)return;
+    btn.addEventListener('click',share,{passive:false});
+    btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();share();}});
+  }
+  async function share(){
+    const btn=document.querySelector('.share-btn');if(!btn)return;
+    const data={title:'Skill2Job Tools – Free Online Tools',text:'Free online tools for students & job seekers: Age Calculator, PDF tools, Image checker. No signup required!',url:window.location.href};
+    try{
+      if(navigator.share){await navigator.share(data);feedback(btn,'Shared!','#4CAF50');}
+      else if(navigator.clipboard){await navigator.clipboard.writeText(data.url);feedback(btn,'Link copied!','#2196F3');}
+      else{window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.text)}&url=${encodeURIComponent(data.url)}`,'_blank');}
+    }catch(err){if(err.name!=='AbortError')fallbackCopy(data.url,btn);}
+  }
+  function feedback(btn,msg,color){const origText=btn.textContent,origBg=btn.style.backgroundColor;btn.textContent=msg;btn.style.backgroundColor=color;btn.style.color='#fff';setTimeout(()=>{btn.textContent=origText;btn.style.backgroundColor=origBg;btn.style.color='';},1800);}
+  function fallbackCopy(url,btn){try{if(navigator.clipboard){navigator.clipboard.writeText(url);feedback(btn,'Link copied!','#FF9800');}else{prompt('Copy this Skill2Job Tools link:',url);}}catch{prompt('Copy this Skill2Job Tools link:',url);}}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initShare);}else{initShare();}
+})();
+</script>
 </body>
 </html>
