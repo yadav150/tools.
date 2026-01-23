@@ -77,3 +77,7 @@ h2{margin-top:0;}
 .pdf-page.selected{border:2px solid red;opacity:0.6;}
 .pdf-page .remove-mark{position:absolute;top:2px;right:4px;font-size:16px;color:red;display:none;}
 .pdf-page.selected .remove-mark{display:block;}
+
+/* NEWLY ADDED FOR CENTERED */
+/* CENTER TOOL SECTIONS */
+.image-tool-card,.pdf-tool-card,.compressor-tool-card,.age-tool-card{display:flex;flex-direction:column;align-items:center;text-align:center}.image-tool-card .input-group,.pdf-tool-card .input-group,.compressor-tool-card .input-group,.age-tool-card .input-group{width:100%;max-width:400px;margin:12px 0;display:flex;flex-direction:column;align-items:center}.image-tool-card button,.pdf-tool-card button,.compressor-tool-card button,.age-tool-card button{margin-top:10px}#imgPreview img{margin:12px auto;display:block}.pdf-grid{justify-content:center;display:grid}
