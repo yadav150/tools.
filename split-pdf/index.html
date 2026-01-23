@@ -78,7 +78,7 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <section class="section">
+   <section class="section">
   <div class="container">
     <div class="card age-tool-card">
       <h1 class="tool-title">Split PDF Pages</h1>
@@ -91,18 +91,18 @@
 
       <button class="calculate-btn" id="splitUploadBtn">Upload PDF</button>
 
-      <!-- Spinner -->
+      <!-- Loading Spinner -->
       <div class="loading" id="splitPdfLoading">
         <div class="spinner"></div>
       </div>
 
-      <!-- Pages Grid -->
+      <!-- PDF Pages Grid -->
       <div class="pdf-grid" id="splitPdfPages"></div>
 
-      <!-- Split Button -->
+      <!-- Split PDF Button -->
       <button class="calculate-btn" id="splitPdfBtn" style="display:none;margin-top:12px;">Split PDF</button>
 
-      <!-- Result / Download -->
+      <!-- Result -->
       <div class="result" id="splitPdfResult"></div>
     </div>
   </div>
@@ -165,8 +165,13 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   <p>© 2026 Skill2Job</p>
 </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.13.141/pdf.min.js"></script>
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.13.141/pdf.min.js"></script>
+<!-- Sortable.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.16.0/Sortable.min.js"></script>
+<!-- PDF-Lib -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.21.0/pdf-lib.min.js"></script>
+
 <script>
 (function() {
   const fileInput = document.getElementById('splitPdfFile');
@@ -177,59 +182,56 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   const resultDiv = document.getElementById('splitPdfResult');
 
   let pdfDoc = null;
-  let pageFiles = [];
 
   uploadBtn.addEventListener('click', () => {
     const file = fileInput.files[0];
-    if(!file) return alert('Please upload a PDF file.');
+    if(!file) return alert('Please select a PDF!');
     if(file.type !== 'application/pdf') return alert('Not a PDF file!');
 
-    loading.style.display = 'block';
     pagesGrid.innerHTML = '';
-    splitBtn.style.display = 'none';
     resultDiv.style.display = 'none';
-    pageFiles = [];
+    splitBtn.style.display = 'none';
+    loading.style.display = 'block';
 
     const reader = new FileReader();
     reader.onload = function(e) {
       const typedarray = new Uint8Array(e.target.result);
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.13.141/pdf.worker.min.js';
       pdfjsLib.getDocument(typedarray).promise.then(doc => {
         pdfDoc = doc;
         const total = doc.numPages;
-        let loadCount = 0;
+        let loaded = 0;
 
-        for(let i=1;i<=total;i++){
+        for(let i=1; i<=total; i++){
           doc.getPage(i).then(page => {
             const viewport = page.getViewport({scale:0.5});
             const canvas = document.createElement('canvas');
             canvas.width = viewport.width;
             canvas.height = viewport.height;
-            const ctx = canvas.getContext('2d');
-
-            page.render({canvasContext: ctx, viewport: viewport}).promise.then(() => {
+            page.render({canvasContext: canvas.getContext('2d'), viewport: viewport}).promise.then(()=>{
               const pageDiv = document.createElement('div');
               pageDiv.className = 'pdf-page';
-              pageDiv.appendChild(canvas);
               pageDiv.dataset.pageNumber = i;
+              pageDiv.appendChild(canvas);
               pagesGrid.appendChild(pageDiv);
 
-              loadCount++;
-              if(loadCount === total){
+              loaded++;
+              if(loaded === total){
                 loading.style.display = 'none';
                 splitBtn.style.display = 'block';
-
-                // Make pages sortable
-                new Sortable(pagesGrid, {animation:150});
+                new Sortable(pagesGrid,{animation:150});
               }
             });
           });
         }
+      }).catch(err => {
+        alert('Error loading PDF!');
+        loading.style.display = 'none';
       });
     };
     reader.readAsArrayBuffer(file);
   });
 
-  // Split PDF
   splitBtn.addEventListener('click', async () => {
     if(!pdfDoc) return;
     loading.style.display = 'block';
@@ -238,16 +240,15 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     const sortedPages = Array.from(pagesGrid.children).map(div => parseInt(div.dataset.pageNumber));
     const { PDFDocument } = PDFLib;
     const newPdf = await PDFDocument.create();
-    const arrayBuffer = await fileInput.files[0].arrayBuffer();
-    const origPdf = await PDFDocument.load(arrayBuffer);
+    const origPdf = await PDFDocument.load(await fileInput.files[0].arrayBuffer());
 
-    for(const pageNum of sortedPages){
-      const [copiedPage] = await newPdf.copyPages(origPdf,[pageNum-1]);
+    for(const p of sortedPages){
+      const [copiedPage] = await newPdf.copyPages(origPdf,[p-1]);
       newPdf.addPage(copiedPage);
     }
 
     const pdfBytes = await newPdf.save();
-    const blob = new Blob([pdfBytes], {type:'application/pdf'});
+    const blob = new Blob([pdfBytes],{type:'application/pdf'});
     const url = URL.createObjectURL(blob);
 
     const downloadLink = document.createElement('a');
@@ -255,13 +256,12 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     downloadLink.download = 'split.pdf';
     downloadLink.textContent = 'Download Split PDF';
     downloadLink.className = 'tool-link';
-    
+
     loading.style.display = 'none';
     resultDiv.innerHTML = '';
     resultDiv.appendChild(downloadLink);
     resultDiv.style.display = 'block';
   });
-
 })();
 </script>
 
