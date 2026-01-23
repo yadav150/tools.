@@ -77,32 +77,32 @@
   <main class="site-main">
     <section class="section">
   <div class="container">
-    <div class="card age-tool-card">
+    <div class="card compressor-tool-card">
       <h1 class="tool-title">Image Compressor</h1>
-      
+
       <div class="input-group">
         <label for="imageFile">Select Image</label>
         <input type="file" id="imageFile" accept="image/*">
       </div>
-      
+
       <div class="input-group">
         <label for="targetSize">Target Size (KB)</label>
         <input type="number" id="targetSize" min="10" max="2000" value="100" placeholder="100">
       </div>
-      
+
       <button class="calculate-btn" id="compressBtn">Compress Image</button>
-      
+
       <div class="loading" id="compressLoading">
         <div class="spinner"></div>
       </div>
-      
+
       <div class="result" id="compressResult"></div>
-      
+
       <!-- IMAGE PREVIEW LIST -->
-      <div id="imageList" style="display:none;margin-top:20px;"></div>
-      
-      <button class="calculate-btn" id="newImageBtn" style="display:none;margin-top:12px;">Compress New Image</button>
-      
+      <div id="imageList"></div>
+
+      <button class="calculate-btn" id="newImageBtn">Compress New Image</button>
+
       <div class="result" id="downloadResult"></div>
     </div>
   </div>
