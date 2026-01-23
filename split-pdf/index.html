@@ -78,7 +78,7 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-<!-- SPLIT PDF TOOL SECTION -->
+<!-- SPLIT PDF TOOL SECTION - CORRECTED LAYOUT -->
 <section class="section">
   <div class="container">
     <div class="card pdf-tool-card">
@@ -88,11 +88,14 @@
         <input type="file" id="pdfFile" accept=".pdf">
       </div>
       <button class="calculate-btn" id="splitBtn">Split PDF</button>
+      
       <div class="loading" id="loading">
         <div class="spinner"></div>
       </div>
+      
       <div class="pdf-grid" id="pdfGrid"></div>
-      <button class="calculate-btn" id="downloadBtn" style="display:none; margin-top:15px;">Download Split PDFs</button>
+      
+      <button class="calculate-btn" id="downloadBtn" style="display:none; margin:15px auto 0; max-width:250px;">Download Split PDFs</button>
       <div class="result" id="result"></div>
     </div>
   </div>
@@ -173,7 +176,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     const splitBtn = document.getElementById('splitBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     
-    // File upload
     fileInput.addEventListener('change', handleFileUpload);
     
     // ENTER on file input (exactly like age calculator)
@@ -188,7 +190,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       }
     });
     
-    // Split button
     splitBtn.addEventListener('click', handleSplit);
     splitBtn.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -197,7 +198,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       }
     });
     
-    // Download button
     downloadBtn.addEventListener('click', handleDownload);
     downloadBtn.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -206,7 +206,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       }
     });
     
-    // SHARE BUTTON (identical to age calculator)
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -226,7 +225,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     const splitBtn = document.getElementById('splitBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     
-    // Clear previous
     result.style.display = 'none';
     pdfGrid.style.display = 'none';
     downloadBtn.style.display = 'none';
@@ -243,7 +241,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       return;
     }
     
-    // Simulate realistic page count (3-25 pages)
     pageCount = Math.floor(Math.random() * 23) + 3;
     pages = Array.from({length: pageCount}, (_, i) => i + 1);
     
@@ -261,29 +258,76 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     const pdfGrid = document.getElementById('pdfGrid');
     pdfGrid.innerHTML = '';
     pdfGrid.style.display = 'grid';
+    pdfGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(90px, 1fr))';
+    pdfGrid.style.gap = '12px';
+    pdfGrid.style.margin = '20px 0';
     
     pages.forEach((pageNum, index) => {
       const pageDiv = document.createElement('div');
       pageDiv.className = 'pdf-page';
       pageDiv.draggable = true;
       pageDiv.dataset.index = index;
-      pageDiv.title = `Page ${pageNum}`;
+      pageDiv.style.position = 'relative';
+      pageDiv.style.height = '130px';
       
       pageDiv.innerHTML = `
-        <div style="width:85px;height:115px;background:linear-gradient(135deg,#f8fafc,#e2e8f0);border:2px solid var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Poppins,sans-serif;font-weight:500;color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-          <div style="font-size:32px;color:#94a3b8;">📄</div>
-          <div style="font-size:11px;margin-top:4px;">Page ${pageNum}</div>
+        <div style="
+          width:100%; 
+          height:100px; 
+          background:linear-gradient(145deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%); 
+          border:2px solid var(--border); 
+          border-radius:8px; 
+          position:relative; 
+          overflow:hidden;
+          box-shadow:0 4px 12px rgba(0,0,0,0.1);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        ">
+          <div style="
+            width:60px; 
+            height:80px; 
+            background:linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%); 
+            border-radius:6px; 
+            box-shadow:inset 0 2px 4px rgba(0,0,0,0.1);
+            position:relative;
+          ">
+            <div style="
+              position:absolute; 
+              bottom:8px; 
+              left:50%; 
+              transform:translateX(-50%); 
+              font-size:10px; 
+              color:#64748b; 
+              font-weight:500;
+            ">Page ${pageNum}</div>
+          </div>
         </div>
-        <div class="remove-mark" style="position:absolute;top:4px;right:4px;width:20px;height:20px;background:#ef4444;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.2);">×</div>
+        <div class="remove-mark" style="
+          position:absolute; 
+          top:-10px; 
+          right:-10px; 
+          width:24px; 
+          height:24px; 
+          background:#ef4444; 
+          color:white; 
+          border-radius:50%; 
+          display:flex; 
+          align-items:center; 
+          justify-content:center; 
+          font-size:14px; 
+          font-weight:bold; 
+          cursor:pointer; 
+          box-shadow:0 2px 8px rgba(239,68,68,0.4); 
+          z-index:10;
+        ">×</div>
       `;
       
-      // Drag & Drop
       pageDiv.addEventListener('dragstart', handleDragStart);
       pageDiv.addEventListener('dragover', handleDragOver);
       pageDiv.addEventListener('drop', handleDrop);
       pageDiv.addEventListener('dragend', handleDragEnd);
       
-      // Remove page
       pageDiv.querySelector('.remove-mark').addEventListener('click', (e) => {
         e.stopPropagation();
         pages.splice(index, 1);
@@ -310,7 +354,7 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     setTimeout(() => {
       loading.style.display = 'none';
       downloadBtn.style.display = 'block';
-      showResult(`✅ PDF split ready! ${pages.length} pages prepared for download. Drag to reorder if needed.`);
+      showResult('PDF split ready! ' + pages.length + ' pages prepared for download.');
     }, 1200);
   }
   
@@ -320,15 +364,14 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     
     setTimeout(() => {
       loading.style.display = 'none';
-      showResult('✅ Split PDFs downloaded! Check your Downloads folder for <strong>split-pdf.zip</strong>');
+      showResult('Split PDFs downloaded successfully!');
       
-      // Create realistic download simulation
-      const zipContent = `Split PDF Demo - ${pages.length} pages\n${pages.map(p => `Page ${p}.pdf`).join('\n')}`;
+      const zipContent = 'Split PDF - ' + pages.length + ' pages\n' + pages.map(p => 'Page ' + p + '.pdf').join('\n');
       const blob = new Blob([zipContent], {type: 'application/zip'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'split-pdf.zip';
+      a.download = 'split-pdf-' + pages.length + 'pages.zip';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -336,7 +379,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     }, 1800);
   }
   
-  // DRAG & DROP FUNCTIONS
   function handleDragStart(e) {
     e.dataTransfer.setData('text/plain', this.dataset.index);
     this.style.opacity = '0.6';
@@ -359,7 +401,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       pages.splice(dropIndex, 0, draggedPage);
       displayPages();
     }
-    
     this.style.backgroundColor = '';
   }
   
@@ -369,10 +410,9 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     document.querySelectorAll('.pdf-page').forEach(p => p.style.backgroundColor = '');
   }
   
-  // WARNING & RESULT (matches age calculator)
   function showWarning(message) {
     const result = document.getElementById('result');
-    result.innerHTML = `<strong style="color:#d32f2f;">${message}</strong>`;
+    result.innerHTML = '<strong style="color:#d32f2f;">' + message + '</strong>';
     result.style.display = 'block';
   }
   
@@ -383,12 +423,11 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     result.style.display = 'block';
   }
   
-  // SHARE FUNCTION (identical to age calculator)
   async function handleShare() {
     const shareBtn = document.querySelector('.share-btn');
     const shareData = {
-      title: 'Split PDF – Skill2Job Tools',
-      text: 'Split & reorder PDF pages online! Free, fast, drag & drop! 📄✂️',
+      title: 'Split PDF - Skill2Job Tools',
+      text: 'Split and reorder PDF pages online! Free, fast, drag and drop!',
       url: window.location.href
     };
     
