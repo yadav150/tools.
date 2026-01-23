@@ -154,8 +154,7 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   </p>
   <p>© 2026 Skill2Job</p>
 </footer>
-
-// UPDATED SPLIT PDF JAVASCRIPT - Fixed Enter key warning
+// FIXED SPLIT PDF JAVASCRIPT - Proper Enter key detection
 <script>
 (function() {
   'use strict';
@@ -180,12 +179,13 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     
     fileInput.addEventListener('change', handleFileUpload);
     
-    // Enter key on file input - warn like age calculator
-    fileInput.addEventListener('keypress', function(e) {
+    // FIXED: Use keydown instead of keypress + focus/blur detection
+    fileInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
         if (!this.files || this.files.length === 0) {
           showWarning('Please select a PDF file first.');
+          this.focus();
         } else {
           handleFileUpload({ target: this });
         }
@@ -193,24 +193,22 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     });
     
     splitBtn.addEventListener('click', handleSplit);
-    
-    // Enter key on split button - warn if no file
-    splitBtn.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
+    splitBtn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         handleSplit();
       }
     });
     
     downloadBtn.addEventListener('click', handleDownload);
-    downloadBtn.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
+    downloadBtn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         handleDownload();
       }
     });
     
-    // Share button
+    // Share button - same as age calculator
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
       shareBtn.addEventListener('click', handleShare);
@@ -223,9 +221,8 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     }
   }
   
-  // Rest of functions remain the same...
   async function handleFileUpload(e) {
-    const file = e.target.files ? e.target.files[0] : null;
+    const file = e.target ? e.target.files[0] : null;
     const result = document.getElementById('result');
     const pdfGrid = document.getElementById('pdfGrid');
     const splitBtn = document.getElementById('splitBtn');
@@ -241,7 +238,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       return;
     }
     
-    // Rest of upload logic same...
     const loading = document.getElementById('loading');
     loading.style.display = 'block';
     result.style.display = 'none';
@@ -271,24 +267,26 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       
       displayPages();
       splitBtn.textContent = 'Prepare Split PDFs';
+      splitBtn.style.display = 'block';
       loading.style.display = 'none';
       
     } catch (error) {
+      console.error(error);
       loading.style.display = 'none';
       showWarning('Error loading PDF. Please try another file.');
     }
   }
   
   function handleSplit() {
-    const splitBtn = document.getElementById('splitBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    
     if (pdfPages.length === 0) {
       showWarning('Please upload a PDF file first.');
       return;
     }
     
+    const splitBtn = document.getElementById('splitBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
     const loading = document.getElementById('loading');
+    
     loading.style.display = 'block';
     
     setTimeout(() => {
@@ -299,7 +297,57 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     }, 1200);
   }
   
-  // Keep all other functions (displayPages, handleDownload, drag handlers, share, etc.) exactly the same...
+  async function handleDownload() {
+    const loading = document.getElementById('loading');
+    loading.style.display = 'block';
+    
+    try {
+      const zip = new JSZip();
+      
+      for (let i = 0; i < pdfPages.length; i++) {
+        const pageData = pdfPages[i];
+        const page = await pdfDoc.getPage(pageData.pageNum);
+        const scale = 2;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+        
+        canvas.toBlob((blob) => {
+          zip.file(`page_${pageData.pageNum}.pdf`, blob);
+          if (i === pdfPages.length - 1) {
+            finalizeDownload(zip);
+          }
+        });
+      }
+    } catch (error) {
+      loading.style.display = 'none';
+      showWarning('Error creating download. Please try again.');
+    }
+  }
+  
+  function finalizeDownload(zip) {
+    zip.generateAsync({ type: 'blob' }).then((zipBlob) => {
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'split-pdf.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      document.getElementById('loading').style.display = 'none';
+      showResult('Split PDFs downloaded successfully as ZIP file!');
+    });
+  }
+  
   function displayPages() {
     const pdfGrid = document.getElementById('pdfGrid');
     pdfGrid.innerHTML = '';
@@ -310,23 +358,36 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
       pageDiv.className = 'pdf-page';
       pageDiv.draggable = true;
       pageDiv.dataset.index = index;
+      pageDiv.setAttribute('role', 'button');
+      pageDiv.setAttribute('tabindex', '0');
       
       pageDiv.innerHTML = `
-        <canvas></canvas>
-        <div class="remove-mark" style="font-size:16px;color:red;cursor:pointer;">×</div>
+        <canvas width="${pageData.canvas.width}" height="${pageData.canvas.height}"></canvas>
+        <div class="remove-mark" style="font-size:16px;color:red;cursor:pointer;position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.7);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;">×</div>
       `;
       
       const canvas = pageDiv.querySelector('canvas');
-      canvas.width = pageData.canvas.width;
-      canvas.height = pageData.canvas.height;
-      canvas.getContext('2d').drawImage(pageData.canvas, 0, 0);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(pageData.canvas, 0, 0);
       
+      // Drag & Drop
       pageDiv.addEventListener('dragstart', handleDragStart);
       pageDiv.addEventListener('dragover', handleDragOver);
       pageDiv.addEventListener('drop', handleDrop);
       pageDiv.addEventListener('dragend', handleDragEnd);
       
-      pageDiv.querySelector('.remove-mark').addEventListener('click', () => {
+      // Keyboard navigation for pages
+      pageDiv.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          pdfPages.splice(index, 1);
+          displayPages();
+        }
+      });
+      
+      // Remove page click
+      pageDiv.querySelector('.remove-mark').addEventListener('click', (e) => {
+        e.stopPropagation();
         pdfPages.splice(index, 1);
         displayPages();
       });
@@ -335,43 +396,7 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
     });
   }
   
-  function handleDownload() {
-    // Same download logic as before...
-    const loading = document.getElementById('loading');
-    loading.style.display = 'block';
-    
-    try {
-      const zip = new JSZip();
-      
-      for (let i = 0; i < pdfPages.length; i++) {
-        const pageData = pdfPages[i];
-        const pageBlob = await pdfDoc.getPage(pageData.pageNum).then(page => {
-          return page.getViewport({ scale: 2 }).convertToPdfDataUrl();
-        });
-        
-        zip.file(`page_${pageData.pageNum}.pdf`, pageBlob.split(',')[1], { base64: true });
-      }
-      
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const url = URL.createObjectURL(zipBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'split-pdf.zip';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      loading.style.display = 'none';
-      showResult('Split PDFs downloaded successfully as ZIP file!');
-      
-    } catch (error) {
-      loading.style.display = 'none';
-      showWarning('Error creating download. Please try again.');
-    }
-  }
-  
-  // Drag handlers (same)
+  // Drag handlers
   function handleDragStart(e) {
     dragData = this.dataset.index;
     this.style.opacity = '0.5';
@@ -399,14 +424,14 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   
   function showWarning(message) {
     const result = document.getElementById('result');
-    result.textContent = message;
+    result.innerHTML = `<strong>${message}</strong>`;
     result.style.color = '#d32f2f';
     result.style.display = 'block';
   }
   
   function showResult(message) {
     const result = document.getElementById('result');
-    result.textContent = message;
+    result.innerHTML = `<strong>${message}</strong>`;
     result.style.color = '';
     result.style.display = 'block';
   }
@@ -442,5 +467,6 @@ Experience convenience, reliability, and ease with Skill2Job's Split PDF tool to
   }
 })();
 </script>
+
 </body>
 </html>
