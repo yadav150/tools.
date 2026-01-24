@@ -157,12 +157,10 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   <p>© 2026 Skill2Job</p>
 </footer>
 
-  <!-- PDF-LIB CDN -->
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <!-- PDF-LIB CDN (keep before script) -->
+  <!-- PDF-LIB CDN (single load - fixed duplicate) -->
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 
-  <script>
+<script>
 (function() {
   'use strict';
   
@@ -175,7 +173,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   async function init() {
     const { PDFDocument } = PDFLib;
     
-    // ALL ELEMENTS
+    // ALL ELEMENTS (no newImageBtn needed)
     const uploadBtn = document.getElementById('uploadBtn');
     const addMoreBtn = document.getElementById('addMoreBtn');
     const mergeBtn = document.getElementById('mergeBtn');
@@ -190,13 +188,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
     
     // EVENT LISTENERS
     uploadBtn.addEventListener('click', handleUpload);
-    mergeBtn.addEventListener('click', handleMerge);
-    addMoreBtn.addEventListener('click', handleAddMore); // FIXED: Now triggers file picker
-    
-    pdfFiles.addEventListener('change', handleFileChange); // FIXED: Direct file input trigger
-    pdfFiles.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') handleUpload();
-    });
+    pdfFiles.addEventListener('change', handleFileChange);
     
     // SHARE BUTTON
     const shareBtn = document.querySelector('.share-btn');
@@ -210,15 +202,14 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       });
     }
     
-    // FIXED: Handle Add More - Opens file picker without reset
-    async function handleAddMore() {
-      pdfFiles.value = ''; // Clear input to allow new selection
-      pdfFiles.click(); // Programmatically trigger file picker
-    }
+    // **NEW: Click results to reset (like Image Compressor)**
+    pdfList.addEventListener('click', resetTool);
+    mergeResult.addEventListener('click', function(e) {
+      if (e.target.tagName !== 'A') resetTool();
+    });
     
-    // FIXED: Direct file input handler
-    async function handleFileChange() {
-      await handleUpload();
+    function handleFileChange() {
+      handleUpload();
     }
     
     async function handleUpload() {
@@ -237,23 +228,21 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       }
       
       uploadLoading.style.display = 'block';
+      uploadBtn.disabled = true;
       
       try {
-        // Load PDFs
         const newPdfs = await Promise.all(
           files.map(async (file) => {
             const arrayBuffer = await file.arrayBuffer();
             const pdf = await PDFDocument.load(arrayBuffer);
             return {
-              file,
-              pdf,
+              file, pdf,
               name: file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name,
               pages: pdf.getPageCount()
             };
           })
         );
         
-        // Append to existing (allows multiple uploads)
         pdfDocs = pdfDocs.concat(newPdfs);
         
         uploadLoading.style.display = 'none';
@@ -262,6 +251,9 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         
         renderPdfList();
         pdfList.style.display = 'block';
+        uploadBtn.style.display = 'none';  // **HIDE UPLOAD BUTTON**
+        
+        // **SHOW ACTION BUTTONS**
         addMoreBtn.style.display = 'block';
         mergeBtn.style.display = 'block';
         
@@ -269,6 +261,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         uploadLoading.style.display = 'none';
         uploadResult.textContent = 'Error loading PDFs. Please try valid files.';
         uploadResult.style.display = 'block';
+        uploadBtn.disabled = false;
       }
     }
     
@@ -295,7 +288,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       `;
     }
     
-    // GLOBAL FUNCTIONS
+    // GLOBAL FUNCTIONS (unchanged)
     window.movePdf = (index, direction) => {
       const newIndex = index + direction;
       if (newIndex >= 0 && newIndex < pdfDocs.length) {
@@ -311,6 +304,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         pdfList.style.display = 'none';
         addMoreBtn.style.display = 'none';
         mergeBtn.style.display = 'none';
+        uploadBtn.style.display = 'block';
       }
     };
     
@@ -349,6 +343,20 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
       }
     }
     
+    // **NEW: Reset function (like Image Compressor)**
+    function resetTool() {
+      pdfFiles.value = '';
+      pdfDocs = [];
+      pdfList.style.display = 'none';
+      addMoreBtn.style.display = 'none';
+      mergeBtn.style.display = 'none';
+      mergeResult.style.display = 'none';
+      uploadResult.style.display = 'none';
+      uploadBtn.style.display = 'block';
+      uploadBtn.textContent = 'Upload New PDFs';
+      uploadBtn.disabled = false;
+    }
+    
     // SHARE FUNCTION
     async function handleShare() {
       const shareData = {
@@ -357,6 +365,7 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
         url: window.location.href
       };
       
+      const shareBtn = document.querySelector('.share-btn');
       try {
         if (navigator.share) {
           await navigator.share(shareData);
