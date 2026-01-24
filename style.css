@@ -31,7 +31,7 @@ h2{
 }
 
 /* ────────────────────────────────────────────────
-   IMAGE RESIZER - TWO COLUMN RESPONSIVE LAYOUT (FIXED)
+   IMAGE RESIZER - TWO COLUMN RESPONSIVE LAYOUT (EQUAL HEIGHT FIXED)
    ──────────────────────────────────────────────── */
 
 .tool-layout {
@@ -39,54 +39,59 @@ h2{
   gap: 16px;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;                    /* Ensure full width usage */
+  width: 100%;
+  min-height: 500px;                /* Base minimum for mobile */
 }
 
-.tool-column {
-  flex: 1;
-  display: flex;                  /* Helps inner content stretch */
-}
-
-.ads-column {
-  flex: 1;
-  min-width: 300px;
-  background: #f8fafc;
-  border: 2px solid var(--border);   /* Grey border added back */
-  border-radius: var(--radius);
-  padding: 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;         /* Vertical stack for stability */
-  align-items: center;
-  justify-content: center;
-  box-shadow: none;
-  min-height: 300px;              /* Stronger minimum to avoid collapse */
-}
-
-/* Desktop: side-by-side + equal height */
+/* Desktop: side-by-side + strict equal height */
 @media (min-width: 768px) {
   .tool-layout {
     flex-direction: row;
-    min-height: 650px;            /* Slightly taller to comfortably fit ads */
+    min-height: 700px;              /* Increase to comfortably fit ads + tool */
   }
   
   .tool-column,
   .ads-column {
-    height: 100%;                 /* Force both to match tallest */
+    flex: 1 1 0;                    /* Equal flex grow/shrink */
+    display: flex;
+    flex-direction: column;
+    height: auto;                   /* Allow natural growth */
+    min-height: 100%;               /* Force match parent height */
   }
 }
 
-/* Ads wrapper - prevents shift when ad loads */
-.ads-column > div {
-  width: 100%;
-  min-height: 280px;              /* Minimum ad space */
+/* Tool column inner card - ensure it fills */
+.tool-column .card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ads column - fixed stability + grey border */
+.ads-column {
+  background: #f8fafc;
+  border: 2px solid var(--border);     /* Grey border visible */
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;                        /* Grow to fill available height */
+  box-shadow: none;
+  min-height: 320px;                   /* Reserve space */
 }
 
-/* Select and inputs (unchanged, just confirming) */
+/* Inner ads wrapper - prevents shift & fills height */
+.ads-column > div {
+  width: 100%;
+  min-height: 280px;
+  flex: 1;                             /* Grow to fill ads-column height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Select and inputs (unchanged) */
 #sizeSelect,
 #customSize input[type="number"] {
   width: 100%;
