@@ -77,12 +77,11 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-<!-- MERGE PDF TOOL (Age Calculator style) -->
 <section class="section" data-google-ad="false">
   <div class="container">
-    <div class="card age-tool-card">
+    <div class="card age-tool-card">  <!-- <-- Use Age Calculator class -->
 
-      <h1 class="tool-title">Merge PDF</h1>
+      <h1 class="tool-title">Merge PDF Tool</h1>
 
       <div class="input-group">
         <label for="pdfFiles">Select PDF Files (Max 10)</label>
@@ -93,25 +92,14 @@
         Upload PDFs
       </button>
 
-      <!-- Loading -->
-      <div class="loading" id="uploadLoading">
-        <div class="spinner"></div>
-      </div>
-
-      <!-- Result -->
+      <!-- Results/Loading -->
+      <div class="loading" id="uploadLoading"><div class="spinner"></div></div>
       <div class="result" id="uploadResult"></div>
-
-      <!-- PDF List (JS will fill) -->
       <div id="pdfList"></div>
 
-      <!-- Action buttons -->
-      <button class="calculate-btn" id="addMoreBtn" style="display:none;">
-        Add More PDFs
-      </button>
-
-      <button class="calculate-btn" id="mergeBtn" style="display:none;">
-        Merge PDFs
-      </button>
+      <!-- Hidden buttons -->
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;">Add More</button>
+      <button class="calculate-btn" id="mergeBtn" style="display:none;">Merge PDFs</button>
 
     </div>
   </div>
