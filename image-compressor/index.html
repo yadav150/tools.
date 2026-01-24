@@ -4,120 +4,88 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Image Compressor – Compress to Target KB Online | Skill2Job Tools</title>
-
-  <meta name="description" content="Use Skill2Job's free Image Compressor to reduce image file size to exact KB target instantly. Client-side processing, fast, mobile-friendly, no uploads required.">
-  <meta name="keywords" content="image compressor, compress image KB, image size reducer, optimize image size, reduce photo size, image optimizer, Skill2Job tools">
+  <title>Image Compressor – Compress Images Online | Skill2Job Tools</title>
+  <meta name="description" content="Compress images online to reduce file size without losing quality. Fast, browser-based, secure.">
+  <meta name="keywords" content="image compressor, compress photos online, reduce image size, Skill2Job tools">
   <meta name="author" content="Yadav Subba">
   <meta name="robots" content="index, follow">
-
   <link rel="canonical" href="https://tools.skill2job.site/image-compressor">
   <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Image Compressor – Free KB Size Tool | Skill2Job">
-  <meta property="og:description" content="Compress images to exact KB size instantly.">
-  <meta property="og:url" content="https://tools.skill2job.site/image-compressor">
-  <meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-  <meta property="og:site_name" content="Skill2Job Tools">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Image Compressor – Skill2Job Tools">
-  <meta name="twitter:description" content="Free online Image Compressor by Skill2Job.">
-  <meta name="twitter:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="/style.css">
-
-  <!-- AdSense (ONLY ONCE) -->
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654"
-    crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
-
 <body>
-
-<!-- HEADER -->
-<header class="site-header">
-  <div class="container header-inner">
-    <div class="logo">
-      <a href="/">
-        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-      </a>
-    </div>
-    <button class="share-btn" type="button">Share</button>
-  </div>
-</header>
-
-<!-- MAIN -->
-<main class="site-main">
-
-<section class="section">
-  <div class="container tool-layout">
-
-    <!-- TOOL -->
-    <div class="tool-column">
-      <div class="card image-tool-card">
-        <h1 class="tool-title">Image Compressor</h1>
-
-        <div class="input-group">
-          <label for="imageFile">Upload Image</label>
-          <input type="file" id="imageFile" accept="image/*">
-        </div>
-
-        <div class="input-group">
-          <label for="targetSize">Target Size (KB)</label>
-          <input type="number" id="targetSize" min="10" max="2000" value="100">
-        </div>
-
-        <button class="calculate-btn" id="compressBtn">Compress Image</button>
-
-        <div class="loading" id="compressLoading">
-          <div class="spinner"></div>
-        </div>
-
-        <div class="result" id="compressResult"></div>
-        <div id="imageList"></div>
-        <div id="downloadResult"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
       </div>
+      <button class="share-btn" type="button" aria-label="Share Image Compressor">Share</button>
     </div>
+  </header>
 
-    <!-- ADS -->
-    <div class="ads-column">
-      <div class="ads-wrapper" style="width:100%; min-height:250px; display:flex; align-items:center; justify-content:center;">
-        <ins class="adsbygoogle"
-             style="display:block; width:100%;"
-             data-ad-client="ca-pub-1876390706944654"
-             data-ad-slot="5136857748"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+  <main class="site-main">
+    <section class="section" data-google-ad="false">
+      <div class="container tool-layout">
+        <div class="tool-column">
+          <div class="card image-tool-card">
+            <h1 class="tool-title">Compress Images Online</h1>
+
+            <div class="input-group">
+              <label for="imageFile">Upload Image</label>
+              <input type="file" id="imageFile" accept="image/*">
+            </div>
+
+            <div class="input-group">
+              <label for="quality">Compression Quality (0-100)</label>
+              <input type="number" id="quality" min="1" max="100" value="80">
+            </div>
+
+            <button class="calculate-btn" id="compressBtn">Compress</button>
+
+            <div class="loading" id="loading"><div class="spinner"></div></div>
+            <div class="result" id="result"></div>
+            <div id="imgPreview"></div>
+          </div>
+        </div>
+
+        <div class="ads-column">
+          <div class="ads-wrapper">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1876390706944654"
+                 data-ad-slot="5136857748"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </div>
-</section>
+    <section class="section">
+      <div class="container">
+        <div class="card">
+          <h2>About This Tool</h2>
+          <p>
+            Skill2Job's <strong>Image Compressor</strong> reduces image file size while keeping quality intact. Process images locally in your browser—no uploads, private and secure.
+          </p>
+          <p>
+            Ideal for web optimization, social media, and document uploads. Simply choose your quality, upload, and get the compressed image instantly.
+          </p>
+          <p>
+            Developed by <strong>Yadav Subba</strong>, CEO & Developer of Skill2Job. Works on all devices and ensures fast, reliable compression with minimal quality loss.
+          </p>
+        </div>
+      </div>
+    </section>
 
-<!-- ABOUT -->
-<section class="section">
-  <div class="container">
-    <div class="card">
-      <h2>About This Tool</h2>
-     <p>
-Skill2Job’s free <strong>Image Compressor</strong> is a fast, secure, and SEO-friendly online tool that helps you reduce image size to an exact KB target without noticeable quality loss. Ideal for government forms, job applications, websites, and social media, it supports JPG, JPEG, PNG, and WebP formats. All compression happens directly in your browser, ensuring complete privacy with no uploads, no watermarks, and no sign-ups. Optimized images load faster, meet size requirements, and improve page speed and search engine performance.
-</p>
-
-<p>
-This reliable image compression tool is built and maintained by <strong>Yadav Subba</strong>, CEO &amp; Developer of Skill2Job. Designed with a focus on accuracy, speed, and user convenience, Skill2Job offers trusted document and image tools for students, professionals, and job seekers. With a privacy-first approach and precise compression control, Skill2Job helps users create perfectly optimized images for everyday digital needs.
-</p>
-    </div>
-  </div>
-</section>
-
-   <!-- MORE TOOLS -->
     <section class="section">
       <div class="container">
         <div class="card">
@@ -144,7 +112,6 @@ This reliable image compression tool is built and maintained by <strong>Yadav Su
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <p>
       <strong>Skill2Job Tools</strong> |
@@ -157,72 +124,94 @@ This reliable image compression tool is built and maintained by <strong>Yadav Su
     <p>© 2026 Skill2Job</p>
   </footer>
 
-<!-- ADS INIT -->
-<script>
-  window.addEventListener('load', function () {
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  });
-</script>
+  <!-- RESTORED ORIGINAL JS with Ads Fix -->
+  <script>
+  (function(){
+    'use strict';
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+    else{init();}
 
-<!-- ORIGINAL TOOL JS (UNCHANGED) -->
-<script>
-(function () {
-  'use strict';
+    function init(){
+      const compressBtn=document.getElementById('compressBtn');
+      const imageFile=document.getElementById('imageFile');
+      const qualityInput=document.getElementById('quality');
+      const result=document.getElementById('result');
+      const loading=document.getElementById('loading');
+      const imgPreview=document.getElementById('imgPreview');
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+      compressBtn.addEventListener('click',compressImage);
+      imageFile.addEventListener('change',updatePreview);
 
-  async function init() {
-    const compressBtn = document.getElementById('compressBtn');
-    const compressLoading = document.getElementById('compressLoading');
-    const compressResult = document.getElementById('compressResult');
-    const downloadResult = document.getElementById('downloadResult');
-    const imageList = document.getElementById('imageList');
-    const imageFile = document.getElementById('imageFile');
-    const targetSize = document.getElementById('targetSize');
-
-    let compressedBlob = null;
-    let originalSize = 0;
-
-    compressBtn.addEventListener('click', handleCompress);
-    imageFile.addEventListener('change', () => compressBtn.disabled = false);
-
-    async function handleCompress() {
-      const file = imageFile.files[0];
-      if (!file) return;
-
-      compressLoading.style.display = 'block';
-      compressedBlob = await compressToTargetSize(file, targetSize.value);
-      compressLoading.style.display = 'none';
-      showDownload();
+      const shareBtn=document.querySelector('.share-btn');
+      if(shareBtn){
+        shareBtn.addEventListener('click',handleShare);
+        shareBtn.addEventListener('keydown',function(e){
+          if(e.key==='Enter'||e.key===' '){e.preventDefault();handleShare();}
+        });
+      }
     }
 
-    function compressToTargetSize(file, targetKB) {
-      return new Promise(resolve => {
-        const canvas = document.createElement('canvas');
-        const img = new Image();
-        img.onload = () => {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          canvas.getContext('2d').drawImage(img, 0, 0);
-          canvas.toBlob(resolve, 'image/jpeg', 0.7);
-        };
-        img.src = URL.createObjectURL(file);
-      });
+    function updatePreview(){
+      const file=document.getElementById('imageFile').files[0];
+      const imgPreview=document.getElementById('imgPreview');
+      imgPreview.innerHTML='';
+      if(file && file.type.startsWith('image/')){
+        const url=URL.createObjectURL(file);
+        imgPreview.innerHTML=`<img src="${url}" alt="Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:8px auto;border:2px solid var(--border);">`;
+      }
     }
 
-    function showDownload() {
-      downloadResult.innerHTML = `
-        <a href="${URL.createObjectURL(compressedBlob)}" download="compressed.jpg">
-          Download Image
-        </a>`;
-    }
-  }
-})();
-</script>
+    function compressImage(){
+      const file=document.getElementById('imageFile').files[0];
+      const quality=parseInt(document.getElementById('quality').value)/100;
+      const result=document.getElementById('result');
+      const loading=document.getElementById('loading');
+      const imgPreview=document.getElementById('imgPreview');
 
+      result.style.display='none';
+      loading.style.display='none';
+
+      if(!file){result.textContent='Please upload an image first.';result.style.display='block';return;}
+      if(!file.type.startsWith('image/')){result.textContent='Please upload a regular image file.';result.style.display='block';return;}
+      if(isNaN(quality) || quality<=0 || quality>1){result.textContent='Please enter a valid quality (1-100).';result.style.display='block';return;}
+
+      loading.style.display='block';
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        canvas.width=img.width;
+        canvas.height=img.height;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0);
+        const compressedDataUrl=canvas.toDataURL('image/jpeg',quality);
+
+        loading.style.display='none';
+        imgPreview.innerHTML=`<img src="${compressedDataUrl}" alt="Compressed Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:16px auto;border:2px solid var(--border);">`;
+        result.innerHTML=`<strong>Image compressed.</strong>
+          <br><a href="${compressedDataUrl}" download="compressed.jpg" class="calculate-btn" style="margin-top:16px;display:inline-block;text-decoration:none;">Download Compressed Image</a>`;
+        result.style.display='block';
+      };
+      img.onerror=()=>{
+        loading.style.display='none';
+        result.textContent='Cannot process this image. Try another file.';
+        result.style.display='block';
+      };
+      img.src=URL.createObjectURL(file);
+    }
+
+    async function handleShare(){
+      const shareData={title:'Image Compressor – Skill2Job Tools',text:'Compress images online instantly! 📏',url:window.location.href};
+      try{
+        if(navigator.share) await navigator.share(shareData);
+        else if(navigator.clipboard){await navigator.clipboard.writeText(shareData.url);showFeedback('Link copied!','#4CAF50');}
+      }catch(err){prompt('Copy this link:',shareData.url);}
+    }
+
+    function showFeedback(message,color){
+      alert(message); // simple alert for feedback (can replace with styled toast)
+    }
+
+  })();
+  </script>
 </body>
 </html>
