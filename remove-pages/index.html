@@ -12,7 +12,6 @@
   <link rel="canonical" href="https://tools.skill2job.site/remove-pages">
   <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-  <!-- OG / Twitter tags (same as before) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Remove Pages from PDF – Free Online Tool | Skill2Job">
   <meta property="og:description" content="Quickly delete unwanted pages from any PDF file online using Skill2Job's Remove Pages from PDF tool. Fast, secure, and easy to use.">
@@ -27,7 +26,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
-  <!-- JSON-LD same as before -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -56,15 +54,16 @@
           <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
         </a>
       </div>
-      <button class="share-btn" type="button" aria-label="Share Remove PDF Pages Tool">Share</button>
+      <button class="share-btn" type="button" aria-label="Share Remove PDF Pages">Share</button>
     </div>
   </header>
 
   <main class="site-main">
 
+    <!-- TOOL SECTION - MATCHES IPC EXACTLY -->
     <section class="section" data-google-ad="false">
       <div class="container">
-        <div class="card pdf-tool-card">  <!-- same centering/max-width feel as .image-tool-card -->
+        <div class="card image-tool-card">  <!-- ← Key fix: use .image-tool-card for max-width:500px + centered -->
           <h1 class="tool-title">Remove Pages from PDF</h1>
           
           <div class="input-group">
@@ -72,7 +71,7 @@
             <input type="file" id="pdfInput" accept="application/pdf">
           </div>
           
-          <button class="calculate-btn" id="calcBtn" disabled>Load PDF</button>
+          <button class="calculate-btn" id="calcBtn">Load PDF</button>
           
           <div id="pagesWrap" class="pdf-grid"></div>
           
@@ -89,7 +88,7 @@
       </div>
     </section>
 
-    <!-- About section unchanged -->
+    <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
         <div class="card">
@@ -106,7 +105,7 @@
       </div>
     </section>
 
-    <!-- More Tools – added all three for consistency -->
+    <!-- MORE TOOLS -->
     <section class="section">
       <div class="container">
         <div class="card">
@@ -131,6 +130,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer">
@@ -145,234 +145,195 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
- <!-- IMPROVED SHARE SCRIPT -->
+  <!-- IMPROVED SHARE SCRIPT – EXACTLY AS YOU PROVIDED, NO CHANGES -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-
-<script>
-/* ===========================
-   REMOVE PAGES FROM PDF TOOL - FIXED
-=========================== */
-
-let selectedPages = new Set();
-let pdfFile = null;
-
-const pdfInput  = document.getElementById('pdfInput');
-const calcBtn   = document.getElementById('calcBtn');
-const removeBtn = document.getElementById('removeBtn');
-const loading   = document.getElementById('loading');
-const result    = document.getElementById('result');
-const pagesWrap = document.getElementById('pagesWrap');
-
-/* pdf.js worker */
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-/* button events */
-calcBtn.addEventListener('click', uploadPDF);
-removeBtn.addEventListener('click', removeSelectedPages);
-
-/* dynamic delay (network + device feel) */
-function getDelay(){
-  return Math.min(2500, 800 + Math.random() * 1500);
-}
-
-/* ===========================
-   STEP 1: UPLOAD PDF
-=========================== */
-function uploadPDF(){
-  result.style.display = 'none';
-  loading.style.display = 'none';
-
-  if(!pdfInput.files.length){
-    result.textContent = 'Please upload a PDF file.';
-    result.style.display = 'block';
-    return;
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script>
+  /* ===========================
+     REMOVE PAGES FROM PDF TOOL - FIXED
+  =========================== */
+  let selectedPages = new Set();
+  let pdfFile = null;
+  const pdfInput = document.getElementById('pdfInput');
+  const calcBtn = document.getElementById('calcBtn');
+  const removeBtn = document.getElementById('removeBtn');
+  const loading = document.getElementById('loading');
+  const result = document.getElementById('result');
+  const pagesWrap = document.getElementById('pagesWrap');
+  /* pdf.js worker */
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  /* button events */
+  calcBtn.addEventListener('click', uploadPDF);
+  removeBtn.addEventListener('click', removeSelectedPages);
+  /* dynamic delay (network + device feel) */
+  function getDelay(){
+    return Math.min(2500, 800 + Math.random() * 1500);
   }
-
-  pagesWrap.innerHTML = '';
-  pagesWrap.style.display = 'none';
-  removeBtn.style.display = 'none';
-  selectedPages.clear();
-
-  loading.style.display = 'block';
-
-  setTimeout(() => {
-    const file = pdfInput.files[0];
-    pdfFile = file; // store file for later
-    const reader = new FileReader();
-
-    reader.onload = async e => {
-      try {
-        const arrayBuffer = e.target.result;
-        await renderPDFPages(arrayBuffer);
-        loading.style.display = 'none';
-        pagesWrap.style.display = 'grid';
-        removeBtn.style.display = 'block';
-      } catch(err){
-        loading.style.display = 'none';
-        result.textContent = 'Failed to load PDF. Please try again.';
-        result.style.display = 'block';
-        console.error(err);
+  /* ===========================
+     STEP 1: UPLOAD PDF
+  =========================== */
+  function uploadPDF(){
+    result.style.display = 'none';
+    loading.style.display = 'none';
+    if(!pdfInput.files.length){
+      result.textContent = 'Please upload a PDF file.';
+      result.style.display = 'block';
+      return;
+    }
+    pagesWrap.innerHTML = '';
+    pagesWrap.style.display = 'none';
+    removeBtn.style.display = 'none';
+    selectedPages.clear();
+    loading.style.display = 'block';
+    setTimeout(() => {
+      const file = pdfInput.files[0];
+      pdfFile = file; // store file for later
+      const reader = new FileReader();
+      reader.onload = async e => {
+        try {
+          const arrayBuffer = e.target.result;
+          await renderPDFPages(arrayBuffer);
+          loading.style.display = 'none';
+          pagesWrap.style.display = 'grid';
+          removeBtn.style.display = 'block';
+        } catch(err){
+          loading.style.display = 'none';
+          result.textContent = 'Failed to load PDF. Please try again.';
+          result.style.display = 'block';
+          console.error(err);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }, getDelay());
+  }
+  /* ===========================
+     STEP 2: RENDER PDF PAGES
+  =========================== */
+  async function renderPDFPages(arrayBuffer){
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    for(let i = 1; i <= pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 0.35 });
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      const box = document.createElement('div');
+      box.className = 'pdf-page';
+      box.dataset.page = i;
+      const cross = document.createElement('span');
+      cross.className = 'remove-mark';
+      cross.textContent = '✕';
+      box.appendChild(cross);
+      box.appendChild(canvas);
+      box.addEventListener('click', () => togglePage(i, box));
+      pagesWrap.appendChild(box);
+    }
+  }
+  /* ===========================
+     SELECT / DESELECT PAGE
+  =========================== */
+  function togglePage(pageNo, el){
+    if(selectedPages.has(pageNo)){
+      selectedPages.delete(pageNo);
+      el.classList.remove('selected');
+    } else {
+      selectedPages.add(pageNo);
+      el.classList.add('selected');
+    }
+  }
+  /* ===========================
+     STEP 3: REMOVE SELECTED PAGES
+  =========================== */
+  async function removeSelectedPages(){
+    result.style.display = 'none';
+    if(!pdfFile){
+      result.textContent = 'Please upload a PDF first.';
+      result.style.display = 'block';
+      return;
+    }
+    if(selectedPages.size === 0){
+      result.textContent = 'Please select pages to remove.';
+      result.style.display = 'block';
+      return;
+    }
+    loading.style.display = 'block';
+    await new Promise(r => setTimeout(r, 120)); // spinner visible
+    try {
+      // read fresh file as ArrayBuffer
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const totalPages = pdfDoc.getPageCount();
+      const pagesToRemove = [...selectedPages]
+        .map(p => p - 1)
+        .filter(p => p >= 0 && p < totalPages)
+        .sort((a,b) => b - a);
+      for(const p of pagesToRemove){
+        pdfDoc.removePage(p);
+        await new Promise(r => setTimeout(r, 40)); // realistic spinner
       }
-    };
-
-    reader.readAsArrayBuffer(file);
-  }, getDelay());
-}
-
-/* ===========================
-   STEP 2: RENDER PDF PAGES
-=========================== */
-async function renderPDFPages(arrayBuffer){
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-  for(let i = 1; i <= pdf.numPages; i++){
-    const page = await pdf.getPage(i);
-    const viewport = page.getViewport({ scale: 0.35 });
-
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext: ctx, viewport }).promise;
-
-    const box = document.createElement('div');
-    box.className = 'pdf-page';
-    box.dataset.page = i;
-
-    const cross = document.createElement('span');
-    cross.className = 'remove-mark';
-    cross.textContent = '✕';
-    box.appendChild(cross);
-
-    box.appendChild(canvas);
-
-    box.addEventListener('click', () => togglePage(i, box));
-
-    pagesWrap.appendChild(box);
-  }
-}
-
-/* ===========================
-   SELECT / DESELECT PAGE
-=========================== */
-function togglePage(pageNo, el){
-  if(selectedPages.has(pageNo)){
-    selectedPages.delete(pageNo);
-    el.classList.remove('selected');
-  } else {
-    selectedPages.add(pageNo);
-    el.classList.add('selected');
-  }
-}
-
-/* ===========================
-   STEP 3: REMOVE SELECTED PAGES
-=========================== */
-async function removeSelectedPages(){
-  result.style.display = 'none';
-
-  if(!pdfFile){
-    result.textContent = 'Please upload a PDF first.';
-    result.style.display = 'block';
-    return;
-  }
-
-  if(selectedPages.size === 0){
-    result.textContent = 'Please select pages to remove.';
-    result.style.display = 'block';
-    return;
-  }
-
-  loading.style.display = 'block';
-
-  await new Promise(r => setTimeout(r, 120)); // spinner visible
-
-  try {
-    // read fresh file as ArrayBuffer
-    const arrayBuffer = await pdfFile.arrayBuffer();
-    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-    const totalPages = pdfDoc.getPageCount();
-
-    const pagesToRemove = [...selectedPages]
-      .map(p => p - 1)
-      .filter(p => p >= 0 && p < totalPages)
-      .sort((a,b) => b - a);
-
-    for(const p of pagesToRemove){
-      pdfDoc.removePage(p);
-      await new Promise(r => setTimeout(r, 40)); // realistic spinner
+      await new Promise(r => setTimeout(r, getDelay())); // processing delay
+      const newBytes = await pdfDoc.save();
+      const blob = new Blob([newBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      loading.style.display = 'none';
+      result.innerHTML = `
+        PDF prepared successfully.<br>
+        <a href="${url}" download="removed-pages.pdf">
+          Download PDF
+        </a>
+      `;
+      result.style.display = 'block';
+    } catch(err){
+      loading.style.display = 'none';
+      result.innerHTML = 'Something went wrong while processing the PDF.<br>';
+      const retryBtn = document.createElement('button');
+      retryBtn.textContent = 'Try Again';
+      retryBtn.className = 'calculate-btn';
+      retryBtn.style.marginTop = '12px';
+      retryBtn.addEventListener('click', () => {
+        result.style.display = 'none';
+        retryBtn.remove();
+        removeSelectedPages();
+      });
+      result.appendChild(retryBtn);
+      result.style.display = 'block';
+      console.error(err);
     }
-
-    await new Promise(r => setTimeout(r, getDelay())); // processing delay
-
-    const newBytes = await pdfDoc.save();
-    const blob = new Blob([newBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-
-    loading.style.display = 'none';
-    result.innerHTML = `
-      PDF prepared successfully.<br>
-      <a href="${url}" download="removed-pages.pdf">
-        Download PDF
-      </a>
-    `;
-    result.style.display = 'block';
-  } catch(err){
-    loading.style.display = 'none';
-    result.innerHTML = 'Something went wrong while processing the PDF.<br>';
-
-    const retryBtn = document.createElement('button');
-    retryBtn.textContent = 'Try Again';
-    retryBtn.className = 'calculate-btn';
-    retryBtn.style.marginTop = '12px';
-    retryBtn.addEventListener('click', () => {
-      result.style.display = 'none';
-      retryBtn.remove();
-      removeSelectedPages();
+  }
+  /* ===========================
+     SHARE FUNCTION
+  =========================== */
+  const shareBtn = document.querySelector('.share-btn');
+  if(shareBtn){
+    shareBtn.addEventListener('click', handleShare);
+    shareBtn.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleShare();
+      }
     });
-
-    result.appendChild(retryBtn);
-    result.style.display = 'block';
-    console.error(err);
   }
-}
-
-/* ===========================
-   SHARE FUNCTION
-=========================== */
-const shareBtn = document.querySelector('.share-btn');
-if(shareBtn){
-  shareBtn.addEventListener('click', handleShare);
-  shareBtn.addEventListener('keydown', e => {
-    if(e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleShare();
+  async function handleShare(){
+    const shareData = {
+      title: 'Remove Pages from PDF – Skill2Job Tools',
+      text: 'Remove selected pages from a PDF online quickly and safely.',
+      url: window.location.href
+    };
+    try {
+      if(navigator.share){
+        await navigator.share(shareData);
+      } else if(navigator.clipboard){
+        await navigator.clipboard.writeText(shareData.url);
+        alert('Link copied!');
+      }
+    } catch(err){
+      prompt('Copy this link:', shareData.url);
     }
-  });
-}
-
-async function handleShare(){
-  const shareData = {
-    title: 'Remove Pages from PDF – Skill2Job Tools',
-    text: 'Remove selected pages from a PDF online quickly and safely.',
-    url: window.location.href
-  };
-
-  try {
-    if(navigator.share){
-      await navigator.share(shareData);
-    } else if(navigator.clipboard){
-      await navigator.clipboard.writeText(shareData.url);
-      alert('Link copied!');
-    }
-  } catch(err){
-    prompt('Copy this link:', shareData.url);
   }
-}
-</script>
-  
+  </script>
+
 </body>
 </html>
