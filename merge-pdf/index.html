@@ -77,50 +77,32 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-<!-- google_ad_section_start(weight=ignore) -->
+<!-- PERFECT - Copy this (zero inline except display:none) -->
 <section class="section" data-google-ad="false">
   <div class="container">
-    <div class="card image-tool-card">
-
+    <div class="card image-tool-card">  <!-- GREY BORDER VIA CSS -->
+      
       <h1 class="tool-title">PDF Merge Tool</h1>
       
-      <div class="input-group">
+      <div class="input-group">           <!-- GREY BORDER VIA CSS -->
         <label for="pdfFiles">Select PDF Files (Max 10)</label>
         <input type="file" id="pdfFiles" accept="application/pdf" multiple>
       </div>
       
-      <button class="calculate-btn" id="uploadBtn">
-        Upload PDFs
-      </button>
+      <button class="calculate-btn" id="uploadBtn">Upload PDFs</button>
       
-      <div class="loading" id="uploadLoading">
-        <div class="spinner"></div>
-      </div>
-      
+      <!-- Results/Loading - All class-based -->
+      <div class="loading" id="uploadLoading"><div class="spinner"></div></div>
       <div class="result" id="uploadResult"></div>
+      <div id="pdfList"></div>  <!-- JS fills w/ inline only -->
       
-      <!-- PDF LIST -->
-      <div id="pdfList"></div>
+      <!-- Hidden buttons - minimal inline -->
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;">Add More</button>
+      <button class="calculate-btn" id="mergeBtn" style="display:none;">Merge PDFs</button>
       
-      <!-- Action buttons (controlled by JS - hidden initially) -->
-      <button class="calculate-btn" id="addMoreBtn" style="display:none;margin-top:12px;">
-        Add More PDFs
-      </button>
-
-      <button class="calculate-btn" id="mergeBtn" style="display:none;margin-top:12px;">
-        Merge PDFs
-      </button>
-      
-      <div class="loading" id="mergeLoading">
-        <div class="spinner"></div>
-      </div>
-      
-      <div class="result" id="mergeResult"></div>
-
     </div>
   </div>
 </section>
-<!-- google_ad_section_end -->
 
     <!-- ABOUT TOOL -->
     <section class="section">
