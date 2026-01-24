@@ -46,7 +46,6 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 <body>
-
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
@@ -59,31 +58,45 @@
   </header>
 
   <main class="site-main">
-
-    <!-- TOOL SECTION - MATCHES IPC EXACTLY -->
     <section class="section" data-google-ad="false">
-      <div class="container">
-        <div class="card image-tool-card">  <!-- ← Key fix: use .image-tool-card for max-width:500px + centered -->
-          <h1 class="tool-title">Remove Pages from PDF</h1>
-          
-          <div class="input-group">
-            <label for="pdfInput">Upload PDF</label>
-            <input type="file" id="pdfInput" accept="application/pdf">
+      <div class="container tool-layout">
+        <div class="tool-column">
+          <div class="card image-tool-card"> <!-- same card class as IPC for width/centering consistency -->
+            <h1 class="tool-title">Remove Pages from PDF</h1>
+            
+            <div class="input-group">
+              <label for="pdfInput">Upload PDF</label>
+              <input type="file" id="pdfInput" accept="application/pdf">
+            </div>
+            
+            <button class="calculate-btn" id="calcBtn">Load PDF</button>
+            
+            <div id="pagesWrap" class="pdf-grid"></div>
+            
+            <button class="calculate-btn danger" id="removeBtn" style="display:none;">
+              Remove Selected Pages
+            </button>
+            
+            <div class="loading" id="loading">
+              <div class="spinner"></div>
+            </div>
+            
+            <div class="result" id="result"></div>
           </div>
-          
-          <button class="calculate-btn" id="calcBtn">Load PDF</button>
-          
-          <div id="pagesWrap" class="pdf-grid"></div>
-          
-          <button class="calculate-btn danger" id="removeBtn" style="display:none;">
-            Remove Selected Pages
-          </button>
-          
-          <div class="loading" id="loading">
-            <div class="spinner"></div>
+        </div>
+        
+        <div class="ads-column">
+          <div class="ads-wrapper">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-1876390706944654"
+                 data-ad-slot="5136857748"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
           </div>
-          
-          <div class="result" id="result"></div>
         </div>
       </div>
     </section>
@@ -112,9 +125,9 @@
           <h2>More Tools</h2>
           <div class="tools-grid">
             <div class="tool-card">
-              <h3>Age Calculator</h3>
-              <p>Calculate exact age in years, months, days.</p>
-              <a class="tool-link" href="/age-calculator/">Use Tool</a>
+              <h3>Image Resizer</h3>
+              <p>Resize photos to exact pixels.</p>
+              <a class="tool-link" href="/image-resizer/">Use Tool</a>
             </div>
             <div class="tool-card">
               <h3>Image Pixel Checker</h3>
@@ -122,15 +135,14 @@
               <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
             </div>
             <div class="tool-card">
-              <h3>Merge PDF</h3>
-              <p>Combine multiple PDF files into one.</p>
-              <a class="tool-link" href="/merge-pdf/">Use Tool</a>
+              <h3>Image Compressor</h3>
+              <p>Compress images to target KB size.</p>
+              <a class="tool-link" href="/image-compressor/">Use Tool</a>
             </div>
           </div>
         </div>
       </div>
     </section>
-
   </main>
 
   <footer class="site-footer">
@@ -145,7 +157,7 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- IMPROVED SHARE SCRIPT – EXACTLY AS YOU PROVIDED, NO CHANGES -->
+  <!-- SCRIPTS (your original, unchanged) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
   <script>
@@ -334,6 +346,5 @@
     }
   }
   </script>
-
 </body>
 </html>
