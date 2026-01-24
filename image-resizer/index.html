@@ -22,9 +22,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="/">
-          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-        </a>
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
       </div>
       <button class="share-btn" type="button" aria-label="Share Image Resizer">Share</button>
     </div>
@@ -36,12 +34,12 @@
         <div class="tool-column">
           <div class="card image-tool-card">
             <h1 class="tool-title">Resize Photos Online</h1>
-           
+
             <div class="input-group">
               <label for="imageFile">Upload Image</label>
               <input type="file" id="imageFile" accept="image/*">
             </div>
-           
+
             <div class="input-group">
               <label for="sizeSelect">Select Image Size</label>
               <select id="sizeSelect">
@@ -57,7 +55,7 @@
                 <option value="472x236">SLPRB Sign (472x236)</option>
               </select>
             </div>
-           
+
             <div id="customSize" style="display:none;">
               <div class="input-group">
                 <label for="width">Width (px)</label>
@@ -68,18 +66,16 @@
                 <input type="number" id="height" min="1" placeholder="e.g. 600">
               </div>
             </div>
-           
+
             <button class="calculate-btn" id="resizeBtn">Resize</button>
-           
-            <div class="loading" id="loading">
-              <div class="spinner"></div>
-            </div>
-           
+
+            <div class="loading" id="loading"><div class="spinner"></div></div>
+
             <div class="result" id="result"></div>
             <div id="imgPreview"></div>
           </div>
         </div>
-       
+
         <div class="ads-column">
           <div class="ads-wrapper">
             <ins class="adsbygoogle"
@@ -88,33 +84,29 @@
                  data-ad-slot="5136857748"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
         <div class="card">
           <h2>About This Tool</h2>
           <p>
-  Skill2Job's free Image Resizer makes it simple to adjust your photos to precise dimensions. You can choose from popular presets like passport, ADRE, SLPRB, or enter custom pixel sizes to fit any requirement. The tool is designed for ease of use, letting you resize images in just a few clicks.
-</p>
-<p>
-  All processing happens directly in your browser, ensuring your images remain private and secure. There’s no need to upload them to a server, so your data stays with you at all times. This makes it safe for sensitive documents and personal photos.
-</p>
-<p>
-  Once resized, your image is ready to download instantly. Whether for official documents, social media posts, or any situation where size matters, Skill2Job's Image Resizer provides a fast, reliable, and secure solution for all your image resizing needs.
-</p>
+            Skill2Job's free <strong>Image Resizer</strong> lets you adjust photos to precise dimensions quickly. Choose from popular presets or custom sizes. All processing happens locally in your browser, keeping your images private and secure.
+          </p>
+          <p>
+            Perfect for official documents, social media, and any other scenario where image size matters. No uploads, no signups, no watermarks—just fast, reliable resizing.
+          </p>
+          <p>
+            Developed and maintained by <strong>Yadav Subba</strong>, CEO and Developer of Skill2Job. The Image Resizer is mobile-optimized and works seamlessly across devices, providing a consistent user experience.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- MORE TOOLS -->
     <section class="section">
       <div class="container">
         <div class="card">
@@ -126,9 +118,9 @@
               <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
             </div>
             <div class="tool-card">
-              <h3>Remove Pages from PDF</h3>
-              <p>Delete selected pages from PDF.</p>
-              <a class="tool-link" href="/remove-pages/">Use Tool</a>
+              <h3>Image Compressor</h3>
+              <p>Compress images to target KB size.</p>
+              <a class="tool-link" href="/image-compressor/">Use Tool</a>
             </div>
             <div class="tool-card">
               <h3>Age Calculator</h3>
@@ -153,17 +145,15 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- JAVASCRIPT (unchanged) -->
   <script>
   (function() {
     'use strict';
-   
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-   
+
     function init() {
       const resizeBtn = document.getElementById('resizeBtn');
       const sizeSelect = document.getElementById('sizeSelect');
@@ -174,17 +164,17 @@
       const loading = document.getElementById('loading');
       const result = document.getElementById('result');
       const imgPreview = document.getElementById('imgPreview');
-     
+
       resizeBtn.addEventListener('click', resizeImage);
       sizeSelect.addEventListener('change', handleSizeChange);
       imageFile.addEventListener('change', updatePreview);
       if (widthInput) widthInput.addEventListener('input', checkCustom);
       if (heightInput) heightInput.addEventListener('input', checkCustom);
-     
+
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
         shareBtn.addEventListener('click', handleShare);
-        shareBtn.addEventListener('keydown', function(e) {
+        shareBtn.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             handleShare();
@@ -192,52 +182,51 @@
         });
       }
     }
-   
+
     function handleSizeChange() {
       document.getElementById('customSize').style.display = (this.value === 'custom') ? 'block' : 'none';
     }
-   
+
     function updatePreview() {
       const file = document.getElementById('imageFile').files[0];
       const imgPreview = document.getElementById('imgPreview');
       imgPreview.innerHTML = '';
-     
       if (file && file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
         imgPreview.innerHTML = `<img src="${url}" alt="Original Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">`;
       }
     }
-   
+
     function checkCustom() {}
-   
+
     function resizeImage() {
       const file = document.getElementById('imageFile').files[0];
       const sizeSelectVal = document.getElementById('sizeSelect').value;
       const result = document.getElementById('result');
       const loading = document.getElementById('loading');
       const imgPreview = document.getElementById('imgPreview');
-     
+
       result.style.display = 'none';
       loading.style.display = 'none';
-     
+
       if (!file) {
         result.textContent = 'Please upload an image first.';
         result.style.display = 'block';
         return;
       }
-     
+
       if (!file.type.startsWith('image/')) {
         result.textContent = 'Please upload a regular image file.';
         result.style.display = 'block';
         return;
       }
-     
+
       if (sizeSelectVal === '') {
         result.textContent = 'Please select an image size.';
         result.style.display = 'block';
         return;
       }
-     
+
       let targetWidth, targetHeight;
       if (sizeSelectVal === 'custom') {
         targetWidth = parseInt(document.getElementById('width').value);
@@ -250,15 +239,12 @@
       } else {
         [targetWidth, targetHeight] = sizeSelectVal.split('x').map(Number);
       }
-     
-      // Clear original preview before processing resized one
+
       imgPreview.innerHTML = '';
-     
       loading.style.display = 'block';
-     
+
       const img = new Image();
       img.onload = () => {
-        // Random delay 800-1800ms for realistic feel
         const delay = 800 + Math.random() * 1000;
         setTimeout(() => {
           const canvas = document.createElement('canvas');
@@ -266,46 +252,33 @@
           canvas.height = targetHeight;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-         
+
           const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-         
+
           loading.style.display = 'none';
-         
-          // Show ONLY resized preview
-          imgPreview.innerHTML = `
-            <img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:16px auto; border:2px solid var(--border);">
-          `;
-         
-          // Result text + download BELOW preview
-          result.innerHTML = `
-            <strong>Resized to:</strong> ${targetWidth}px × ${targetHeight}px
-            <br>
-            <a href="${resizedDataUrl}" download="resized_${targetWidth}x${targetHeight}.jpg" class="calculate-btn" style="margin-top:16px; display:inline-block; text-decoration:none;">Download Resized Image</a>
-          `;
+
+          imgPreview.innerHTML = `<img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:16px auto; border:2px solid var(--border);">`;
+
+          result.innerHTML = `<strong>Resized to:</strong> ${targetWidth}px × ${targetHeight}px
+          <br><a href="${resizedDataUrl}" download="resized_${targetWidth}x${targetHeight}.jpg" class="calculate-btn" style="margin-top:16px; display:inline-block; text-decoration:none;">Download Resized Image</a>`;
           result.style.display = 'block';
-         
         }, delay);
       };
-     
+
       img.onerror = () => {
         loading.style.display = 'none';
         result.textContent = 'Cannot process this image. Try another file.';
         result.style.display = 'block';
       };
-     
+
       img.src = URL.createObjectURL(file);
     }
-   
+
     async function handleShare() {
-      const shareData = {
-        title: 'Image Resizer – Skill2Job Tools',
-        text: 'Resize images online instantly! 📏',
-        url: window.location.href
-      };
+      const shareData = {title: 'Image Resizer – Skill2Job Tools', text: 'Resize images online instantly! 📏', url: window.location.href};
       try {
-        if (navigator.share) {
-          await navigator.share(shareData);
-        } else if (navigator.clipboard) {
+        if (navigator.share) await navigator.share(shareData);
+        else if (navigator.clipboard) {
           await navigator.clipboard.writeText(shareData.url);
           alert('Link copied!');
         }
