@@ -30,65 +30,67 @@
 
   <main class="site-main">
     <section class="section" data-google-ad="false">
-      <div class="container tool-layout">
-        <div class="tool-column">
-          <div class="card image-tool-card">
-            <h1 class="tool-title">Resize Photos Online</h1>
+  <div class="container tool-layout" style="display:grid; grid-template-columns:2fr 1fr; gap:20px; align-items:start;">
 
-            <div class="input-group">
-              <label for="imageFile">Upload Image</label>
-              <input type="file" id="imageFile" accept="image/*">
-            </div>
+    <!-- LEFT COLUMN: Tool -->
+    <div class="tool-column">
+      <div class="card image-tool-card">
+        <h1 class="tool-title">Resize Photos Online</h1>
 
-            <div class="input-group">
-              <label for="sizeSelect">Select Image Size</label>
-              <select id="sizeSelect">
-                <option value="">-- Select Image Size --</option>
-                <option value="custom">Custom Size</option>
-                <option value="450x600">Passport Size (450x600)</option>
-                <option value="210x310">ADRE Photo (210x310)</option>
-                <option value="210x110">ADRE Sign (210x110)</option>
-                <option value="210x310">DHS Photo (210x310)</option>
-                <option value="210x110">DHS Sign (210x110)</option>
-                <option value="1536x1920">Facebook Post (1536x1920)</option>
-                <option value="413x531">SLPRB Photo (413x531)</option>
-                <option value="472x236">SLPRB Sign (472x236)</option>
-              </select>
-            </div>
+        <div class="input-group">
+          <label for="imageFile">Upload Image</label>
+          <input type="file" id="imageFile" accept="image/*">
+        </div>
 
-            <div id="customSize" style="display:none;">
-              <div class="input-group">
-                <label for="width">Width (px)</label>
-                <input type="number" id="width" min="1" placeholder="e.g. 450">
-              </div>
-              <div class="input-group">
-                <label for="height">Height (px)</label>
-                <input type="number" id="height" min="1" placeholder="e.g. 600">
-              </div>
-            </div>
+        <div class="input-group">
+          <label for="sizeSelect">Select Image Size</label>
+          <select id="sizeSelect">
+            <option value="">-- Select Image Size --</option>
+            <option value="custom">Custom Size</option>
+            <option value="450x600">Passport Size (450x600)</option>
+            <option value="210x310">ADRE Photo (210x310)</option>
+            <option value="210x110">ADRE Sign (210x110)</option>
+            <option value="210x310">DHS Photo (210x310)</option>
+            <option value="210x110">DHS Sign (210x110)</option>
+            <option value="1536x1920">Facebook Post (1536x1920)</option>
+            <option value="413x531">SLPRB Photo (413x531)</option>
+            <option value="472x236">SLPRB Sign (472x236)</option>
+          </select>
+        </div>
 
-            <button class="calculate-btn" id="resizeBtn">Resize</button>
-
-            <div class="loading" id="loading"><div class="spinner"></div></div>
-
-            <div class="result" id="result"></div>
-            <div id="imgPreview"></div>
+        <div id="customSize" style="display:none;">
+          <div class="input-group">
+            <label for="width">Width (px)</label>
+            <input type="number" id="width" min="1" placeholder="e.g. 450">
+          </div>
+          <div class="input-group">
+            <label for="height">Height (px)</label>
+            <input type="number" id="height" min="1" placeholder="e.g. 600">
           </div>
         </div>
 
-        <div class="ads-column">
-          <div class="ads-wrapper">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1876390706944654"
-                 data-ad-slot="5136857748"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-          </div>
-        </div>
+        <button class="calculate-btn" id="resizeBtn">Resize</button>
+        <div class="loading" id="loading"><div class="spinner"></div></div>
+        <div class="result" id="result"></div>
+        <div id="imgPreview"></div>
       </div>
-    </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Ads -->
+    <div class="ads-column">
+      <div class="ads-wrapper" style="width:100%; min-height:280px; display:flex; justify-content:center; align-items:flex-start;">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-1876390706944654"
+             data-ad-slot="5136857748"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </div>
+
+  </div>
+</section>
 
     <section class="section">
       <div class="container">
