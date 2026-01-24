@@ -44,34 +44,35 @@
   <!-- MAIN CONTENT -->
   <main class="site-main">
     <section class="section" data-google-ad="false">
-      <div class="container tool-layout">
-        <div class="tool-column">
-          <div class="card age-tool-card">
-            <h1 class="tool-title">Age Calculator</h1>
-            <div class="input-group">
-              <label for="dob">Enter Your Date of Birth</label>
-              <input type="date" id="dob">
-            </div>
-            <button class="calculate-btn" id="calcBtn">Calculate Age</button>
-            <div class="loading" id="loading">
-              <div class="spinner"></div>
-            </div>
-            <div class="result" id="result" style="min-height: 80px;"></div>
+      <div class="container">
+        <div class="card age-tool-card">
+          <h1 class="tool-title">Age Calculator</h1>
+          <div class="input-group">
+            <label for="dob">Enter Your Date of Birth</label>
+            <input type="date" id="dob">
           </div>
+          <button class="calculate-btn" id="calcBtn">Calculate Age</button>
+          <div class="loading" id="loading">
+            <div class="spinner"></div>
+          </div>
+          <div class="result" id="result" style="min-height: 80px;"></div>
         </div>
-        
-        <div class="ads-column">
-          <div class="ads-wrapper">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1876390706944654"
-                 data-ad-slot="5136857748"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-          </div>
+      </div>
+    </section>
+
+    <!-- ADS PLACEHOLDER - just below tool section -->
+    <section class="section" data-google-ad="true">
+      <div class="container">
+        <div class="card" style="padding: 20px; text-align: center; background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); min-height: 280px; display: flex; align-items: center; justify-content: center;">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-1876390706944654"
+               data-ad-slot="5136857748"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
     </section>
@@ -82,16 +83,13 @@
         <div class="card">
           <h2>About This Tool</h2>
           <p>
-  Skill2Job's free <strong>Age Calculator</strong> allows you to quickly and accurately determine your exact age in years, months, and days based on your date of birth. This simple, mobile-friendly online tool works seamlessly across all devices without requiring any downloads or installations.
-</p>
-
-<p>
-  All calculations are performed locally on your device, ensuring that your personal information is never stored, shared, or tracked. Whether you need your precise age for official purposes, planning, or just out of curiosity, this tool provides instant results with complete privacy and reliability.
-</p>
-
-<p>
-  Created and maintained by <strong>Yadav Subba</strong>, CEO and Developer of Skill2Job, the Age Calculator is designed for students, job seekers, professionals, and anyone looking for a fast, secure, and convenient way to calculate age online. Experience accuracy, safety, and ease of use with Skill2Job's Age Calculator today.
-</p>
+            Skill2Job's free Age Calculator allows you to quickly and accurately calculate your exact age in years, months, and days based on your date of birth.
+            This online tool is simple to use, mobile-friendly, and works seamlessly on all devices without requiring any downloads or installations.
+            All calculations are performed locally on your device, ensuring your personal information is never stored, shared, or tracked.
+            Whether you want to know your precise age for official purposes, planning, or curiosity, this tool provides instant results with complete privacy.
+            Our Age Calculator is designed for students, job seekers, professionals, and anyone who wants a reliable, fast, and easy way to calculate age online.
+            Experience convenience, accuracy, and safety with Skill2Job's Age Calculator today.
+          </p>
         </div>
       </div>
     </section>
@@ -136,29 +134,29 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- JAVASCRIPT (your original, unchanged) -->
+  <!-- JAVASCRIPT (your exact JS, unchanged) -->
   <script>
   (function() {
     'use strict';
-  
+   
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-  
+   
     function init() {
       const btn = document.getElementById('calcBtn');
       const loading = document.getElementById('loading');
       const result = document.getElementById('result');
       const dobInput = document.getElementById('dob');
-    
+     
       btn.addEventListener('click', calculateAge);
-    
+     
       dobInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') calculateAge();
       });
-    
+     
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
         shareBtn.addEventListener('click', handleShare);
@@ -170,31 +168,31 @@
         });
       }
     }
-  
+   
     function calculateAge() {
       const dobValue = document.getElementById('dob').value;
       const result = document.getElementById('result');
       const loading = document.getElementById('loading');
-    
+     
       result.style.display = 'none';
       loading.style.display = 'none';
-    
+     
       if (!dobValue) {
         result.textContent = 'Please select your date of birth.';
         result.style.display = 'block';
         return;
       }
-    
+     
       loading.style.display = 'block';
-    
+     
       setTimeout(() => {
         const dob = new Date(dobValue);
         const today = new Date();
-      
+       
         let y = today.getFullYear() - dob.getFullYear();
         let m = today.getMonth() - dob.getMonth();
         let d = today.getDate() - dob.getDate();
-      
+       
         if (d < 0) {
           m--;
           const lastDay = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
@@ -204,13 +202,13 @@
           y--;
           m += 12;
         }
-      
+       
         loading.style.display = 'none';
         result.style.display = 'block';
         result.innerHTML = `<strong>Your Exact Age as of Today:</strong> ${y} years, ${m} months, ${d} days`;
       }, 800);
     }
-  
+   
     async function handleShare() {
       const shareBtn = document.querySelector('.share-btn');
       const shareData = {
@@ -218,7 +216,7 @@
         text: 'Calculate exact age online instantly. Free, accurate, mobile-friendly! 🎂',
         url: window.location.href
       };
-    
+     
       try {
         if (navigator.share) {
           await navigator.share(shareData);
@@ -230,7 +228,7 @@
         prompt('Copy this Age Calculator link:', shareData.url);
       }
     }
-  
+   
     function showFeedback(btn, message, color) {
       const originalText = btn.textContent;
       btn.textContent = message;
