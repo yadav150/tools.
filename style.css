@@ -797,12 +797,11 @@ h2{
 }
 
 /* FOOTER */
-/* FOOTER */
 .site-footer{
   border-top:1px solid var(--border);
   padding:14px 0;
   font-size:13px;
-  background:#222222;   /* Dark background */
+  background:#444444;   /* Grey background */
   color:#ffffff;        /* White text */
   transition:background-color .2s ease, color .2s ease;
 }
@@ -826,9 +825,10 @@ h2{
 
 /* OPTIONAL SUBTLE FOOTER HOVER */
 .site-footer:hover{
-  background:#333333;    /* Slightly lighter dark on hover */
+  background:#555555;    /* Slightly lighter grey on hover */
   color:#ffffff;         /* Keep text white */
 }
+
 
 /* RESPONSIVE */
 @media (min-width:640px){
