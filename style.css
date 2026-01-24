@@ -38,7 +38,7 @@ h2{
   display: flex;
   gap: 16px;
   flex-direction: column;
-  align-items: stretch;           /* Stretch children to same height */
+  align-items: stretch;          /* Stretch children to same height */
 }
 
 .tool-column {
@@ -48,31 +48,32 @@ h2{
 .ads-column {
   flex: 1;
   min-width: 300px;
-  background: #f8fafc;             /* light grey background */
-  border: none;                    /* no border - no separator line */
+  background: #f8fafc;            /* light grey */
+  border: none;                   /* no separator line */
   border-radius: var(--radius);
   padding: 16px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: none;                /* no shadow */
+  box-shadow: none;
+  min-height: 280px;              /* prevents collapse before ad loads */
 }
 
-/* Force equal height on desktop */
+/* Desktop: side-by-side + equal height */
 @media (min-width: 768px) {
   .tool-layout {
     flex-direction: row;
-    min-height: 600px;             /* minimum height to match typical ads */
+    min-height: 600px;            /* enough space for ads */
   }
   
   .tool-column,
   .ads-column {
-    height: 100%;                  /* both fill full container height */
+    height: 100%;                 /* both columns fill full height */
   }
 }
 
-/* Select dropdown styling - matches your input grey border */
+/* Select dropdown - matches input style */
 #sizeSelect {
   width: 100%;
   padding: 12px 16px;
@@ -92,7 +93,7 @@ h2{
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* Custom size inputs - same style */
+/* Custom size number inputs */
 #customSize input[type="number"] {
   width: 100%;
   padding: 12px 16px;
@@ -105,6 +106,15 @@ h2{
 #customSize input[type="number"]:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Extra: make ads container more stable (prevents layout shift) */
+.ads-column > div {
+  width: 100%;
+  min-height: 280px;              /* match min-height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ────────────────────────────────────────────────
