@@ -4,214 +4,307 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Image Compressor – Compress Images Online | Skill2Job Tools</title>
+
   <meta name="description" content="Compress images online to reduce file size without losing quality. Fast, browser-based, secure.">
   <meta name="keywords" content="image compressor, compress photos online, reduce image size, Skill2Job tools">
   <meta name="author" content="Yadav Subba">
   <meta name="robots" content="index, follow">
+
   <link rel="canonical" href="https://tools.skill2job.site/image-compressor">
   <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
+
+  <!-- AdSense (ONLY ONCE) -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654"
+    crossorigin="anonymous"></script>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
-      </div>
-      <button class="share-btn" type="button" aria-label="Share Image Compressor">Share</button>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="logo">
+      <a href="/">
+        <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+      </a>
     </div>
-  </header>
+    <button class="share-btn" type="button" aria-label="Share Image Compressor">Share</button>
+  </div>
+</header>
 
-  <main class="site-main">
-    <section class="section" data-google-ad="false">
-      <div class="container tool-layout">
-        <div class="tool-column">
-          <div class="card image-tool-card">
-            <h1 class="tool-title">Compress Images Online</h1>
+<!-- MAIN -->
+<main class="site-main">
 
-            <div class="input-group">
-              <label for="imageFile">Upload Image</label>
-              <input type="file" id="imageFile" accept="image/*">
-            </div>
+<section class="section">
+  <div class="container tool-layout">
 
-            <div class="input-group">
-              <label for="quality">Compression Quality (0-100)</label>
-              <input type="number" id="quality" min="1" max="100" value="80">
-            </div>
+    <!-- TOOL -->
+    <div class="tool-column">
+      <div class="card image-tool-card">
+        <h1 class="tool-title">Image Compressor</h1>
 
-            <button class="calculate-btn" id="compressBtn">Compress</button>
-
-            <div class="loading" id="loading"><div class="spinner"></div></div>
-            <div class="result" id="result"></div>
-            <div id="imgPreview"></div>
-          </div>
+        <div class="input-group">
+          <label for="imageFile">Upload Image</label>
+          <input type="file" id="imageFile" accept="image/*">
         </div>
 
-        <div class="ads-column">
-          <div class="ads-wrapper">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-1876390706944654"
-                 data-ad-slot="5136857748"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-          </div>
+        <div class="input-group">
+          <label for="quality">Target Size (KB)</label>
+          <input type="number" id="quality" min="10" max="500" value="100" placeholder="e.g. 100">
+        </div>
+
+        <button class="calculate-btn" id="compressBtn">Compress Image</button>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+        </div>
+
+        <div class="result" id="result"></div>
+        <div id="imgPreview"></div>
+      </div>
+    </div>
+
+    <!-- ADS (EXACT SAME AS ALL OTHERS) -->
+    <div class="ads-column">
+      <div class="ads-wrapper"
+           style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;"
+             data-ad-client="ca-pub-1876390706944654"
+             data-ad-slot="5136857748"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT TOOL -->
+<section class="section">
+  <div class="container">
+    <div class="card">
+      <h2>About This Tool</h2>
+
+      <p>
+        Skill2Job's <strong>Image Compressor</strong> reduces any image to your exact target KB size using intelligent client-side processing. Upload, set target size, download—zero quality guesswork.
+      </p>
+
+      <p>
+        Perfect for WhatsApp, websites, job applications, and email attachments. No server uploads, fully private. Created by <strong>Yadav Subba</strong>, CEO and Developer of Skill2Job.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- MORE TOOLS -->
+<section class="section">
+  <div class="container">
+    <div class="card">
+      <h2>More Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>Image Resizer</h3>
+          <p>Resize photos to exact pixels.</p>
+          <a class="tool-link" href="/image-resizer/">Use Tool</a>
+        </div>
+        <div class="tool-card">
+          <h3>Image Pixel Checker</h3>
+          <p>Check image width and height.</p>
+          <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
+        </div>
+        <div class="tool-card">
+          <h3>Remove Pages from PDF</h3>
+          <p>Delete selected pages from PDF.</p>
+          <a class="tool-link" href="/remove-pages/">Use Tool</a>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="section">
-      <div class="container">
-        <div class="card">
-          <h2>About This Tool</h2>
-          <p>
-            Skill2Job's <strong>Image Compressor</strong> reduces image file size while keeping quality intact. Process images locally in your browser—no uploads, private and secure.
-          </p>
-          <p>
-            Ideal for web optimization, social media, and document uploads. Simply choose your quality, upload, and get the compressed image instantly.
-          </p>
-          <p>
-            Developed by <strong>Yadav Subba</strong>, CEO & Developer of Skill2Job. Works on all devices and ensures fast, reliable compression with minimal quality loss.
-          </p>
-        </div>
-      </div>
-    </section>
+</main>
 
-    <section class="section">
-      <div class="container">
-        <div class="card">
-          <h2>More Tools</h2>
-          <div class="tools-grid">
-            <div class="tool-card">
-              <h3>Image Resizer</h3>
-              <p>Resize photos to exact pixels.</p>
-              <a class="tool-link" href="/image-resizer/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Image Pixel Checker</h3>
-              <p>Check image width and height.</p>
-              <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Remove Pages from PDF</h3>
-              <p>Delete selected pages from PDF.</p>
-              <a class="tool-link" href="/remove-pages/">Use Tool</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>
+    <strong>Skill2Job Tools</strong> |
+    <a href="/">Home</a> |
+    <a href="/about">About</a> |
+    <a href="/contact">Contact</a> |
+    <a href="/privacy">Privacy</a> |
+    <a href="/terms">Terms</a>
+  </p>
+  <p>© 2026 Skill2Job</p>
+</footer>
 
-  <footer class="site-footer">
-    <p>
-      <strong>Skill2Job Tools</strong> |
-      <a href="/">Home</a> |
-      <a href="/about">About</a> |
-      <a href="/contact">Contact</a> |
-      <a href="/privacy">Privacy</a> |
-      <a href="/terms">Terms</a>
-    </p>
-    <p>© 2026 Skill2Job</p>
-  </footer>
+<!-- ADS INIT (IMPORTANT) -->
+<script>
+  window.addEventListener('load', function () {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  });
+</script>
 
-  <!-- RESTORED ORIGINAL JS with Ads Fix -->
-  <script>
-  (function(){
-    'use strict';
-    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-    else{init();}
+<!-- YOUR ORIGINAL JS (ENHANCED - ALL IDs PRESERVED) -->
+<script>
+(function() {
+  'use strict';
 
-    function init(){
-      const compressBtn=document.getElementById('compressBtn');
-      const imageFile=document.getElementById('imageFile');
-      const qualityInput=document.getElementById('quality');
-      const result=document.getElementById('result');
-      const loading=document.getElementById('loading');
-      const imgPreview=document.getElementById('imgPreview');
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
-      compressBtn.addEventListener('click',compressImage);
-      imageFile.addEventListener('change',updatePreview);
+  function init() {
+    const compressBtn = document.getElementById('compressBtn');
+    const imageFile = document.getElementById('imageFile');
+    const qualityInput = document.getElementById('quality');
+    const result = document.getElementById('result');
+    const loading = document.getElementById('loading');
+    const imgPreview = document.getElementById('imgPreview');
 
-      const shareBtn=document.querySelector('.share-btn');
-      if(shareBtn){
-        shareBtn.addEventListener('click',handleShare);
-        shareBtn.addEventListener('keydown',function(e){
-          if(e.key==='Enter'||e.key===' '){e.preventDefault();handleShare();}
-        });
+    compressBtn.addEventListener('click', compressImage);
+    imageFile.addEventListener('change', updatePreview);
+
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', handleShare);
+      shareBtn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleShare();
+        }
+      });
+    }
+  }
+
+  function updatePreview() {
+    const file = document.getElementById('imageFile').files[0];
+    const imgPreview = document.getElementById('imgPreview');
+    imgPreview.innerHTML = '';
+    if (file && file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file);
+      imgPreview.innerHTML = `<img src="${url}" alt="Original Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:8px auto;border:2px solid var(--border);">`;
+    }
+  }
+
+  async function compressImage() {
+    const file = document.getElementById('imageFile').files[0];
+    const targetKB = parseInt(document.getElementById('quality').value);
+    const result = document.getElementById('result');
+    const loading = document.getElementById('loading');
+    const imgPreview = document.getElementById('imgPreview');
+
+    result.style.display = 'none';
+    loading.style.display = 'none';
+
+    if (!file) {
+      result.textContent = 'Please upload an image first.';
+      result.style.display = 'block';
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      result.textContent = 'Please upload a regular image file.';
+      result.style.display = 'block';
+      return;
+    }
+    if (isNaN(targetKB) || targetKB < 10 || targetKB > 500) {
+      result.textContent = 'Please enter target size 10-500 KB.';
+      result.style.display = 'block';
+      return;
+    }
+
+    loading.style.display = 'block';
+
+    const img = new Image();
+    img.onload = () => {
+      compressToTargetSize(img, file, targetKB, result, loading, imgPreview);
+    };
+    img.onerror = () => {
+      loading.style.display = 'none';
+      result.textContent = 'Cannot process this image. Try another file.';
+      result.style.display = 'block';
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  function compressToTargetSize(img, originalFile, targetKB, result, loading, imgPreview) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+
+    let quality = 0.9;
+    let attempts = 0;
+    const maxAttempts = 15;
+
+    function tryCompress() {
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      const byteString = atob(dataUrl.split(',')[1]);
+      const bytes = new Array(byteString.length);
+      for (let i = 0; i < byteString.length; i++) {
+        bytes[i] = byteString.charCodeAt(i);
       }
-    }
+      const sizeKB = bytes.length / 1024;
 
-    function updatePreview(){
-      const file=document.getElementById('imageFile').files[0];
-      const imgPreview=document.getElementById('imgPreview');
-      imgPreview.innerHTML='';
-      if(file && file.type.startsWith('image/')){
-        const url=URL.createObjectURL(file);
-        imgPreview.innerHTML=`<img src="${url}" alt="Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:8px auto;border:2px solid var(--border);">`;
+      attempts++;
+      if (sizeKB <= targetKB || attempts >= maxAttempts || quality <= 0.1) {
+        loading.style.display = 'none';
+        imgPreview.innerHTML = `<img src="${dataUrl}" alt="Compressed Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:16px auto;border:2px solid var(--border);">`;
+        result.innerHTML = `<strong>Compressed to ${sizeKB.toFixed(1)} KB</strong> (target: ${targetKB} KB)
+          <br><a href="${dataUrl}" download="compressed_${targetKB}KB.jpg" class="calculate-btn" style="margin-top:16px;display:inline-block;text-decoration:none;">Download Compressed Image</a>`;
+        result.style.display = 'block';
+        return;
       }
+
+      quality -= 0.05;
+      setTimeout(tryCompress, 50);
     }
+    tryCompress();
+  }
 
-    function compressImage(){
-      const file=document.getElementById('imageFile').files[0];
-      const quality=parseInt(document.getElementById('quality').value)/100;
-      const result=document.getElementById('result');
-      const loading=document.getElementById('loading');
-      const imgPreview=document.getElementById('imgPreview');
-
-      result.style.display='none';
-      loading.style.display='none';
-
-      if(!file){result.textContent='Please upload an image first.';result.style.display='block';return;}
-      if(!file.type.startsWith('image/')){result.textContent='Please upload a regular image file.';result.style.display='block';return;}
-      if(isNaN(quality) || quality<=0 || quality>1){result.textContent='Please enter a valid quality (1-100).';result.style.display='block';return;}
-
-      loading.style.display='block';
-      const img=new Image();
-      img.onload=()=>{
-        const canvas=document.createElement('canvas');
-        canvas.width=img.width;
-        canvas.height=img.height;
-        const ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0);
-        const compressedDataUrl=canvas.toDataURL('image/jpeg',quality);
-
-        loading.style.display='none';
-        imgPreview.innerHTML=`<img src="${compressedDataUrl}" alt="Compressed Preview" style="max-width:90%;max-height:240px;border-radius:12px;display:block;margin:16px auto;border:2px solid var(--border);">`;
-        result.innerHTML=`<strong>Image compressed.</strong>
-          <br><a href="${compressedDataUrl}" download="compressed.jpg" class="calculate-btn" style="margin-top:16px;display:inline-block;text-decoration:none;">Download Compressed Image</a>`;
-        result.style.display='block';
-      };
-      img.onerror=()=>{
-        loading.style.display='none';
-        result.textContent='Cannot process this image. Try another file.';
-        result.style.display='block';
-      };
-      img.src=URL.createObjectURL(file);
+  async function handleShare() {
+    const shareBtn = document.querySelector('.share-btn');
+    const shareData = {
+      title: 'Image Compressor – Skill2Job Tools',
+      text: 'Compress images to exact KB size online! 📦',
+      url: window.location.href
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareData.url);
+        showFeedback(shareBtn, 'Link copied!', '#4CAF50');
+      }
+    } catch (err) {
+      prompt('Copy this Image Compressor link:', shareData.url);
     }
+  }
 
-    async function handleShare(){
-      const shareData={title:'Image Compressor – Skill2Job Tools',text:'Compress images online instantly! 📏',url:window.location.href};
-      try{
-        if(navigator.share) await navigator.share(shareData);
-        else if(navigator.clipboard){await navigator.clipboard.writeText(shareData.url);showFeedback('Link copied!','#4CAF50');}
-      }catch(err){prompt('Copy this link:',shareData.url);}
-    }
+  function showFeedback(btn, message, color) {
+    const originalText = btn.textContent;
+    btn.textContent = message;
+    btn.style.backgroundColor = color;
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.backgroundColor = '';
+    }, 2000);
+  }
+})();
+</script>
 
-    function showFeedback(message,color){
-      alert(message); // simple alert for feedback (can replace with styled toast)
-    }
-
-  })();
-  </script>
 </body>
 </html>
