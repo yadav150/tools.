@@ -77,9 +77,9 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-<section class="section" data-google-ad="false">
+    <section class="section" data-google-ad="false">
   <div class="container">
-    <div class="card age-tool-card">  <!-- <-- Use Age Calculator class -->
+    <div class="card age-tool-card"> <!-- Age Calculator styling -->
 
       <h1 class="tool-title">Merge PDF Tool</h1>
 
@@ -88,23 +88,27 @@
         <input type="file" id="pdfFiles" accept="application/pdf" multiple>
       </div>
 
-      <button class="calculate-btn" id="uploadBtn">
-        Upload PDFs
-      </button>
+      <button class="calculate-btn" id="uploadBtn">Upload PDFs</button>
 
-      <!-- Results/Loading -->
-      <div class="loading" id="uploadLoading"><div class="spinner"></div></div>
-      <div class="result" id="uploadResult"></div>
-      <div id="pdfList"></div>
+      <div class="loading" id="uploadLoading" style="display:none;">
+        <div class="spinner"></div>
+      </div>
+
+      <div class="result" id="uploadResult" style="display:none;"></div>
+      <div id="pdfList" style="display:none;"></div>
 
       <!-- Hidden buttons -->
-      <button class="calculate-btn" id="addMoreBtn" style="display:none;">Add More</button>
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;">Add More PDFs</button>
       <button class="calculate-btn" id="mergeBtn" style="display:none;">Merge PDFs</button>
+
+      <div class="loading" id="mergeLoading" style="display:none;">
+        <div class="spinner"></div>
+      </div>
+      <div class="result" id="mergeResult" style="display:none;"></div>
 
     </div>
   </div>
 </section>
-
     <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
@@ -157,231 +161,117 @@ Experience convenience, efficiency, and safety with Skill2Job's PDF Merge Tool t
   </p>
   <p>© 2026 Skill2Job</p>
 </footer>
-
-<!-- PDF-LIB CDN -->
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-<!-- PDF-LIB CDN (keep before script) -->
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>
 (function() {
-'use strict';
+  const { PDFDocument } = PDFLib;
 
-if (document.readyState === 'loading') {
-document.addEventListener('DOMContentLoaded', init);
-} else {
-init();
-}
+  const uploadBtn = document.getElementById('uploadBtn');
+  const addMoreBtn = document.getElementById('addMoreBtn');
+  const mergeBtn = document.getElementById('mergeBtn');
+  const uploadLoading = document.getElementById('uploadLoading');
+  const mergeLoading = document.getElementById('mergeLoading');
+  const uploadResult = document.getElementById('uploadResult');
+  const mergeResult = document.getElementById('mergeResult');
+  const pdfList = document.getElementById('pdfList');
+  const pdfFiles = document.getElementById('pdfFiles');
 
-async function init() {
-const { PDFDocument } = PDFLib;
+  let pdfDocs = [];
 
-// ALL ELEMENTS
-const uploadBtn = document.getElementById('uploadBtn');
-const addMoreBtn = document.getElementById('addMoreBtn');
-const mergeBtn = document.getElementById('mergeBtn');
-const uploadLoading = document.getElementById('uploadLoading');
-const mergeLoading = document.getElementById('mergeLoading');
-const uploadResult = document.getElementById('uploadResult');
-const mergeResult = document.getElementById('mergeResult');
-const pdfList = document.getElementById('pdfList');
-const pdfFiles = document.getElementById('pdfFiles');
+  uploadBtn.addEventListener('click', handleUpload);
+  mergeBtn.addEventListener('click', handleMerge);
+  addMoreBtn.addEventListener('click', () => { pdfFiles.value = ''; pdfFiles.click(); });
+  pdfFiles.addEventListener('change', handleUpload);
 
-let pdfDocs = [];
+  function renderPdfList() {
+    const totalPages = pdfDocs.reduce((sum, doc) => sum + doc.pages, 0);
+    pdfList.innerHTML = pdfDocs.map((doc, i) => `
+      <div style="display:flex;align-items:center;padding:8px;margin:6px 0;background:#f8fafc;border:1px solid var(--border);border-radius:8px;">
+        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${doc.name}</span>
+        <span style="background:var(--primary);color:white;padding:2px 8px;border-radius:6px;font-size:12px;">${doc.pages}p</span>
+        <div style="margin-left:8px;">
+          <button onclick="movePdf(${i},-1)">↑</button>
+          <button onclick="movePdf(${i},1)">↓</button>
+          <button onclick="removePdf(${i})">×</button>
+        </div>
+      </div>
+    `).join('');
+  }
 
-// EVENT LISTENERS
-uploadBtn.addEventListener('click', handleUpload);
-mergeBtn.addEventListener('click', handleMerge);
-addMoreBtn.addEventListener('click', handleAddMore); // FIXED: Now triggers file picker
+  window.movePdf = (i, dir) => {
+    const ni = i + dir;
+    if (ni >= 0 && ni < pdfDocs.length) {
+      [pdfDocs[i], pdfDocs[ni]] = [pdfDocs[ni], pdfDocs[i]];
+      renderPdfList();
+    }
+  };
 
-pdfFiles.addEventListener('change', handleFileChange); // FIXED: Direct file input trigger
-pdfFiles.addEventListener('keypress', function(e) {
-if (e.key === 'Enter') handleUpload();
-});
+  window.removePdf = (i) => {
+    pdfDocs.splice(i, 1);
+    if(pdfDocs.length === 0) {
+      pdfList.style.display = 'none';
+      addMoreBtn.style.display = 'none';
+      mergeBtn.style.display = 'none';
+    }
+    renderPdfList();
+  };
 
-// SHARE BUTTON
-const shareBtn = document.querySelector('.share-btn');
-if (shareBtn) {
-shareBtn.addEventListener('click', handleShare);
-shareBtn.addEventListener('keydown', function(e) {
-if (e.key === 'Enter' || e.key === ' ') {
-e.preventDefault();
-handleShare();
-}
-});
-}
+  async function handleUpload() {
+    const files = Array.from(pdfFiles.files);
+    if (!files.length) return alert('Select PDF files first!');
+    if (pdfDocs.length + files.length > 10) return alert('Maximum 10 PDFs allowed!');
 
-// FIXED: Handle Add More - Opens file picker without reset
-async function handleAddMore() {
-pdfFiles.value = ''; // Clear input to allow new selection
-pdfFiles.click(); // Programmatically trigger file picker
-}
+    uploadLoading.style.display = 'block';
+    uploadResult.style.display = 'none';
 
-// FIXED: Direct file input handler
-async function handleFileChange() {
-await handleUpload();
-}
+    try {
+      const newPdfs = await Promise.all(files.map(async file => {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFDocument.load(arrayBuffer);
+        return { file, pdf, name: file.name.length>25?file.name.slice(0,22)+'...':file.name, pages: pdf.getPageCount() };
+      }));
+      pdfDocs = pdfDocs.concat(newPdfs);
 
-async function handleUpload() {
-const files = Array.from(pdfFiles.files);
+      uploadLoading.style.display = 'none';
+      uploadResult.innerHTML = `<strong>${newPdfs.length} PDF(s) added! Total: ${pdfDocs.length}</strong>`;
+      uploadResult.style.display = 'block';
+      pdfList.style.display = 'block';
+      addMoreBtn.style.display = 'block';
+      mergeBtn.style.display = 'block';
+      renderPdfList();
+    } catch (e) {
+      uploadLoading.style.display = 'none';
+      uploadResult.innerHTML = 'Error loading PDFs!';
+      uploadResult.style.display = 'block';
+    }
+  }
 
-if (files.length === 0) {
-uploadResult.textContent = 'Please select PDF files first.';
-uploadResult.style.display = 'block';
-return;
-}
+  async function handleMerge() {
+    if (!pdfDocs.length) return;
+    mergeLoading.style.display = 'block';
+    mergeResult.style.display = 'none';
 
-if (pdfDocs.length + files.length > 10) {
-uploadResult.textContent = 'Maximum 10 PDF files total allowed.';
-uploadResult.style.display = 'block';
-return;
-}
+    try {
+      const mergedPdf = await PDFDocument.create();
+      for (const doc of pdfDocs) {
+        const pages = await mergedPdf.copyPages(doc.pdf, doc.pdf.getPageIndices());
+        pages.forEach(p => mergedPdf.addPage(p));
+      }
+      const pdfBytes = await mergedPdf.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
 
-uploadLoading.style.display = 'block';
+      mergeLoading.style.display = 'none';
+      mergeResult.innerHTML = `<a href="${url}" download="merged-${Date.now()}.pdf" class="calculate-btn" style="margin-top:12px;">Download Merged PDF</a>`;
+      mergeResult.style.display = 'block';
+    } catch (e) {
+      mergeLoading.style.display = 'none';
+      mergeResult.innerHTML = 'Merge failed!';
+      mergeResult.style.display = 'block';
+    }
+  }
 
-try {
-// Load PDFs
-const newPdfs = await Promise.all(
-files.map(async (file) => {
-const arrayBuffer = await file.arrayBuffer();
-const pdf = await PDFDocument.load(arrayBuffer);
-return {
-file,
-pdf,
-name: file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name,
-pages: pdf.getPageCount()
-};
-})
-);
-
-// Append to existing (allows multiple uploads)
-pdfDocs = pdfDocs.concat(newPdfs);
-
-uploadLoading.style.display = 'none';
-uploadResult.innerHTML = `<strong>${newPdfs.length} PDF(s) added! Total: ${pdfDocs.length}</strong>`;
-uploadResult.style.display = 'block';
-
-renderPdfList();
-pdfList.style.display = 'block';
-addMoreBtn.style.display = 'block';
-mergeBtn.style.display = 'block';
-
-} catch (error) {
-uploadLoading.style.display = 'none';
-uploadResult.textContent = 'Error loading PDFs. Please try valid files.';
-uploadResult.style.display = 'block';
-}
-}
-
-function renderPdfList() {
-const totalPages = pdfDocs.reduce((sum, doc) => sum + doc.pages, 0);
-pdfList.innerHTML = `
-<div style="text-align:center;margin:16px 0;padding:16px;background:rgba(37,99,235,0.08);border-radius:var(--radius);border:1px solid var(--border);">
-<strong style="color:var(--primary);">${pdfDocs.length} file${pdfDocs.length > 1 ? 's' : ''}</strong>
-<br><span style="color:#64748b;font-size:14px;">${totalPages} total page${totalPages > 1 ? 's' : ''}</span>
-</div>
-<div style="max-height:280px;overflow-y:auto;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);">
-${pdfDocs.map((doc, index) => `
-<div style="display:flex;align-items:center;padding:12px;margin-bottom:8px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;font-size:14px;">
-<span style="flex:1;margin-right:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${doc.name}</span>
-<span style="background:var(--primary);color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;">${doc.pages}p</span>
-<div style="margin-left:12px;">
-<button onclick="movePdf(${index},-1)" style="width:30px;height:30px;border:none;background:var(--primary);color:white;border-radius:6px;cursor:pointer;margin-right:4px;font-weight:600;font-size:14px;" title="Move Up">↑</button>
-<button onclick="movePdf(${index},1)" style="width:30px;height:30px;border:none;background:var(--primary);color:white;border-radius:6px;cursor:pointer;margin-right:6px;font-weight:600;font-size:14px;" title="Move Down">↓</button>
-<button onclick="removePdf(${index})" style="width:30px;height:30px;border:none;background:#ef4444;color:white;border-radius:6px;cursor:pointer;font-weight:600;font-size:16px;" title="Remove">×</button>
-</div>
-</div>
-`).join('')}
-</div>
-`;
-}
-
-// GLOBAL FUNCTIONS
-window.movePdf = (index, direction) => {
-const newIndex = index + direction;
-if (newIndex >= 0 && newIndex < pdfDocs.length) {
-[pdfDocs[index], pdfDocs[newIndex]] = [pdfDocs[newIndex], pdfDocs[index]];
-renderPdfList();
-}
-};
-
-window.removePdf = (index) => {
-pdfDocs.splice(index, 1);
-renderPdfList();
-if (pdfDocs.length === 0) {
-pdfList.style.display = 'none';
-addMoreBtn.style.display = 'none';
-mergeBtn.style.display = 'none';
-}
-};
-
-async function handleMerge() {
-mergeLoading.style.display = 'block';
-mergeResult.style.display = 'none';
-
-try {
-const mergedPdf = await PDFDocument.create();
-for (const docItem of pdfDocs) {
-const copiedPages = await mergedPdf.copyPages(docItem.pdf, docItem.pdf.getPageIndices());
-copiedPages.forEach(page => mergedPdf.addPage(page));
-}
-
-const pdfBytes = await mergedPdf.save();
-const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-const url = URL.createObjectURL(blob);
-const totalPages = pdfDocs.reduce((sum, doc) => sum + doc.pages, 0);
-
-mergeLoading.style.display = 'none';
-mergeResult.innerHTML = `
-<strong style="color:var(--primary);">PDFs Merged Successfully!</strong>
-<br style="margin:8px 0;"><span style="color:#64748b;">Total: ${totalPages} pages</span>
-<br><br>
-<a href="${url}" download="skill2job-merged-${Date.now()}.pdf"
-style="display:inline-block;padding:16px 32px;background:var(--primary);color:white;font-weight:500;border-radius:var(--radius);text-decoration:none;box-shadow:0 4px 12px rgba(37,99,235,0.3);margin-top:12px;">
-Download Merged PDF
-</a>
-`;
-mergeResult.style.display = 'block';
-
-} catch (error) {
-mergeLoading.style.display = 'none';
-mergeResult.innerHTML = '<strong style="color:#ef4444;">Merge failed. Please try again.</strong>';
-mergeResult.style.display = 'block';
-}
-}
-
-// SHARE FUNCTION
-async function handleShare() {
-const shareData = {
-title: 'PDF Merge Tool – Skill2Job Tools',
-text: 'Merge multiple PDFs instantly online! Free, private, no signup required.',
-url: window.location.href
-};
-
-try {
-if (navigator.share) {
-await navigator.share(shareData);
-} else if (navigator.clipboard) {
-await navigator.clipboard.writeText(shareData.url);
-showFeedback(shareBtn, 'Link copied!', '#4CAF50');
-}
-} catch (err) {
-prompt('Copy PDF Merge Tool link:', shareData.url);
-}
-}
-
-function showFeedback(btn, message, color) {
-const originalText = btn.textContent;
-btn.textContent = message;
-btn.style.backgroundColor = color;
-setTimeout(() => {
-btn.textContent = originalText;
-btn.style.backgroundColor = '';
-}, 2000);
-}
-}
 })();
 </script>
-
 </body>
 </html>
