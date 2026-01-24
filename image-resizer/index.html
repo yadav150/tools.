@@ -19,6 +19,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 <body>
+
   <!-- HEADER -->
   <header class="site-header">
     <div class="container header-inner">
@@ -30,13 +31,15 @@
       <button class="share-btn" type="button" aria-label="Share Image Resizer">Share</button>
     </div>
   </header>
+
   <!-- MAIN -->
   <main class="site-main">
+
     <!-- IMAGE RESIZER TOOL -->
     <section class="section" data-google-ad="false">
-      <div class="container tool-layout">  <!-- New two-column wrapper -->
+      <div class="container tool-layout">
         <div class="tool-column">
-          <div class="card image-tool-card">  <!-- Centered narrow card like IPC -->
+          <div class="card image-tool-card">
             <h1 class="tool-title">Resize Photos Online</h1>
             
             <div class="input-group">
@@ -63,15 +66,15 @@
             <div id="customSize" style="display:none;">
               <div class="input-group">
                 <label for="width">Width (px)</label>
-                <input type="number" id="width" min="1">
+                <input type="number" id="width" min="1" placeholder="e.g. 450">
               </div>
               <div class="input-group">
                 <label for="height">Height (px)</label>
-                <input type="number" id="height" min="1">
+                <input type="number" id="height" min="1" placeholder="e.g. 600">
               </div>
             </div>
             
-            <button class="calculate-btn" id="resizeBtn" disabled>Resize</button>
+            <button class="calculate-btn" id="resizeBtn">Resize</button>
             
             <div class="loading" id="loading">
               <div class="spinner"></div>
@@ -82,31 +85,33 @@
           </div>
         </div>
         
-        <div class="ads-column">  <!-- Right ads holder -->
-          <!-- Adsense Placeholder - replace with your ad code -->
+        <div class="ads-column">
+          <!-- Adsense Placeholder -->
           <ins class="adsbygoogle"
-               style="display:block; height:600px; background:#f0f0f0; border:2px solid var(--border); border-radius:var(--radius);"
+               style="display:block;"
                data-ad-client="ca-pub-1876390706944654"
-               data-ad-slot="your-slot-id"
+               data-ad-slot="YOUR_AD_SLOT_HERE"
                data-ad-format="auto"
                data-full-width-responsive="true"></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
     </section>
-    
+
     <!-- ABOUT TOOL -->
     <section class="section">
       <div class="container">
         <div class="card">
           <h2>About This Tool</h2>
           <p>
-            Skill2Job's Image Resizer lets you quickly resize photos to preset or custom dimensions in pixels. Perfect for passports, signatures, social media, and more. All processing is browser-based for privacy—no server uploads. Supports common formats like JPG, PNG. Fast and easy on any device.
+            Skill2Job's free Image Resizer allows you to resize photos to exact pixel dimensions — either using popular presets (passport, ADRE, SLPRB, etc.) or custom sizes. All resizing happens in your browser for complete privacy. Upload, choose size, resize, and download instantly. Perfect for documents, social media, or any size-specific needs.
           </p>
         </div>
       </div>
     </section>
-    
+
     <!-- MORE TOOLS -->
     <section class="section">
       <div class="container">
@@ -115,17 +120,17 @@
           <div class="tools-grid">
             <div class="tool-card">
               <h3>Image Pixel Checker</h3>
-              <p>Check image dimensions.</p>
+              <p>Check image width and height.</p>
               <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
             </div>
             <div class="tool-card">
               <h3>Remove Pages from PDF</h3>
-              <p>Delete PDF pages.</p>
+              <p>Delete selected pages from PDF.</p>
               <a class="tool-link" href="/remove-pages/">Use Tool</a>
             </div>
             <div class="tool-card">
               <h3>Age Calculator</h3>
-              <p>Calculate exact age.</p>
+              <p>Calculate exact age in years, months, days.</p>
               <a class="tool-link" href="/age-calculator/">Use Tool</a>
             </div>
           </div>
@@ -133,6 +138,7 @@
       </div>
     </section>
   </main>
+
   <!-- FOOTER -->
   <footer class="site-footer">
     <p>
@@ -145,6 +151,8 @@
     </p>
     <p>© 2026 Skill2Job</p>
   </footer>
+
+  <!-- JAVASCRIPT -->
   <script>
   (function() {
     'use strict';
@@ -168,9 +176,9 @@
       
       resizeBtn.addEventListener('click', resizeImage);
       sizeSelect.addEventListener('change', handleSizeChange);
-      imageFile.addEventListener('change', checkReady);
-      if (widthInput) widthInput.addEventListener('input', checkReady);
-      if (heightInput) heightInput.addEventListener('input', checkReady);
+      imageFile.addEventListener('change', updatePreview);
+      if (widthInput) widthInput.addEventListener('input', checkCustom);
+      if (heightInput) heightInput.addEventListener('input', checkCustom);
       
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
@@ -186,38 +194,33 @@
     
     function handleSizeChange() {
       const customSize = document.getElementById('customSize');
-      if (this.value === 'custom') {
-        customSize.style.display = 'block';
-      } else {
-        customSize.style.display = 'none';
-      }
-      checkReady();
+      customSize.style.display = (this.value === 'custom') ? 'block' : 'none';
     }
     
-    function checkReady() {
-      const resizeBtn = document.getElementById('resizeBtn');
-      const imageFile = document.getElementById('imageFile');
-      const sizeSelect = document.getElementById('sizeSelect');
-      const width = document.getElementById('width');
-      const height = document.getElementById('height');
+    function updatePreview() {
+      const file = document.getElementById('imageFile').files[0];
+      const imgPreview = document.getElementById('imgPreview');
+      imgPreview.innerHTML = '';
       
-      const hasFile = imageFile.files.length > 0;
-      const hasSize = sizeSelect.value !== '';
-      const hasCustom = sizeSelect.value !== 'custom' || (width.value > 0 && height.value > 0);
-      
-      resizeBtn.disabled = !(hasFile && hasSize && hasCustom);
+      if (file && file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        imgPreview.innerHTML = `<img src="${url}" alt="Original Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">`;
+      }
+    }
+    
+    function checkCustom() {
+      // Optional real-time feedback if needed
     }
     
     function resizeImage() {
       const file = document.getElementById('imageFile').files[0];
-      const sizeSelect = document.getElementById('sizeSelect').value;
+      const sizeSelectVal = document.getElementById('sizeSelect').value;
       const result = document.getElementById('result');
       const loading = document.getElementById('loading');
       const imgPreview = document.getElementById('imgPreview');
       
       result.style.display = 'none';
       loading.style.display = 'none';
-      imgPreview.innerHTML = '';
       
       if (!file) {
         result.textContent = 'Please upload an image first.';
@@ -231,10 +234,23 @@
         return;
       }
       
-      if (sizeSelect === '') {
-        result.textContent = 'Please select a size.';
+      if (sizeSelectVal === '') {
+        result.textContent = 'Please select an image size.';
         result.style.display = 'block';
         return;
+      }
+      
+      let targetWidth, targetHeight;
+      if (sizeSelectVal === 'custom') {
+        targetWidth = parseInt(document.getElementById('width').value);
+        targetHeight = parseInt(document.getElementById('height').value);
+        if (isNaN(targetWidth) || isNaN(targetHeight) || targetWidth < 1 || targetHeight < 1) {
+          result.textContent = 'Please enter valid width and height (positive numbers).';
+          result.style.display = 'block';
+          return;
+        }
+      } else {
+        [targetWidth, targetHeight] = sizeSelectVal.split('x').map(Number);
       }
       
       loading.style.display = 'block';
@@ -242,46 +258,32 @@
       const img = new Image();
       img.onload = () => {
         setTimeout(() => {
-          let targetWidth, targetHeight;
-          
-          if (sizeSelect === 'custom') {
-            targetWidth = parseInt(document.getElementById('width').value);
-            targetHeight = parseInt(document.getElementById('height').value);
-            if (!targetWidth || !targetHeight) {
-              loading.style.display = 'none';
-              result.textContent = 'Please enter valid custom dimensions.';
-              result.style.display = 'block';
-              return;
-            }
-          } else {
-            [targetWidth, targetHeight] = sizeSelect.split('x').map(Number);
-          }
-          
           const canvas = document.createElement('canvas');
           canvas.width = targetWidth;
           canvas.height = targetHeight;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
           
-          const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.9);  // JPEG for smaller size
+          const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
           
           loading.style.display = 'none';
           result.style.display = 'block';
           
           result.innerHTML = `
-            <strong>Resized:</strong> ${targetWidth}px x ${targetHeight}px
+            <strong>Resized to:</strong> ${targetWidth}px × ${targetHeight}px
             <br>
-            <a href="${resizedDataUrl}" download="resized_image.jpg" class="calculate-btn" style="margin-top:12px; display:inline-block;">Download Resized Image</a>
+            <a href="${resizedDataUrl}" download="resized_${targetWidth}x${targetHeight}.jpg" class="calculate-btn" style="margin-top:12px; display:inline-block; text-decoration:none;">Download Resized Image</a>
           `;
           
-          imgPreview.innerHTML = `<img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">`;
+          // Add resized preview below original
+          imgPreview.innerHTML += `<br><img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:16px auto; border:2px solid var(--border);">`;
           
         }, 800);
       };
       
       img.onerror = () => {
         loading.style.display = 'none';
-        result.textContent = 'Cannot process this image.';
+        result.textContent = 'Cannot process this image. Try another file.';
         result.style.display = 'block';
       };
       
