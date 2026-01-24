@@ -7,6 +7,8 @@
   --text:#334155;
   --radius:12px;
   --container:1200px;
+  --site-grey: #444444; 
+  --site-grey: #444444;
 }
 
 /* RESET */
@@ -660,9 +662,8 @@ h2{
 }
 
 /* HEADER */
-.site-header{
-  background:#fff;
-  border-bottom:1px solid var(--border);
+.site-header {
+  background-color: var(--site-grey);
 }
 
 .header-inner{
@@ -801,9 +802,9 @@ h2{
   border-top:1px solid var(--border);
   padding:14px 0;
   font-size:13px;
-  background:#444444;   /* Grey background */
-  color:#ffffff;        /* White text */
-  transition:background-color .2s ease, color .2s ease;
+  background: var(--site-grey);   /* Grey background using variable */
+  color:#ffffff;                   /* White text */
+  transition: background-color .2s ease, color .2s ease;
 }
 
 .site-footer p{
@@ -813,22 +814,21 @@ h2{
 
 /* FOOTER LINKS */
 .site-footer a{
-  color:#ffffff;          /* White links */
+  color:#ffffff;                  /* White links */
   text-decoration:none;
-  transition:color .2s ease, text-decoration .2s ease;
+  transition: color .2s ease, text-decoration .2s ease;
 }
 
 .site-footer a:hover{
-  color:var(--primary);   /* Highlight link on hover */
-  text-decoration:underline;
+  color: var(--primary);          /* Highlight link on hover */
+  text-decoration: underline;
 }
 
 /* OPTIONAL SUBTLE FOOTER HOVER */
 .site-footer:hover{
-  background:#555555;    /* Slightly lighter grey on hover */
-  color:#ffffff;         /* Keep text white */
+  background: var(--site-grey-hover);   /* Slightly lighter grey on hover */
+  color: #ffffff;                        /* Keep text white */
 }
-
 
 /* RESPONSIVE */
 @media (min-width:640px){
