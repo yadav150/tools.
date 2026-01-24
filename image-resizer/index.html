@@ -19,7 +19,6 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 <body>
-
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
@@ -32,18 +31,17 @@
   </header>
 
   <main class="site-main">
-
     <section class="section" data-google-ad="false">
       <div class="container tool-layout">
         <div class="tool-column">
           <div class="card image-tool-card">
             <h1 class="tool-title">Resize Photos Online</h1>
-            
+           
             <div class="input-group">
               <label for="imageFile">Upload Image</label>
               <input type="file" id="imageFile" accept="image/*">
             </div>
-            
+           
             <div class="input-group">
               <label for="sizeSelect">Select Image Size</label>
               <select id="sizeSelect">
@@ -59,7 +57,7 @@
                 <option value="472x236">SLPRB Sign (472x236)</option>
               </select>
             </div>
-            
+           
             <div id="customSize" style="display:none;">
               <div class="input-group">
                 <label for="width">Width (px)</label>
@@ -70,21 +68,20 @@
                 <input type="number" id="height" min="1" placeholder="e.g. 600">
               </div>
             </div>
-            
+           
             <button class="calculate-btn" id="resizeBtn">Resize</button>
-            
+           
             <div class="loading" id="loading">
               <div class="spinner"></div>
             </div>
-            
+           
             <div class="result" id="result"></div>
             <div id="imgPreview"></div>
           </div>
         </div>
-        
+       
         <div class="ads-column">
-          <!-- Fixed height container to prevent collapse / layout shift -->
-          <div style="min-height:280px; width:100%; display:flex; align-items:center; justify-content:center;">
+          <div class="ads-wrapper">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-1876390706944654"
@@ -150,17 +147,17 @@
     <p>© 2026 Skill2Job</p>
   </footer>
 
-  <!-- JAVASCRIPT -->
+  <!-- JAVASCRIPT (unchanged) -->
   <script>
   (function() {
     'use strict';
-    
+   
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-    
+   
     function init() {
       const resizeBtn = document.getElementById('resizeBtn');
       const sizeSelect = document.getElementById('sizeSelect');
@@ -171,13 +168,13 @@
       const loading = document.getElementById('loading');
       const result = document.getElementById('result');
       const imgPreview = document.getElementById('imgPreview');
-      
+     
       resizeBtn.addEventListener('click', resizeImage);
       sizeSelect.addEventListener('change', handleSizeChange);
       imageFile.addEventListener('change', updatePreview);
       if (widthInput) widthInput.addEventListener('input', checkCustom);
       if (heightInput) heightInput.addEventListener('input', checkCustom);
-      
+     
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
         shareBtn.addEventListener('click', handleShare);
@@ -189,52 +186,52 @@
         });
       }
     }
-    
+   
     function handleSizeChange() {
       document.getElementById('customSize').style.display = (this.value === 'custom') ? 'block' : 'none';
     }
-    
+   
     function updatePreview() {
       const file = document.getElementById('imageFile').files[0];
       const imgPreview = document.getElementById('imgPreview');
       imgPreview.innerHTML = '';
-      
+     
       if (file && file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
         imgPreview.innerHTML = `<img src="${url}" alt="Original Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">`;
       }
     }
-    
+   
     function checkCustom() {}
-    
+   
     function resizeImage() {
       const file = document.getElementById('imageFile').files[0];
       const sizeSelectVal = document.getElementById('sizeSelect').value;
       const result = document.getElementById('result');
       const loading = document.getElementById('loading');
       const imgPreview = document.getElementById('imgPreview');
-      
+     
       result.style.display = 'none';
       loading.style.display = 'none';
-      
+     
       if (!file) {
         result.textContent = 'Please upload an image first.';
         result.style.display = 'block';
         return;
       }
-      
+     
       if (!file.type.startsWith('image/')) {
         result.textContent = 'Please upload a regular image file.';
         result.style.display = 'block';
         return;
       }
-      
+     
       if (sizeSelectVal === '') {
         result.textContent = 'Please select an image size.';
         result.style.display = 'block';
         return;
       }
-      
+     
       let targetWidth, targetHeight;
       if (sizeSelectVal === 'custom') {
         targetWidth = parseInt(document.getElementById('width').value);
@@ -247,12 +244,12 @@
       } else {
         [targetWidth, targetHeight] = sizeSelectVal.split('x').map(Number);
       }
-      
+     
       // Clear original preview before processing resized one
       imgPreview.innerHTML = '';
-      
+     
       loading.style.display = 'block';
-      
+     
       const img = new Image();
       img.onload = () => {
         // Random delay 800-1800ms for realistic feel
@@ -263,16 +260,16 @@
           canvas.height = targetHeight;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-          
+         
           const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-          
+         
           loading.style.display = 'none';
-          
+         
           // Show ONLY resized preview
           imgPreview.innerHTML = `
             <img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:16px auto; border:2px solid var(--border);">
           `;
-          
+         
           // Result text + download BELOW preview
           result.innerHTML = `
             <strong>Resized to:</strong> ${targetWidth}px × ${targetHeight}px
@@ -280,19 +277,19 @@
             <a href="${resizedDataUrl}" download="resized_${targetWidth}x${targetHeight}.jpg" class="calculate-btn" style="margin-top:16px; display:inline-block; text-decoration:none;">Download Resized Image</a>
           `;
           result.style.display = 'block';
-          
+         
         }, delay);
       };
-      
+     
       img.onerror = () => {
         loading.style.display = 'none';
         result.textContent = 'Cannot process this image. Try another file.';
         result.style.display = 'block';
       };
-      
+     
       img.src = URL.createObjectURL(file);
     }
-    
+   
     async function handleShare() {
       const shareData = {
         title: 'Image Resizer – Skill2Job Tools',
