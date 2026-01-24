@@ -7,8 +7,8 @@
   --text:#334155;
   --radius:12px;
   --container:1200px;
-  --site-grey: #444444; 
-  --site-grey: #444444;
+  --site-grey: #f0f0f0;        /* Hazy lightest grey */
+  --site-grey-hover: #e0e0e0;
 }
 
 /* RESET */
