@@ -797,12 +797,14 @@ h2{
 }
 
 /* FOOTER */
+/* FOOTER */
 .site-footer{
   border-top:1px solid var(--border);
   padding:14px 0;
   font-size:13px;
-  background:#222222;
-  transition:background-color .2s ease;
+  background:#222222;   /* Dark background */
+  color:#ffffff;        /* White text */
+  transition:background-color .2s ease, color .2s ease;
 }
 
 .site-footer p{
@@ -812,20 +814,22 @@ h2{
 
 /* FOOTER LINKS */
 .site-footer a{
-  color:var(--text);
+  color:#ffffff;          /* White links */
   text-decoration:none;
   transition:color .2s ease, text-decoration .2s ease;
 }
 
 .site-footer a:hover{
-  color:var(--primary);
+  color:var(--primary);   /* Highlight link on hover */
   text-decoration:underline;
 }
 
 /* OPTIONAL SUBTLE FOOTER HOVER */
 .site-footer:hover{
-  background:#f8fafc;
+  background:#333333;    /* Slightly lighter dark on hover */
+  color:#ffffff;         /* Keep text white */
 }
+
 /* RESPONSIVE */
 @media (min-width:640px){
   .tools-grid{
