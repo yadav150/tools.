@@ -137,25 +137,25 @@
   <script>
   (function() {
     'use strict';
-   
+  
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-   
+  
     function init() {
       const btn = document.getElementById('calcBtn');
       const loading = document.getElementById('loading');
       const result = document.getElementById('result');
       const dobInput = document.getElementById('dob');
-     
+    
       btn.addEventListener('click', calculateAge);
-     
+    
       dobInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') calculateAge();
       });
-     
+    
       const shareBtn = document.querySelector('.share-btn');
       if (shareBtn) {
         shareBtn.addEventListener('click', handleShare);
@@ -167,31 +167,31 @@
         });
       }
     }
-   
+  
     function calculateAge() {
       const dobValue = document.getElementById('dob').value;
       const result = document.getElementById('result');
       const loading = document.getElementById('loading');
-     
+    
       result.style.display = 'none';
       loading.style.display = 'none';
-     
+    
       if (!dobValue) {
         result.textContent = 'Please select your date of birth.';
         result.style.display = 'block';
         return;
       }
-     
+    
       loading.style.display = 'block';
-     
+    
       setTimeout(() => {
         const dob = new Date(dobValue);
         const today = new Date();
-       
+      
         let y = today.getFullYear() - dob.getFullYear();
         let m = today.getMonth() - dob.getMonth();
         let d = today.getDate() - dob.getDate();
-       
+      
         if (d < 0) {
           m--;
           const lastDay = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
@@ -201,13 +201,13 @@
           y--;
           m += 12;
         }
-       
+      
         loading.style.display = 'none';
         result.style.display = 'block';
         result.innerHTML = `<strong>Your Exact Age as of Today:</strong> ${y} years, ${m} months, ${d} days`;
       }, 800);
     }
-   
+  
     async function handleShare() {
       const shareBtn = document.querySelector('.share-btn');
       const shareData = {
@@ -215,7 +215,7 @@
         text: 'Calculate exact age online instantly. Free, accurate, mobile-friendly! 🎂',
         url: window.location.href
       };
-     
+    
       try {
         if (navigator.share) {
           await navigator.share(shareData);
@@ -227,7 +227,7 @@
         prompt('Copy this Age Calculator link:', shareData.url);
       }
     }
-   
+  
     function showFeedback(btn, message, color) {
       const originalText = btn.textContent;
       btn.textContent = message;
