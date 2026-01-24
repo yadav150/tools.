@@ -1,164 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Image Resizer – Resize Photos Online in Pixels | Skill2Job Tools</title>
-  <meta name="description" content="Resize images online to custom or preset sizes like passport, ADRE, DHS, Facebook post. Fast, browser-based, secure.">
-  <meta name="keywords" content="image resizer, resize photos online, change image size pixels, Skill2Job tools">
-  <meta name="author" content="Yadav Subba">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://tools.skill2job.site/image-resizer">
-  <link rel="icon" type="image/webp" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
-</head>
-<body>
-
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="/">
-          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-        </a>
-      </div>
-      <button class="share-btn" type="button" aria-label="Share Image Resizer">Share</button>
-    </div>
-  </header>
-
-  <!-- MAIN -->
-  <main class="site-main">
-
-    <!-- IMAGE RESIZER TOOL -->
-    <section class="section" data-google-ad="false">
-      <div class="container tool-layout">
-        <div class="tool-column">
-          <div class="card image-tool-card">
-            <h1 class="tool-title">Resize Photos Online</h1>
-            
-            <div class="input-group">
-              <label for="imageFile">Upload Image</label>
-              <input type="file" id="imageFile" accept="image/*">
-            </div>
-            
-            <div class="input-group">
-              <label for="sizeSelect">Select Image Size</label>
-              <select id="sizeSelect">
-                <option value="">-- Select Image Size --</option>
-                <option value="custom">Custom Size</option>
-                <option value="450x600">Passport Size (450x600)</option>
-                <option value="210x310">ADRE Photo (210x310)</option>
-                <option value="210x110">ADRE Sign (210x110)</option>
-                <option value="210x310">DHS Photo (210x310)</option>
-                <option value="210x110">DHS Sign (210x110)</option>
-                <option value="1536x1920">Facebook Post (1536x1920)</option>
-                <option value="413x531">SLPRB Photo (413x531)</option>
-                <option value="472x236">SLPRB Sign (472x236)</option>
-              </select>
-            </div>
-            
-            <div id="customSize" style="display:none;">
-              <div class="input-group">
-                <label for="width">Width (px)</label>
-                <input type="number" id="width" min="1" placeholder="e.g. 450">
-              </div>
-              <div class="input-group">
-                <label for="height">Height (px)</label>
-                <input type="number" id="height" min="1" placeholder="e.g. 600">
-              </div>
-            </div>
-            
-            <button class="calculate-btn" id="resizeBtn">Resize</button>
-            
-            <div class="loading" id="loading">
-              <div class="spinner"></div>
-            </div>
-            
-            <div class="result" id="result"></div>
-            <div id="imgPreview"></div>
-          </div>
-        </div>
-        
-        <div class="ads-column">
-          <!-- Adsense Placeholder -->
-          <ins class="adsbygoogle"
-               style="display:block;"
-               data-ad-client="ca-pub-1876390706944654"
-               data-ad-slot="YOUR_AD_SLOT_HERE"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-          <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT TOOL -->
-    <section class="section">
-      <div class="container">
-        <div class="card">
-          <h2>About This Tool</h2>
-          <p>
-  Skill2Job's free Image Resizer makes it simple to adjust your photos to precise dimensions. You can choose from popular presets like passport, ADRE, SLPRB, or enter custom pixel sizes to fit any requirement. The tool is designed for ease of use, letting you resize images in just a few clicks.
-</p>
-<p>
-  All processing happens directly in your browser, ensuring your images remain private and secure. There’s no need to upload them to a server, so your data stays with you at all times. This makes it safe for sensitive documents and personal photos.
-</p>
-<p>
-  Once resized, your image is ready to download instantly. Whether for official documents, social media posts, or any situation where size matters, Skill2Job's Image Resizer provides a fast, reliable, and secure solution for all your image resizing needs.
-</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- MORE TOOLS -->
-    <section class="section">
-      <div class="container">
-        <div class="card">
-          <h2>More Tools</h2>
-          <div class="tools-grid">
-            <div class="tool-card">
-              <h3>Image Pixel Checker</h3>
-              <p>Check image width and height.</p>
-              <a class="tool-link" href="/image-pixel-checker/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Remove Pages from PDF</h3>
-              <p>Delete selected pages from PDF.</p>
-              <a class="tool-link" href="/remove-pages/">Use Tool</a>
-            </div>
-            <div class="tool-card">
-              <h3>Age Calculator</h3>
-              <p>Calculate exact age in years, months, days.</p>
-              <a class="tool-link" href="/age-calculator/">Use Tool</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <p>
-      <strong>Skill2Job Tools</strong> |
-      <a href="/">Home</a> |
-      <a href="/about">About</a> |
-      <a href="/contact">Contact</a> |
-      <a href="/privacy">Privacy</a> |
-      <a href="/terms">Terms</a>
-    </p>
-    <p>© 2026 Skill2Job</p>
-  </footer>
-
- <script>
+<script>
 (function() {
   'use strict';
   
@@ -209,12 +49,19 @@
     
     if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
-      imgPreview.innerHTML = `<img src="${url}" alt="Original Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">`;
+      imgPreview.innerHTML = `
+        <img src="${url}" alt="Original Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">
+      `;
     }
   }
   
   function checkCustom() {
     // Optional real-time feedback if needed
+  }
+  
+  function getDelay() {
+    // Random realistic delay based on "network" feel (1.2s to 3s)
+    return Math.floor(Math.random() * (3000 - 1200 + 1)) + 1200;
   }
   
   function resizeImage() {
@@ -273,13 +120,12 @@
         
         loading.style.display = 'none';
         
-        // Show resized preview first
-        imgPreview.innerHTML += `
-          <br>
-          <img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:16px auto; border:2px solid var(--border);">
+        // 1. Remove original preview and show ONLY resized preview
+        imgPreview.innerHTML = `
+          <img src="${resizedDataUrl}" alt="Resized Preview" style="max-width:90%; max-height:240px; border-radius:12px; display:block; margin:8px auto; border:2px solid var(--border);">
         `;
         
-        // Then show result text + download button BELOW the image
+        // 2. Below the preview: result text + download button
         result.innerHTML = `
           <strong>Resized to:</strong> ${targetWidth}px × ${targetHeight}px
           <br>
@@ -287,7 +133,7 @@
         `;
         result.style.display = 'block';
         
-      }, 800);
+      }, getDelay());  // realistic random delay
     };
     
     img.onerror = () => {
@@ -318,6 +164,3 @@
   }
 })();
 </script>
-  
-</body>
-</html>
