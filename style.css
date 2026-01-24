@@ -802,8 +802,8 @@ h2{
   border-top:1px solid var(--border);
   padding:14px 0;
   font-size:13px;
-  background: var(--site-grey);   /* Grey background using variable */
-  color:#ffffff;                   /* White text */
+  background: var(--site-grey);  /* Light hazy grey background */
+  color: var(--text);            /* Text color from --text variable */
   transition: background-color .2s ease, color .2s ease;
 }
 
@@ -814,7 +814,7 @@ h2{
 
 /* FOOTER LINKS */
 .site-footer a{
-  color:#ffffff;                  /* White links */
+  color: var(--text);             /* Use same text color for links */
   text-decoration:none;
   transition: color .2s ease, text-decoration .2s ease;
 }
@@ -826,10 +826,9 @@ h2{
 
 /* OPTIONAL SUBTLE FOOTER HOVER */
 .site-footer:hover{
-  background: var(--site-grey-hover);   /* Slightly lighter grey on hover */
-  color: #ffffff;                        /* Keep text white */
+  background: var(--site-grey-hover);  /* Slightly darker grey on hover */
+  color: var(--text);                   /* Keep text color consistent */
 }
-
 /* RESPONSIVE */
 @media (min-width:640px){
   .tools-grid{
