@@ -77,29 +77,42 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-<!-- PERFECT - Copy this (zero inline except display:none) -->
+<!-- MERGE PDF TOOL (Age Calculator style) -->
 <section class="section" data-google-ad="false">
   <div class="container">
-    <div class="card image-tool-card">  <!-- GREY BORDER VIA CSS -->
-      
-      <h1 class="tool-title">PDF Merge Tool</h1>
-      
-      <div class="input-group">           <!-- GREY BORDER VIA CSS -->
+    <div class="card age-tool-card">
+
+      <h1 class="tool-title">Merge PDF</h1>
+
+      <div class="input-group">
         <label for="pdfFiles">Select PDF Files (Max 10)</label>
         <input type="file" id="pdfFiles" accept="application/pdf" multiple>
       </div>
-      
-      <button class="calculate-btn" id="uploadBtn">Upload PDFs</button>
-      
-      <!-- Results/Loading - All class-based -->
-      <div class="loading" id="uploadLoading"><div class="spinner"></div></div>
+
+      <button class="calculate-btn" id="uploadBtn">
+        Upload PDFs
+      </button>
+
+      <!-- Loading -->
+      <div class="loading" id="uploadLoading">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Result -->
       <div class="result" id="uploadResult"></div>
-      <div id="pdfList"></div>  <!-- JS fills w/ inline only -->
-      
-      <!-- Hidden buttons - minimal inline -->
-      <button class="calculate-btn" id="addMoreBtn" style="display:none;">Add More</button>
-      <button class="calculate-btn" id="mergeBtn" style="display:none;">Merge PDFs</button>
-      
+
+      <!-- PDF List (JS will fill) -->
+      <div id="pdfList"></div>
+
+      <!-- Action buttons -->
+      <button class="calculate-btn" id="addMoreBtn" style="display:none;">
+        Add More PDFs
+      </button>
+
+      <button class="calculate-btn" id="mergeBtn" style="display:none;">
+        Merge PDFs
+      </button>
+
     </div>
   </div>
 </section>
