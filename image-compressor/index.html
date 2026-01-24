@@ -75,15 +75,15 @@
 
   <!-- MAIN CONTENT -->
   <main class="site-main">
-    <!-- google_ad_section_start(weight=ignore) -->
+<!-- google_ad_section_start(weight=ignore) -->
 <section class="section" data-google-ad="false">
   <div class="container">
-    <div class="card compressor-tool-card">
+    <div class="card image-tool-card">
 
       <h1 class="tool-title">Image Compressor</h1>
-
+      
       <div class="input-group">
-        <label for="imageFile">Select Image</label>
+        <label for="imageFile">Upload Image</label>
         <input type="file" id="imageFile" accept="image/*">
       </div>
 
@@ -101,15 +101,8 @@
       </div>
 
       <div class="result" id="compressResult"></div>
-
-      <!-- IMAGE PREVIEW LIST -->
       <div id="imageList"></div>
-
-      <button class="calculate-btn" id="newImageBtn">
-        Compress New Image
-      </button>
-
-      <div class="result" id="downloadResult"></div>
+      <div id="downloadResult"></div>
 
     </div>
   </div>
@@ -168,7 +161,6 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   <p>© 2026 Skill2Job</p>
 </footer>
 
-  <!-- IMPROVED SHARE SCRIPT -->
   <script>
 (function() {
   'use strict';
@@ -180,9 +172,8 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
   }
   
   async function init() {
-    // ALL ELEMENTS
+    // ALL ELEMENTS (newImageBtn removed - no HTML button)
     const compressBtn = document.getElementById('compressBtn');
-    const newImageBtn = document.getElementById('newImageBtn');
     const compressLoading = document.getElementById('compressLoading');
     const compressResult = document.getElementById('compressResult');
     const downloadResult = document.getElementById('downloadResult');
@@ -195,7 +186,6 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     
     // EVENT LISTENERS
     compressBtn.addEventListener('click', handleCompress);
-    newImageBtn.addEventListener('click', resetTool);
     imageFile.addEventListener('change', handleFileSelect);
     
     // SHARE BUTTON
@@ -213,6 +203,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
     function handleFileSelect() {
       if (imageFile.files.length > 0) {
         compressBtn.disabled = false;
+        compressBtn.textContent = 'Compress Image'; // Reset button text
       }
     }
     
@@ -245,8 +236,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
         compressLoading.style.display = 'none';
         renderImageList(originalSize, compressedSize, reduction);
         imageList.style.display = 'block';
-        newImageBtn.style.display = 'block';
-        compressBtn.style.display = 'none';
+        compressBtn.style.display = 'none'; // Hide main button after success
         
         showDownload();
         
@@ -333,20 +323,27 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
       downloadResult.style.display = 'block';
     }
     
+    // Reset via clicking anywhere on results (or add reset button in download area)
     function resetTool() {
       imageFile.value = '';
       targetSize.value = '100';
       compressedBlob = null;
       originalSize = 0;
       imageList.style.display = 'none';
-      newImageBtn.style.display = 'none';
       downloadResult.style.display = 'none';
       compressResult.style.display = 'none';
       compressBtn.style.display = 'block';
+      compressBtn.textContent = 'Compress New Image';
       compressBtn.disabled = false;
     }
     
-    // SHARE FUNCTION (same as PDF tool)
+    // Add reset on results click (user-friendly)
+    imageList.addEventListener('click', resetTool);
+    downloadResult.addEventListener('click', function(e) {
+      if (e.target.tagName !== 'A') resetTool();
+    });
+    
+    // SHARE FUNCTION
     async function handleShare() {
       const shareData = {
         title: 'Image Compressor – Skill2Job Tools',
@@ -354,6 +351,7 @@ Experience convenience, accuracy, and safety with Skill2Job's Age Calculator tod
         url: window.location.href
       };
       
+      const shareBtn = document.querySelector('.share-btn');
       try {
         if (navigator.share) {
           await navigator.share(shareData);
