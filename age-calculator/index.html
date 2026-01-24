@@ -26,6 +26,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
+
+  <!-- load ads script ONCE -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -33,9 +35,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="/">
-          <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
-        </a>
+        <a href="/"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></a>
       </div>
       <button class="share-btn" type="button" aria-label="Share Age Calculator">Share</button>
     </div>
@@ -60,22 +60,26 @@
       </div>
     </section>
 
-    <!-- ADS PLACEHOLDER - just below tool section -->
+    <!-- ADS PLACEHOLDER - just below tool section (fixed: removed duplicate script + removed flex) -->
     <section class="section" data-google-ad="true">
       <div class="container">
-        <div class="card" style="padding: 20px; text-align: center; background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); min-height: 280px; display: flex; align-items: center; justify-content: center;">
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654"
-     crossorigin="anonymous"></script>
-<!-- ADS UNIT 3 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-1876390706944654"
-     data-ad-slot="5136857748"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+        <!-- keep same card class, but avoid using flex for the ad itself -->
+        <div class="card" style="padding: 20px; text-align: center; background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); min-height: 280px;">
+          
+          <!-- wrapper ensures ad is in a normal block flow (not inside a flex-centered container) -->
+          <div style="width:100%; max-width:100%; margin:0 auto; min-height:250px; display:block;">
+            <!-- ADS UNIT 3 -->
+            <ins class="adsbygoogle"
+                 style="display:block; min-height:250px"
+                 data-ad-client="ca-pub-1876390706944654"
+                 data-ad-slot="5136857748"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
+
         </div>
       </div>
     </section>
