@@ -2,23 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Background Remover – Skill2Job Tools</title>
-  <link rel="stylesheet" href="/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654" crossorigin="anonymous"></script>
+
+  <title>Background Remover – Remove Image Background Online | Skill2Job Tools</title>
+
+  <meta name="description" content="Remove image backgrounds instantly with Skill2Job's free AI-powered background remover. Perfect cutouts, transparent PNG output, customizable backgrounds.">
+  <meta name="keywords" content="background remover, remove background, image cutout, transparent png, Skill2Job tools">
+  <meta name="author" content="Yadav Subba">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://tools.skill2job.site/background-remover">
+  <link rel="icon" type="image/webp" href="/favicon">
+  <link rel="apple-touch-icon" href="/favicon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+
+  <!-- AdSense (ONLY ONCE) -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1876390706944654"
+    crossorigin="anonymous"></script>
 </head>
+
 <body>
+
+<!-- HEADER -->
 <header class="site-header">
   <div class="container header-inner">
-    <div class="logo"><a href="/"><img src="/favicon"></a></div>
-    <button class="share-btn" type="button">Share</button>
+    <div class="logo">
+      <a href="/">
+        <img src="/favicon">
+      </a>
+    </div>
+    <button class="share-btn" type="button" aria-label="Share Background Remover">Share</button>
   </div>
 </header>
 
+<!-- MAIN -->
 <main class="site-main">
+
 <section class="section">
   <div class="container tool-layout">
+
+    <!-- TOOL -->
     <div class="tool-column">
       <div class="card image-tool-card">
         <h1 class="tool-title">Background Remover</h1>
@@ -30,22 +61,15 @@
 
         <button class="calculate-btn" id="removeBtn">Remove Background</button>
 
-        <!-- LOADING SPINNER -->
-        <div class="loading" id="imgLoading" style="display:none;">
+        <div class="loading" id="imgLoading">
           <div class="spinner"></div>
           <p>AI processing image... This may take 10-20 seconds</p>
         </div>
 
-        <!-- PREVIEW + SWIPE CONTAINER -->
-        <div class="preview-container" id="previewContainer" style="display:none;">
-          <div class="preview-image" id="previewImage"></div>
-          <div class="preview-overlay" id="previewOverlay"></div>
-        </div>
+        <div class="result" id="imgResult"></div>
+        <div id="imgPreview"></div>
 
-        <!-- RESULT -->
-        <div class="result" id="imgResult" style="display:none;"></div>
-
-        <!-- COLOR PICKER -->
+        <!-- COLOR PICKER SECTION -->
         <div class="color-section" id="colorSection" style="display:none; margin-top:24px;">
           <div style="display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;">
             <label style="font-weight:500; color:var(--text);">Background Color:</label>
@@ -61,223 +85,412 @@
               <button class="color-btn" data-color="#ef4444" title="Red" style="background:#ef4444;"></button>
             </div>
             <input type="color" id="customColor" class="color-input" value="#ffffff" style="display:none;">
-            <button class="calculate-btn small-btn" id="customColorBtn" style="display:none;">Custom</button>
+            <button class="calculate-btn small-btn" id="customColorBtn" style="display:none; padding:8px 16px; font-size:14px;">
+              Custom
+            </button>
           </div>
           <div style="text-align:center; margin-top:12px;">
-            <button class="calculate-btn" id="downloadBtn" style="display:none; width:100%;">Download Image</button>
+            <button class="calculate-btn" id="downloadBtn" style="display:none; width:100%;">
+              Download Image
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ADS -->
+    <!-- ADS (FIXED – SAME AS OTHER TOOLS) -->
     <div class="ads-column">
-      <div class="ads-wrapper">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1876390706944654" data-ad-slot="5136857748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <div class="ads-wrapper"
+           style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;"
+             data-ad-client="ca-pub-1876390706944654"
+             data-ad-slot="5136857748"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT TOOL -->
+<section class="section">
+  <div class="container">
+    <div class="card">
+      <h2>About This Tool</h2>
+
+      <p>
+        Skill2Job's Background Remover uses cutting-edge AI to instantly remove image backgrounds creating perfect transparent PNG cutouts. Customize with 7+ professional background colors or keep transparent. Ideal for product photos, profile pictures, presentations, social media graphics, and e-commerce visuals.
+      </p>
+
+      <p>
+        Powered by remove.bg API with 100% client-side file handling for maximum privacy. Delivers pixel-perfect cutouts preserving fine details like hair, fur, and complex edges. Professional color customization with instant preview. Developed by Yadav Subba, CEO and Developer of Skill2Job.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- MORE TOOLS -->
+<section class="section">
+  <div class="container">
+    <div class="card">
+      <h2>More Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>PDF Merger</h3>
+          <p>Combine multiple PDF files instantly.</p>
+          <a class="tool-link" href="/pdf-merger/">Use Tool</a>
+        </div>
+        <div class="tool-card">
+          <h3>Image Pixel Checker</h3>
+          <p>Check image dimensions instantly.</p>
+          <a class="tool-link" href="/image-pixel-checker">Use Tool</a>
+        </div>
+        <div class="tool-card">
+          <h3>Image Compressor</h3>
+          <p>Compress images to target KB size.</p>
+          <a class="tool-link" href="/image-compressor/">Use Tool</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="section">
-  <div class="container">
-    <div class="card">
-      <h2>About This Tool</h2>
-      <p>Skill2Job's Background Remover uses advanced AI technology to instantly remove image backgrounds, creating perfect transparent PNG cutouts with precise edge detection. Customize with 7+ professional background colors including white, blue, green, orange, red, light gray, or keep it fully transparent for versatile design needs. The interactive swipe animation lets users compare original vs processed results in real-time.</p>
-      <p>Powered by remove.bg API with complete client-side processing for maximum privacy and security. Delivers pixel-perfect cutouts that preserve fine details like hair strands, fur texture, fabric edges, and complex patterns. Lightning-fast processing with professional-grade results. Developed by Yadav Subba, CEO and Developer of Skill2Job Tools platform.</p>
-    </div>
-  </div>
-</section>
-  </main>
+</main>
 
+<!-- FOOTER -->
 <footer class="site-footer">
-  <p><strong>Skill2Job Tools</strong> | <a href="/">Home</a> | <a href="/about">About</a> | <a href="/privacy">Privacy</a></p>
+  <p>
+    <strong>Skill2Job Tools</strong> |
+    <a href="/">Home</a> |
+    <a href="/about">About</a> |
+    <a href="/contact">Contact</a> |
+    <a href="/privacy">Privacy</a> |
+    <a href="/terms">Terms</a>
+  </p>
   <p>© 2026 Skill2Job</p>
 </footer>
 
+<style>
+/* COLOR PICKER STYLES - PERFECT CONSISTENCY */
+.color-section {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.color-palette {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.color-btn {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.color-btn:hover {
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.color-btn.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.checkerboard {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%), 
+                    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), 
+                    linear-gradient(45deg, transparent 75%, #e0e0e0 75%), 
+                    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+  border-radius: 50%;
+}
+
+.color-input {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.small-btn {
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .color-palette {
+    justify-content: center;
+  }
+  .color-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+</style>
+
+<!-- ADS INIT (IMPORTANT) -->
 <script>
-window.addEventListener('load', () => (adsbygoogle = window.adsbygoogle || []).push({}));
+  window.addEventListener('load', function () {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  });
 </script>
 
-<!-- COMPLETE JS -->
+<!-- BACKGROUND REMOVER WITH COLOR PICKER -->
 <script>
 (function() {
   'use strict';
 
   let removedBgImage = null;
-  let originalImageData = null;
   let currentBgColor = 'transparent';
-
-  function init() {
-    const fileInput = document.getElementById('imageFile');
-    const removeBtn = document.getElementById('removeBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const colorSection = document.getElementById('colorSection');
-    const customColorBtn = document.getElementById('customColorBtn');
-    const loading = document.getElementById('imgLoading');
-    const result = document.getElementById('imgResult');
-    const previewContainer = document.getElementById('previewContainer');
-    const previewImage = document.getElementById('previewImage');
-    const previewOverlay = document.getElementById('previewOverlay');
-
-    // File upload preview
-    fileInput.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file && file.type.startsWith('image/')) {
-        originalImageData = file;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          previewImage.innerHTML = `<img src="${e.target.result}">`;
-          previewContainer.style.display = 'block';
-          result.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-      } else {
-        result.textContent = 'Please upload a valid image file.';
-        result.style.display = 'block';
-        previewContainer.style.display = 'none';
-      }
-    });
-
-    // Remove background button
-    removeBtn.addEventListener('click', async function() {
-      const file = fileInput.files[0];
-      
-      if (!file) {
-        result.textContent = 'Please upload an image first.';
-        result.style.display = 'block';
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        result.textContent = 'Please upload a valid image file.';
-        result.style.display = 'block';
-        return;
-      }
-
-      // Show spinner + blur preview
-      loading.style.display = 'block';
-      previewImage.classList.add('blur');
-      result.style.display = 'none';
-      colorSection.style.display = 'none';
-
-      try {
-        const formData = new FormData();
-        formData.append('image_file', file);
-        formData.append('size', 'auto');
-
-        const response = await fetch('https://api.remove.bg/v1.0/removebg', {
-          method: 'POST',
-          headers: { 'X-Api-Key': '25f3oGaee6SLboH5U62f6B78' },
-          body: formData
-        });
-
-        if (!response.ok) throw new Error('API error');
-
-        removedBgImage = await response.blob();
-        
-        // Hide spinner, start white swipe animation
-        loading.style.display = 'none';
-        setTimeout(() => {
-          previewOverlay.classList.add('animate');
-          previewImage.classList.remove('blur');
-        }, 800);
-
-        // Show result + color picker
-        setTimeout(() => {
-          result.textContent = 'Background removed successfully!';
-          result.style.display = 'block';
-          colorSection.style.display = 'block';
-          downloadBtn.style.display = 'block';
-          customColorBtn.style.display = 'inline-block';
-        }, 3000);
-
-      } catch (error) {
-        loading.style.display = 'none';
-        previewImage.classList.remove('blur');
-        result.textContent = 'Processing error. Please try again.';
-        result.style.display = 'block';
-      }
-    });
-
-    // Color picker
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('color-btn')) {
-        document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-        e.target.classList.add('active');
-        currentBgColor = e.target.dataset.color;
-      }
-    });
-
-    customColorBtn.addEventListener('click', function() {
-      const customColor = document.getElementById('customColor');
-      if (customColor.style.display === 'none') {
-        customColor.style.display = 'block';
-        this.textContent = 'Close';
-      } else {
-        customColor.style.display = 'none';
-        this.textContent = 'Custom';
-      }
-    });
-
-    document.getElementById('customColor').addEventListener('change', function(e) {
-      currentBgColor = e.target.value;
-    });
-
-    // Download
-    downloadBtn.addEventListener('click', function() {
-      if (!removedBgImage) return;
-
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = function() {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        
-        if (currentBgColor === 'transparent') {
-          ctx.drawImage(img, 0, 0);
-        } else {
-          ctx.fillStyle = currentBgColor;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0);
-        }
-        
-        canvas.toBlob(function(blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `skill2job-bg-removed-${Date.now()}.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        });
-      };
-      
-      img.src = URL.createObjectURL(removedBgImage);
-    });
-
-    // Share
-    document.querySelector('.share-btn').addEventListener('click', function() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Background Remover - Skill2Job',
-          text: 'Remove backgrounds instantly!',
-          url: window.location.href
-        });
-      }
-    });
-  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
+
+  function init() {
+    const btn = document.getElementById('removeBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const colorSection = document.getElementById('colorSection');
+    const customColorBtn = document.getElementById('customColorBtn');
+    const loading = document.getElementById('imgLoading');
+    const result = document.getElementById('imgResult');
+    const imageFile = document.getElementById('imageFile');
+    const imgPreview = document.getElementById('imgPreview');
+
+    btn.addEventListener('click', removeBackground);
+    downloadBtn.addEventListener('click', downloadImage);
+    customColorBtn.addEventListener('click', toggleCustomColor);
+    imageFile.addEventListener('change', previewImage);
+
+    // Color picker events
+    document.querySelectorAll('.color-btn').forEach(btn => {
+      btn.addEventListener('click', selectColor);
+    });
+    document.getElementById('customColor').addEventListener('change', handleCustomColor);
+
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', handleShare);
+    }
+  }
+
+  function previewImage() {
+    const file = document.getElementById('imageFile').files[0];
+    const imgPreview = document.getElementById('imgPreview');
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        imgPreview.innerHTML = `<img src="${e.target.result}" style="max-width:90%;margin:12px auto;display:block;border-radius:12px;border:2px solid var(--border);">`;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function selectColor(e) {
+    document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
+    currentBgColor = e.target.dataset.color;
+    updatePreview();
+  }
+
+  function toggleCustomColor() {
+    const customColor = document.getElementById('customColor');
+    const customColorBtn = document.getElementById('customColorBtn');
+    
+    if (customColor.style.display === 'none') {
+      customColor.style.display = 'block';
+      customColorBtn.textContent = 'Close';
+    } else {
+      customColor.style.display = 'none';
+      customColorBtn.textContent = 'Custom';
+    }
+  }
+
+  function handleCustomColor(e) {
+    currentBgColor = e.target.value;
+    document.querySelector('.color-btn.active').dataset.color = currentBgColor;
+    document.querySelector('.color-btn.active').style.background = currentBgColor;
+    document.querySelector('.color-btn.active').classList.remove('active');
+    document.querySelector('[data-color="#ffffff"]').classList.add('active');
+    updatePreview();
+  }
+
+  async function removeBackground() {
+    const file = document.getElementById('imageFile').files[0];
+    const result = document.getElementById('imgResult');
+    const loading = document.getElementById('imgLoading');
+    const imgPreview = document.getElementById('imgPreview');
+    const colorSection = document.getElementById('colorSection');
+
+    result.style.display = 'none';
+    loading.style.display = 'none';
+    imgPreview.innerHTML = '';
+    colorSection.style.display = 'none';
+
+    if (!file) {
+      result.textContent = 'Please upload an image first.';
+      result.style.display = 'block';
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      result.textContent = 'Please upload a valid image file.';
+      result.style.display = 'block';
+      return;
+    }
+
+    loading.style.display = 'block';
+
+    try {
+      const formData = new FormData();
+      formData.append('image_file', file);
+      formData.append('size', 'auto');
+
+      const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': '25f3oGaee6SLboH5U62f6B78'
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      removedBgImage = await response.blob();
+      
+      loading.style.display = 'none';
+      colorSection.style.display = 'block';
+      result.style.display = 'block';
+      
+      result.innerHTML = '<strong>Background removed! Choose your background color:</strong>';
+      updatePreview();
+
+    } catch (error) {
+      loading.style.display = 'none';
+      result.innerHTML = '<strong>Processing error. Please try a different image or try again later.</strong>';
+      result.style.display = 'block';
+      console.error('BG Remove error:', error);
+    }
+  }
+
+  function updatePreview() {
+    const result = document.getElementById('imgResult');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    if (!removedBgImage) return;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      // Fill background color
+      if (currentBgColor === 'transparent') {
+        // Checkerboard for transparency
+        const checkerSize = 20;
+        for (let y = 0; y < canvas.height; y += checkerSize) {
+          for (let x = 0; x < canvas.width; x += checkerSize) {
+            ctx.fillStyle = ((x / checkerSize + y / checkerSize) % 2 === 0) ? '#f0f0f0' : '#e0e0e0';
+            ctx.fillRect(x, y, checkerSize, checkerSize);
+          }
+        }
+      } else {
+        ctx.fillStyle = currentBgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      ctx.drawImage(img, 0, 0);
+      
+      const previewUrl = canvas.toDataURL('image/png');
+      
+      result.innerHTML = `
+        <div style="text-align:center;">
+          <img src="${previewUrl}" style="max-width:90%;max-height:300px;border-radius:12px;border:2px solid var(--primary);box-shadow:0 8px 20px rgba(0,0,0,0.15);">
+          <br><br>
+          <strong>Preview ready!</strong>
+        </div>
+      `;
+      
+      downloadBtn.style.display = 'block';
+    };
+    
+    img.src = URL.createObjectURL(removedBgImage);
+  }
+
+  function downloadImage() {
+    if (!removedBgImage) return;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      if (currentBgColor === 'transparent') {
+        ctx.drawImage(img, 0, 0);
+      } else {
+        ctx.fillStyle = currentBgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+      }
+      
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bg-custom-${currentBgColor !== 'transparent' ? currentBgColor.slice(1) : 'transparent'}-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    };
+    
+    img.src = URL.createObjectURL(removedBgImage);
+  }
+
+  async function handleShare() {
+    const shareData = {
+      title: 'Background Remover – Skill2Job Tools',
+      text: 'Remove & customize image backgrounds instantly!',
+      url: window.location.href
+    };
+    if (navigator.share) await navigator.share(shareData);
+  }
 })();
 </script>
+
 </body>
 </html>
