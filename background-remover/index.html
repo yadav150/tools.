@@ -65,15 +65,15 @@
           <p>AI processing image... This may take 10-20 seconds</p>
         </div>
 
+        <!-- SWIPE PREVIEW CONTAINER -->
+        <div class="swipe-preview" id="swipePreview" style="display:none;">
+          <div class="preview-bg" id="previewBg"></div>
+          <div class="preview-original" id="previewOriginal"></div>
+          <div class="preview-result" id="previewResult"></div>
+        </div>
+
         <div class="result" id="imgResult"></div>
         <div id="imgPreview"></div>
-
-        <!-- SWIPE ANIMATION -->
-        <div class="swipe-container" id="swipeContainer" style="display:none;">
-          <div class="swipe-original" id="swipeOriginal"></div>
-          <div class="swipe-result" id="swipeResult"></div>
-          <div class="swipe-handle"></div>
-        </div>
 
         <!-- COLOR PICKER SECTION -->
         <div class="color-section" id="colorSection" style="display:none; margin-top:24px;">
@@ -104,7 +104,7 @@
       </div>
     </div>
 
-    <!-- ADS (FIXED – SAME AS OTHER TOOLS) -->
+    <!-- ADS -->
     <div class="ads-column">
       <div class="ads-wrapper"
            style="width:100%;min-height:250px;display:flex;align-items:center;justify-content:center;">
@@ -125,14 +125,12 @@
   <div class="container">
     <div class="card">
       <h2>About This Tool</h2>
-
       <p>
 Skill2Job's Background Remover uses advanced AI technology to instantly remove image backgrounds, creating perfect transparent PNG cutouts with precise edge detection. Customize with 7+ professional background colors including white, blue, green, orange, red, light gray, or keep it fully transparent for versatile design needs. The interactive swipe animation lets users compare original vs processed results in real-time.
-</p>
-
-<p>
+      </p>
+      <p>
 Powered by remove.bg API with complete client-side processing for maximum privacy and security. Delivers pixel-perfect cutouts that preserve fine details like hair strands, fur texture, fabric edges, and complex patterns. Lightning-fast processing with professional-grade results. Developed by Yadav Subba, CEO and Developer of Skill2Job Tools platform.
-</p>
+      </p>
     </div>
   </div>
 </section>
@@ -185,7 +183,7 @@ Powered by remove.bg API with complete client-side processing for maximum privac
   });
 </script>
 
-<!-- FIXED BACKGROUND REMOVER - SMOOTH SWIPE + CLEAN MESSAGES -->
+<!-- BACKGROUND REMOVER WITH WHITE BG SWIPE -->
 <script>
 (function() {
   'use strict';
@@ -205,7 +203,7 @@ Powered by remove.bg API with complete client-side processing for maximum privac
     const downloadBtn = document.getElementById('downloadBtn');
     const colorSection = document.getElementById('colorSection');
     const customColorBtn = document.getElementById('customColorBtn');
-    const swipeContainer = document.getElementById('swipeContainer');
+    const swipePreview = document.getElementById('swipePreview');
     const loading = document.getElementById('imgLoading');
     const result = document.getElementById('imgResult');
     const imageFile = document.getElementById('imageFile');
@@ -243,7 +241,6 @@ Powered by remove.bg API with complete client-side processing for maximum privac
     document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
     e.target.classList.add('active');
     currentBgColor = e.target.dataset.color;
-    updatePreview();
   }
 
   function toggleCustomColor() {
@@ -252,7 +249,6 @@ Powered by remove.bg API with complete client-side processing for maximum privac
     if (customColor.style.display === 'none') {
       customColor.style.display = 'block';
       customColorBtn.textContent = 'Close';
-      customColorBtn.style.display = 'inline-block';
     } else {
       customColor.style.display = 'none';
       customColorBtn.textContent = 'Custom';
@@ -261,30 +257,23 @@ Powered by remove.bg API with complete client-side processing for maximum privac
 
   function handleCustomColor(e) {
     currentBgColor = e.target.value;
-    updatePreview();
   }
 
   async function removeBackground() {
     const file = document.getElementById('imageFile').files[0];
     const result = document.getElementById('imgResult');
     const loading = document.getElementById('imgLoading');
-    const swipeContainer = document.getElementById('swipeContainer');
+    const swipePreview = document.getElementById('swipePreview');
     const colorSection = document.getElementById('colorSection');
 
     // Reset
     result.style.display = 'none';
     loading.style.display = 'none';
-    swipeContainer.style.display = 'none';
+    swipePreview.style.display = 'none';
     colorSection.style.display = 'none';
 
     if (!file) {
       result.textContent = 'Please upload an image first.';
-      result.style.display = 'block';
-      return;
-    }
-
-    if (!file.type.startsWith('image/')) {
-      result.textContent = 'Please upload a valid image file.';
       result.style.display = 'block';
       return;
     }
@@ -310,30 +299,36 @@ Powered by remove.bg API with complete client-side processing for maximum privac
 
       removedBgImage = await response.blob();
       
-      // Show swipe comparison
+      // Show swipe preview with white background swipe
       loading.style.display = 'none';
-      swipeContainer.style.display = 'block';
+      swipePreview.style.display = 'block';
       
-      // Original image
+      // Original image (top layer initially)
       const originalReader = new FileReader();
       originalReader.onload = function(e) {
-        document.getElementById('swipeOriginal').innerHTML = `<img src="${e.target.result}">`;
+        document.getElementById('previewOriginal').innerHTML = `<img src="${e.target.result}">`;
       };
       originalReader.readAsDataURL(originalImage);
       
-      // Removed BG with animation
+      // Result with swipe animation
       const bgReader = new FileReader();
       bgReader.onload = function(e) {
-        document.getElementById('swipeResult').innerHTML = `<img src="${e.target.result}">`;
-        document.querySelector('.swipe-result').classList.add('animate');
+        document.getElementById('previewResult').innerHTML = `<img src="${e.target.result}">`;
+        document.getElementById('previewBg').style.background = '#ffffff';
         
+        // Trigger swipe animation
+        setTimeout(() => {
+          document.querySelector('.preview-result').classList.add('swiping');
+        }, 200);
+        
+        // Show color picker after animation
         setTimeout(() => {
           colorSection.style.display = 'block';
           result.textContent = 'Background removed successfully! Choose background color:';
           result.style.display = 'block';
           document.getElementById('customColorBtn').style.display = 'inline-block';
-          updatePreview();
-        }, 1600);
+          document.getElementById('downloadBtn').style.display = 'block';
+        }, 2000);
       };
       bgReader.readAsDataURL(removedBgImage);
 
@@ -342,10 +337,6 @@ Powered by remove.bg API with complete client-side processing for maximum privac
       result.textContent = 'Processing error. Please try again.';
       result.style.display = 'block';
     }
-  }
-
-  function updatePreview() {
-    document.getElementById('downloadBtn').style.display = 'block';
   }
 
   function downloadImage() {
