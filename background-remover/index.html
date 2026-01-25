@@ -65,14 +65,15 @@
           <p>AI processing image... This may take 10-20 seconds</p>
         </div>
 
-        <!-- SWIPE ANIMATION CONTAINER -->
+        <div class="result" id="imgResult"></div>
+        <div id="imgPreview"></div>
+
+        <!-- SWIPE ANIMATION -->
         <div class="swipe-container" id="swipeContainer" style="display:none;">
           <div class="swipe-original" id="swipeOriginal"></div>
           <div class="swipe-result" id="swipeResult"></div>
           <div class="swipe-handle"></div>
         </div>
-
-        <div class="result" id="imgResult"></div>
 
         <!-- COLOR PICKER SECTION -->
         <div class="color-section" id="colorSection" style="display:none; margin-top:24px;">
@@ -126,11 +127,11 @@
       <h2>About This Tool</h2>
 
       <p>
-        Skill2Job's Background Remover uses cutting-edge AI to instantly remove image backgrounds creating perfect transparent PNG cutouts. Features smooth swipe comparison animation to see before/after results. Customize with 7+ professional background colors.
+        Skill2Job's Background Remover uses cutting-edge AI to instantly remove image backgrounds creating perfect transparent PNG cutouts. Customize with 7+ professional background colors or keep transparent. 
       </p>
 
       <p>
-        Powered by remove.bg API with 100% client-side file handling for maximum privacy. Delivers pixel-perfect cutouts preserving fine details like hair, fur, and complex edges. Professional color customization with instant preview. Developed by Yadav Subba.
+        Powered by remove.bg API with 100% client-side file handling for maximum privacy. Delivers pixel-perfect cutouts preserving fine details like hair, fur, and complex edges. Developed by Yadav Subba, CEO and Developer of Skill2Job.
       </p>
     </div>
   </div>
@@ -176,6 +177,7 @@
   </p>
   <p>© 2026 Skill2Job</p>
 </footer>
+  
 <!-- ADS INIT -->
 <script>
   window.addEventListener('load', function () {
@@ -183,7 +185,7 @@
   });
 </script>
 
-<!-- BACKGROUND REMOVER WITH SMOOTH SWIPE ANIMATION -->
+<!-- FIXED BACKGROUND REMOVER - SMOOTH SWIPE + CLEAN MESSAGES -->
 <script>
 (function() {
   'use strict';
@@ -191,9 +193,6 @@
   let removedBgImage = null;
   let originalImage = null;
   let currentBgColor = 'transparent';
-  let isDragging = false;
-  let startX = 0;
-  let currentClip = 0;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -216,16 +215,10 @@
     customColorBtn.addEventListener('click', toggleCustomColor);
     imageFile.addEventListener('change', previewImage);
 
-    // Color picker events
     document.querySelectorAll('.color-btn').forEach(btn => {
       btn.addEventListener('click', selectColor);
     });
     document.getElementById('customColor').addEventListener('change', handleCustomColor);
-
-    // Swipe handle events
-    const swipeHandle = document.querySelector('.swipe-handle');
-    swipeHandle.addEventListener('mousedown', startSwipe);
-    swipeHandle.addEventListener('touchstart', startSwipe);
 
     const shareBtn = document.querySelector('.share-btn');
     if (shareBtn) {
@@ -235,55 +228,15 @@
 
   function previewImage() {
     const file = document.getElementById('imageFile').files[0];
-    const imgPreview = document.getElementById('imgPreview');
-    
     if (file) {
       originalImage = file;
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById('imgPreview').innerHTML = `<img src="${e.target.result}" style="max-width:90%;margin:12px auto;display:block;border-radius:12px;border:2px solid var(--border);">`;
+        document.getElementById('imgPreview').innerHTML = 
+          `<img src="${e.target.result}" style="max-width:90%;margin:12px auto;display:block;border-radius:12px;border:2px solid var(--border);">`;
       };
       reader.readAsDataURL(file);
     }
-  }
-
-  function startSwipe(e) {
-    isDragging = true;
-    startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    document.addEventListener('mousemove', dragSwipe);
-    document.addEventListener('touchmove', dragSwipe);
-    document.addEventListener('mouseup', endSwipe);
-    document.addEventListener('touchend', endSwipe);
-  }
-
-  function dragSwipe(e) {
-    if (!isDragging) return;
-    
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const deltaX = clientX - startX;
-    const container = document.getElementById('swipeContainer');
-    const maxClip = container.offsetWidth;
-    
-    currentClip = Math.max(0, Math.min(maxClip, currentClip + deltaX * 0.5));
-    startX = clientX;
-    
-    updateSwipeClip();
-  }
-
-  function endSwipe() {
-    isDragging = false;
-    document.removeEventListener('mousemove', dragSwipe);
-    document.removeEventListener('touchmove', dragSwipe);
-    document.removeEventListener('mouseup', endSwipe);
-    document.removeEventListener('touchend', endSwipe);
-  }
-
-  function updateSwipeClip() {
-    const container = document.getElementById('swipeContainer');
-    const clipPercent = (currentClip / container.offsetWidth) * 100;
-    
-    document.querySelector('.swipe-original').style.clipPath = `inset(0 ${clipPercent}% 0 0)`;
-    document.querySelector('.swipe-result').style.clipPath = `inset(0 0 0 ${clipPercent}%)`;
   }
 
   function selectColor(e) {
@@ -296,10 +249,10 @@
   function toggleCustomColor() {
     const customColor = document.getElementById('customColor');
     const customColorBtn = document.getElementById('customColorBtn');
-    
     if (customColor.style.display === 'none') {
       customColor.style.display = 'block';
       customColorBtn.textContent = 'Close';
+      customColorBtn.style.display = 'inline-block';
     } else {
       customColor.style.display = 'none';
       customColorBtn.textContent = 'Custom';
@@ -318,6 +271,7 @@
     const swipeContainer = document.getElementById('swipeContainer');
     const colorSection = document.getElementById('colorSection');
 
+    // Reset
     result.style.display = 'none';
     loading.style.display = 'none';
     swipeContainer.style.display = 'none';
@@ -325,6 +279,12 @@
 
     if (!file) {
       result.textContent = 'Please upload an image first.';
+      result.style.display = 'block';
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      result.textContent = 'Please upload a valid image file.';
       result.style.display = 'block';
       return;
     }
@@ -350,7 +310,7 @@
 
       removedBgImage = await response.blob();
       
-      // Show swipe animation
+      // Show swipe comparison
       loading.style.display = 'none';
       swipeContainer.style.display = 'block';
       
@@ -361,34 +321,31 @@
       };
       originalReader.readAsDataURL(originalImage);
       
-      // Removed background
+      // Removed BG with animation
       const bgReader = new FileReader();
       bgReader.onload = function(e) {
         document.getElementById('swipeResult').innerHTML = `<img src="${e.target.result}">`;
-        // Auto-swipe animation
-        setTimeout(() => {
-          document.querySelector('.swipe-result').classList.add('reveal');
-        }, 500);
+        document.querySelector('.swipe-result').classList.add('animate');
         
         setTimeout(() => {
           colorSection.style.display = 'block';
-          result.innerHTML = '<strong>✨ Perfect background removal! Choose your background color:</strong>';
+          result.textContent = 'Background removed successfully! Choose background color:';
           result.style.display = 'block';
+          document.getElementById('customColorBtn').style.display = 'inline-block';
           updatePreview();
-        }, 2000);
+        }, 1600);
       };
       bgReader.readAsDataURL(removedBgImage);
 
     } catch (error) {
       loading.style.display = 'none';
-      result.innerHTML = '<strong>Processing error. Please try a different image or try again later.</strong>';
+      result.textContent = 'Processing error. Please try again.';
       result.style.display = 'block';
     }
   }
 
   function updatePreview() {
-    const downloadBtn = document.getElementById('downloadBtn');
-    downloadBtn.style.display = 'block';
+    document.getElementById('downloadBtn').style.display = 'block';
   }
 
   function downloadImage() {
@@ -414,24 +371,25 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `bg-custom-${currentBgColor !== 'transparent' ? currentBgColor.slice(1) : 'transparent'}-${Date.now()}.png`;
+        a.download = `skill2job-bg-removed-${Date.now()}.png`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-      }, 'image/png');
+      });
     };
     
     img.src = URL.createObjectURL(removedBgImage);
   }
 
-  async function handleShare() {
-    const shareData = {
-      title: 'Background Remover – Skill2Job Tools',
-      text: 'Remove & customize image backgrounds instantly!',
-      url: window.location.href
-    };
-    if (navigator.share) await navigator.share(shareData);
+  function handleShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Background Remover - Skill2Job Tools',
+        text: 'Remove image backgrounds instantly!',
+        url: window.location.href
+      });
+    }
   }
 })();
 </script>
