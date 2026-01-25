@@ -32,7 +32,7 @@ h2{
   margin-top: 0;
 }
 
-/* SWIPE ANIMATION - MISSING CSS FOR EXISTING STYLE.SHEET */
+/* FIXED SWIPE ANIMATION + COLOR PICKER */
 .swipe-container {
   position: relative;
   width: 100%;
@@ -50,47 +50,68 @@ h2{
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  transition: clip-path 0.3s ease;
 }
 
 .swipe-original img, .swipe-result img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 8px;
+  display: block;
 }
 
 .swipe-handle {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: var(--primary);
   border-radius: 50%;
-  cursor: grab;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
   z-index: 10;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  user-select: none;
 }
 
-.swipe-handle:active {
-  cursor: grabbing;
-  transform: translate(-50%, -50%) scale(0.95);
+.swipe-handle:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+}
+
+.swipe-handle::after {
+  content: '';
+  width: 20px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  position: relative;
 }
 
 .swipe-handle::before {
-  content: "↔";
-  font-size: 16px;
+  content: '';
+  width: 3px;
+  height: 20px;
+  background: white;
+  border-radius: 2px;
+  position: absolute;
+}
+
+/* SWIPE REVEAL */
+@keyframes swipeIn {
+  0% { 
+    clip-path: inset(0 100% 0 0); 
+  }
+  100% { 
+    clip-path: inset(0 0 0 0); 
+  }
+}
+
+.swipe-result.animate {
+  animation: swipeIn 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* COLOR PICKER */
@@ -135,10 +156,11 @@ h2{
   left: 4px;
   right: 4px;
   bottom: 4px;
-  background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%), 
-                    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), 
-                    linear-gradient(45deg, transparent 75%, #e0e0e0 75%), 
-                    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-image: 
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
   background-size: 12px 12px;
   background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
   border-radius: 50%;
@@ -158,23 +180,10 @@ h2{
   font-size: 14px !important;
 }
 
-/* SWIPE REVEAL ANIMATION */
-@keyframes swipeReveal {
-  0% { clip-path: inset(0 100% 0 0); }
-  100% { clip-path: inset(0 0 0 0); }
-}
-
-.swipe-result.reveal {
-  animation: swipeReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-/* RESPONSIVE */
 @media (max-width: 640px) {
   .swipe-container { height: 250px; }
-  .color-palette { justify-content: center; }
   .color-btn { width: 40px; height: 40px; }
 }
-
 
 /* ────────────────────────────────────────────────
    IMAGE RESIZER - TWO COLUMN RESPONSIVE LAYOUT (FINAL)
