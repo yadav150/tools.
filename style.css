@@ -32,6 +32,150 @@ h2{
   margin-top: 0;
 }
 
+/* SWIPE ANIMATION - MISSING CSS FOR EXISTING STYLE.SHEET */
+.swipe-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  overflow: hidden;
+  margin: 20px 0;
+  background: #f8fafc;
+}
+
+.swipe-original, .swipe-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: clip-path 0.3s ease;
+}
+
+.swipe-original img, .swipe-result img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.swipe-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: grab;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  z-index: 10;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  user-select: none;
+}
+
+.swipe-handle:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+.swipe-handle::before {
+  content: "↔";
+  font-size: 16px;
+}
+
+/* COLOR PICKER */
+.color-section {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.color-palette {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.color-btn {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.color-btn:hover {
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.color-btn.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.checkerboard {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%), 
+                    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), 
+                    linear-gradient(45deg, transparent 75%, #e0e0e0 75%), 
+                    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+  border-radius: 50%;
+}
+
+.color-input {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.small-btn {
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+}
+
+/* SWIPE REVEAL ANIMATION */
+@keyframes swipeReveal {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+.swipe-result.reveal {
+  animation: swipeReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .swipe-container { height: 250px; }
+  .color-palette { justify-content: center; }
+  .color-btn { width: 40px; height: 40px; }
+}
+
+
 /* ────────────────────────────────────────────────
    IMAGE RESIZER - TWO COLUMN RESPONSIVE LAYOUT (FINAL)
    ──────────────────────────────────────────────── */
